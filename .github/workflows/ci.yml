@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel older runs for the same branch to save Action minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # These secrets must be set in GitHub repo settings → Secrets and variables → Actions.
+  # See docs/SETUP.md for the click-path.
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL_DEV }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY_DEV }}
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+jobs:
+  static-checks:
+    name: Lint, typecheck, unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.10.0 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm test
+
+  build-and-e2e:
+    name: Build + E2E
+    runs-on: ubuntu-latest
+    needs: static-checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.10.0 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      # Boot the built app, then run E2E against it.
+      - name: Start app and run E2E
+        run: |
+          pnpm start &
+          APP_PID=$!
+          # Wait for the app to be ready (up to 60 seconds)
+          for i in {1..60}; do
+            if curl -sf http://localhost:3000/api/health > /dev/null; then
+              echo "App is ready."
+              break
+            fi
+            sleep 1
+          done
+          PLAYWRIGHT_TEST_BASE_URL=http://localhost:3000 pnpm test:e2e
+          E2E_EXIT=$?
+          kill $APP_PID || true
+          exit $E2E_EXIT
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

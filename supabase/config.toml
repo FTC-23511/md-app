@@ -1,0 +1,16 @@
+# Minimal supabase project config. Most settings come from the linked remote
+# project; this file just identifies the project locally.
+#
+# When you run `pnpm db:link:dev` it'll be linked to your dev Supabase project
+# and migrations apply to it. Same for `pnpm db:link:prod`.
+
+project_id = "md-app"
+
+[db]
+major_version = 17
+
+[auth]
+# This is overridden by your hosted Supabase project; the local config here
+# is only consulted if someone runs `supabase start` (which we don't).
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/**"]
