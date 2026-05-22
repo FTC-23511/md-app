@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Supabase magic-link redirect target. Exchanges the `code` query param for a
  * real session and sets the auth cookies, then redirects on to the dashboard
