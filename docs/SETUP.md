@@ -208,9 +208,12 @@ git push -u origin main
 Wait ~2 minutes. You'll get a URL like `md-app-xyz.vercel.app`. Visit it; you
 should see the sign-in page.
 
-Go back to Supabase **dev** project → Authentication → URL Configuration. Add
-the Vercel URL + `/auth/callback` to Redirect URLs. (Repeat once you set up
-the prod project the same way.)
+Go back to Supabase **prod** project → Authentication → URL Configuration and set:
+
+- **Site URL**: `https://your-vercel-url.vercel.app` (no trailing slash)
+- **Redirect URLs**: add `https://your-vercel-url.vercel.app/auth/callback`
+
+Your dev Supabase stays as-is (`http://localhost:3000` / `http://localhost:3000/auth/callback`) — it's only used when running `pnpm dev` locally. The Vercel deployment uses prod credentials, so the callback URL must be registered in prod Supabase.
 
 ---
 
@@ -236,8 +239,9 @@ you'll apply each new migration manually via Supabase CLI or SQL Editor).
 3. Check:
    - **Require a pull request before merging** (1 approval — yourself counts via GitHub)
    - **Require status checks to pass before merging**
-   - In the search box, after pushing once and seeing CI run, find **"static-checks"**
-     and **"build-and-e2e"** and select both as required checks
+   - In the search box, after pushing once and seeing CI run, search **`Lint`**
+     (selects `Lint, typecheck, unit tests`) and **`Build`** (selects `Build + E2E`)
+     — select both when they appear
    - **Require branches to be up to date before merging**
 4. Save.
 
