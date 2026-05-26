@@ -137,7 +137,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Create the `set_updated_at()` trigger function. This is the one function shared across every table for `updated_at` maintenance.
 
-**Deliverables.** `supabase/migrations/<timestamp>_functions_and_types.sql` containing the trigger function. Full SQL in `docs/phase1/02-schema.md` §3.
+**Deliverables.** `supabase/migrations/20260521000001_extensions_and_helpers.sql` — landed as `pgcrypto` extension + `current_member_id()` helper. The trigger function described above lives in `20260521000005_triggers.sql` (covered by T08 below) rather than this migration; the chat-to-repo planning split functions into their natural file by lifecycle stage.
 
 **Acceptance.** `supabase db reset` runs cleanly. `SELECT proname FROM pg_proc WHERE proname = 'set_updated_at';` returns the function.
 
@@ -149,7 +149,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Create the supporting tables: `members` (with the `handle_new_auth_user` trigger on `auth.users`), `option_lists` (with all 49 seed rows from charter-defined option groups), `flags`, `classification_index`, `award_criteria_snapshot`. Apply the `set_updated_at` trigger to each.
 
-**Deliverables.** `supabase/migrations/<timestamp>_supporting_tables.sql`. Full SQL in `docs/phase1/02-schema.md` §4 including the seed-row INSERTs.
+**Deliverables.** `supabase/migrations/20260521000002_core_tables.sql` — landed with `member_role` enum + `teams`, `seasons`, `subsystems`, `members` tables (richer than the original spec's `members` + `option_lists` + `flags` + `classification_index` + `award_criteria_snapshot` flat list). The seed data lives in `20260521000007_seed_reference_data.sql` (T08); cross-cutting tables (flags, classification, awards) live in `20260521000003_entries_and_crosscutting.sql` (T07).
 
 **Acceptance.** Migration applies cleanly. All five tables visible in dashboard. `SELECT category, COUNT(*) FROM option_lists GROUP BY category` returns the expected seed counts per category. The auth trigger is verified by manually creating a user in the Supabase dashboard and confirming a matching `members` row appears.
 
@@ -161,7 +161,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Create the ten entry-type tables: `session_logs`, `outreach_logs`, `meeting_notes`, `comp_recaps`, `decision_logs`, `hw_change_logs`, `sw_change_logs`, `test_logs`, `contact_logs`, `subsystem_handoffs`. Plus the `test_trials` child table with `ON DELETE CASCADE` from `test_logs`. Each table follows the conventions in `docs/phase1/02-schema.md` §2 (common columns + entry-specific typed columns + extras JSONB + entry_state). Apply the `set_updated_at` trigger to each.
 
-**Deliverables.** `supabase/migrations/<timestamp>_entry_tables.sql`. Full SQL in `docs/phase1/02-schema.md` §5.
+**Deliverables.** Split across two migrations: `supabase/migrations/20260521000003_entries_and_crosscutting.sql` (base `entries` table + cross-cutting `flags`, `classification_index`, `awards`) and `supabase/migrations/20260521000004_detail_tables.sql` (the 10 detail tables, 1:1 with `entries` via `entry_id` PK+FK with cascade delete, including `test_logs` with raw-data JSONB that powers the auto-compute trigger in T08).
 
 **Acceptance.** Migration applies cleanly. All eleven tables visible. `\d session_logs` (or dashboard equivalent) shows the expected columns and types. `INSERT INTO session_logs (session_date, session_lead, what_worked_on) VALUES (CURRENT_DATE, 'test', 'test')` succeeds.
 
@@ -173,7 +173,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Add indexes for query patterns: B-tree on every FK, `created_at DESC` on every entry table, partial indexes on `WHERE deleted_at IS NULL`, plus the table-specific indexes (test_label time-series, commit_hash lookup, flags parent lookup, classification award lookup, option_lists category lookup). Enable RLS on every table and add the `phase1_authenticated_all` permissive policy per table.
 
-**Deliverables.** `supabase/migrations/<timestamp>_indexes_and_policies.sql`. Full SQL in `docs/phase1/02-schema.md` §6.
+**Deliverables.** Split across four migrations: `20260521000005_triggers.sql` (audit revisions, test-log auto-compute, `updated_at` touches), `20260521000006_rls_policies.sql` (**full role-based** RLS — 5 roles + 24h author edit window + public showcase, richer than the original spec's permissive Phase 1 policies), `20260521000007_seed_reference_data.sql` (team + season + subsystems + awards), and `20260521000008_grants.sql` (base table/sequence grants for `authenticated` and read-only for `anon`).
 
 **Acceptance.** Migration applies cleanly. `EXPLAIN SELECT * FROM session_logs WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 10` shows the partial index being used. `SELECT relname, relrowsecurity FROM pg_class WHERE relname IN ('session_logs', ...)` shows `relrowsecurity = true` for every table. Supabase advisor shows no "RLS disabled" or "unindexed foreign key" warnings.
 
