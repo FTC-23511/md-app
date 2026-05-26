@@ -112,13 +112,13 @@ count (Migration 7).
 
 ## Step 4 — Configure Supabase Auth
 
-In your dev project dashboard:
+Phase 1 auth is **email + password** with sign-up disabled (per [`docs/phase1/04-auth.md`](phase1/04-auth.md)). The only way an account exists is if you create it manually in the dashboard. In your dev project dashboard:
 
-1. **Authentication → Providers → Email**: ensure "Enable Email provider" is on.
-   Disable "Confirm email" (we use magic links instead).
-2. **Authentication → URL Configuration**:
+1. **Authentication → Providers → Email**: ensure "Enable Email provider" is on. Set "Confirm email" to **off** (you'll create your user with a known-good email in Step 5; no email-verification round trip needed).
+2. **Authentication → Sign In / Up → User Signups**: toggle **Disable signup** on. This is the critical setting — with it off, no one can create an account through the app, only via this dashboard.
+3. **Authentication → URL Configuration**:
    - **Site URL**: `http://localhost:3000` (we'll add the production URL after deploy)
-   - **Redirect URLs**: add `http://localhost:3000/auth/callback`
+   - **Redirect URLs**: add `http://localhost:3000/auth/reset-password` (this is the redirect target for the forgot-password magic-link path — the only magic-link flow in Phase 1)
 
 ---
 
