@@ -1,10 +1,41 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:claude.ai)",
-      "Bash(git push *)",
-      "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(*)",
+      "PowerShell(*)",
+      "WebFetch(domain:*)",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -fdx*)",
+      "Bash(git config --global *)",
+      "Bash(git config --system *)",
+      "Bash(git update-ref *)",
+      "Bash(gh repo delete*)",
+      "Bash(gh repo archive*)",
+      "Bash(gh release delete*)",
+      "Bash(gh secret delete*)",
+      "Bash(gh auth logout*)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(rm -rf .git*)",
+      "Bash(rm .env.local*)",
+      "Bash(rm -* .env.local*)",
+      "Bash(rm -* .env)",
+      "Bash(supabase db reset*)",
+      "Bash(supabase projects delete*)",
+      "Bash(supabase login --token *)",
+      "Bash(supabase secrets unset *)",
+      "Bash(npm publish*)",
+      "Bash(pnpm publish*)",
+      "Bash(curl * | sh*)",
+      "Bash(curl * | bash*)",
+      "Bash(wget * | sh*)",
+      "Bash(wget * | bash*)"
     ]
   }
 }
