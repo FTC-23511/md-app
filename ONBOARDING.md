@@ -5,23 +5,26 @@
 Based on Saket T's usage over the last 30 days:
 
 Work Type Breakdown:
-  _TODO — not enough sessions yet to show a breakdown. Check back after a few weeks of use._
+_TODO — not enough sessions yet to show a breakdown. Check back after a few weeks of use._
 
 Top Skills & Commands:
-  _TODO — no command history yet._
+_TODO — no command history yet._
 
 Top MCP Servers:
-  _None configured yet._
+_None configured yet._
 
 ## Your Setup Checklist
 
 ### Codebases
+
 - [ ] md-app — https://github.com/ftc-23511/md-app
 
 ### MCP Servers to Activate
-  _None in use yet — this section will grow as the team adopts integrations._
+
+_None in use yet — this section will grow as the team adopts integrations._
 
 ### Skills to Know About
+
 - `/team-onboarding` — generates this guide; run it when onboarding a new teammate
 - `/review` — code review for pull requests
 - `/simplify` — cleans up changed code for quality and efficiency after a feature lands

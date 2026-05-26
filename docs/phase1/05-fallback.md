@@ -109,6 +109,7 @@ Parser: match the line pattern, only emit entries with `[x]`. Owner and subject 
 ## Stories
 
 ### Story 1
+
 - **Person:** Alex Chen
 - **Role / age:** Parent, ~40
 - **Permission:** yes
@@ -121,6 +122,7 @@ Stayed after the demo and asked detailed questions about the intake mechanism fo
 This is exactly what I wish I'd had as a kid.
 
 ### Story 2
+
 ...
 ```
 
@@ -132,6 +134,7 @@ Parser: split on `### Story` boundaries; within each block parse the bullet-list
 ## Engagement Depth
 
 Check all that apply:
+
 - [x] Hands-on robot or team interaction
 - [x] Sustained engagement (>15 min)
 - [ ] Substantive questions
@@ -156,43 +159,44 @@ Templates are committed to the repo. Updating a template after a charter change 
 ```markdown
 ---
 # REQUIRED. Do not change the lines marked REQUIRED.
-type: session_log                           # REQUIRED — must be 'session_log'
-template_version: 1                         # REQUIRED — leave as 1
-session_date: 2026-MM-DD                    # REQUIRED — today's date
-session_lead: Your Name                     # REQUIRED — who is filing this
-duration_hours:                             # Optional — decimal hours, e.g. 2.5
-subsystems:                                 # Optional — list of subsystem labels
+type: session_log # REQUIRED — must be 'session_log'
+template_version: 1 # REQUIRED — leave as 1
+session_date: 2026-MM-DD # REQUIRED — today's date
+session_lead: Your Name # REQUIRED — who is filing this
+duration_hours: # Optional — decimal hours, e.g. 2.5
+subsystems: # Optional — list of subsystem labels
   - intake
   - drivetrain
 ---
 
 ## What did we work on today?
+
 <!-- REQUIRED. 1–3 sentences. -->
 
-
 ## What worked?
-<!-- Optional. 1–3 sentences. -->
 
+<!-- Optional. 1–3 sentences. -->
 
 ## What didn't work?
+
 <!-- Optional. 1–3 sentences. -->
 
-
 ## Numbers measured today
+
 <!-- Optional. Free text. Substantive numerical results go in a Test Log. -->
 
-
 ## What's next session?
+
 <!-- Optional. 1–2 sentences. -->
 
-
 ## Per-Person Contributions
+
 <!-- One line per attending person. Format: - **Name:** contribution -->
 
 - **Name:** contribution
 
-
 ## Specialty Entries Triggered
+
 <!-- Check the boxes for Tier 2 entries that should result from this session. -->
 <!-- For each checked box, fill in owner and subject. -->
 
@@ -208,39 +212,43 @@ subsystems:                                 # Optional — list of subsystem lab
 ```markdown
 ---
 # REQUIRED. Do not change the lines marked REQUIRED.
-type: outreach_log                          # REQUIRED — must be 'outreach_log'
-template_version: 1                         # REQUIRED — leave as 1
-event_name: Event Name Here                 # REQUIRED
-event_date: 2026-MM-DD                      # REQUIRED — date of event
-location_city:                              # Optional
-location_state:                             # Optional
-host_org:                                   # Optional — host organization name
-our_role: demo                              # Optional — demo / coaching / workshop / fair-table / other
-event_type: public-showcase                 # REQUIRED — one of: private-sponsor,
-                                            #   public-showcase, presentation-conference,
-                                            #   classroom-visit, workshop-hosted,
-                                            #   recurring-program, first-community,
-                                            #   online-virtual, other
-outreach_reporter: Your Name                # REQUIRED — you, the Reporter
-total_attendees: 0                          # REQUIRED — integer
-zero_first_count: 0                         # REQUIRED — integer; of total, how many
-                                            #   had no prior FIRST experience
-age_range: mixed                            # Optional — e.g. "K-5", "middle school + parents"
-follow_up_type:                             # Optional — none / via-host / individual /
-                                            #   re-engagement
+type: outreach_log # REQUIRED — must be 'outreach_log'
+template_version: 1 # REQUIRED — leave as 1
+event_name: Event Name Here # REQUIRED
+event_date: 2026-MM-DD # REQUIRED — date of event
+location_city: # Optional
+location_state: # Optional
+host_org: # Optional — host organization name
+our_role: demo # Optional — demo / coaching / workshop / fair-table / other
+event_type:
+  public-showcase # REQUIRED — one of: private-sponsor,
+  #   public-showcase, presentation-conference,
+  #   classroom-visit, workshop-hosted,
+  #   recurring-program, first-community,
+  #   online-virtual, other
+outreach_reporter: Your Name # REQUIRED — you, the Reporter
+total_attendees: 0 # REQUIRED — integer
+zero_first_count:
+  0 # REQUIRED — integer; of total, how many
+  #   had no prior FIRST experience
+age_range: mixed # Optional — e.g. "K-5", "middle school + parents"
+follow_up_type: # Optional — none / via-host / individual /
+  #   re-engagement
 ---
 
 ## Team Members Present
+
 <!-- One line per team member at the event with their role. -->
 <!-- Format: - **Name:** role at event -->
 
 - **Name:** role
 
-
 ## Engagement Depth
+
 <!-- REQUIRED — at least one box checked OR a custom note. -->
 
 Check all that apply:
+
 - [ ] Hands-on robot or team interaction
 - [ ] Sustained engagement (>15 min)
 - [ ] Substantive questions
@@ -252,42 +260,43 @@ Check all that apply:
 
 **Custom note (optional):**
 
-
-
 ## New FLL Participants Directly Inspired Today
-<!-- Optional. Names if known. -->
 
+<!-- Optional. Names if known. -->
 
 ## New FTC Participants Directly Inspired Today
-<!-- Optional. Names if known. -->
 
+<!-- Optional. Names if known. -->
 
 ## New Mentors / Coaches / Volunteers Committed Today
+
 <!-- Optional. Names if known. -->
 
-
 ## Existing FIRST Community Members Re-Engaged Today
+
 <!-- Optional. -->
 
-
 ## Stories
+
 <!-- REQUIRED — at least 3 stories. Each named, with permission status. -->
 
 ### Story 1
+
 - **Person:** Name
 - **Role / age:** e.g. Parent, ~40 / Student, age 8
 - **Permission:** yes / no / pending
 - **Photo URL:** (leave blank in Phase 1)
 
 **What happened:**
+
 <!-- 2–4 sentences. -->
 
-
 **Quote:**
+
 <!-- Direct quote if any; verbatim. -->
 
-
 ### Story 2
+
 - **Person:** Name
 - **Role / age:**
 - **Permission:** yes / no / pending
@@ -295,11 +304,10 @@ Check all that apply:
 
 **What happened:**
 
-
 **Quote:**
-
 
 ### Story 3
+
 - **Person:** Name
 - **Role / age:**
 - **Permission:** yes / no / pending
@@ -307,28 +315,26 @@ Check all that apply:
 
 **What happened:**
 
-
 **Quote:**
 
-
 ## What Worked Well
-<!-- Optional. -->
 
+<!-- Optional. -->
 
 ## What We'd Do Differently Next Event
+
 <!-- Optional. -->
 
-
 ## Follow-Up Details
+
 <!-- Optional. Only fill in the part matching your follow_up_type frontmatter. -->
 
 **Names for individual follow-up** (only if follow_up_type is `individual`):
 
-
 **Link to prior Outreach Log** (only if follow_up_type is `re-engagement`):
 
-
 ## Specialty Entries Triggered
+
 <!-- Most commonly a Contact Log for each new mentor / sponsor / individual follow-up. -->
 
 - [ ] **Decision Log** — owner: NAME — subject: BRIEF
@@ -343,42 +349,40 @@ Check all that apply:
 ```markdown
 ---
 # REQUIRED. Do not change the lines marked REQUIRED.
-type: meeting_notes                         # REQUIRED — must be 'meeting_notes'
-template_version: 1                         # REQUIRED — leave as 1
-meeting_type: weekly                        # REQUIRED — one of: kickoff, weekly,
-                                            #   strategy, retro, planning
-meeting_date: 2026-MM-DD                    # REQUIRED
-scribe: Your Name                           # REQUIRED — who is filing this
-next_meeting_date:                          # Optional
+type: meeting_notes # REQUIRED — must be 'meeting_notes'
+template_version: 1 # REQUIRED — leave as 1
+meeting_type:
+  weekly # REQUIRED — one of: kickoff, weekly,
+  #   strategy, retro, planning
+meeting_date: 2026-MM-DD # REQUIRED
+scribe: Your Name # REQUIRED — who is filing this
+next_meeting_date: # Optional
 ---
 
 ## Attendees
+
 <!-- REQUIRED — at least one attendee. -->
 <!-- Format: - **Name:** role/focus (optional after the colon) -->
 
 - **Name:** (focus optional)
 
-
 ## Agenda Items + Outcomes
+
 <!-- REQUIRED. For each agenda item, what was discussed and decided. -->
 
-
-
 ## Decisions Made
+
 <!-- Optional. Summary; Decision Log entries are the canonical record. -->
 
-
-
 ## Action Items
+
 <!-- Optional. One bullet per action. -->
 
 - **Owner:** Name | **Action:** what they're doing | **Due:** YYYY-MM-DD
 
-
 ## Open Questions / Parking Lot
+
 <!-- Optional. -->
-
-
 
 ## Specialty Entries Triggered
 
@@ -472,7 +476,7 @@ async function main() {
   const files = (await Promise.all(args.map((a) => glob(a)))).flat();
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!  // service role for fallback inserts
+    process.env.SUPABASE_SERVICE_ROLE_KEY!, // service role for fallback inserts
   );
 
   let okCount = 0;
@@ -509,12 +513,12 @@ Each entry definition gets one new function: a header-to-field mapping. Lives in
 
 export const sessionLogBodyMapping: Record<string, string> = {
   'what did we work on today?': 'what_worked_on',
-  'what worked?':              'what_worked',
-  'what didn\'t work?':        'what_didnt_work',
-  'numbers measured today':    'numbers_measured',
-  'what\'s next session?':     'whats_next',
-  'per-person contributions':  'contributions',
-  'specialty entries triggered':'specialty_entries',
+  'what worked?': 'what_worked',
+  "what didn't work?": 'what_didnt_work',
+  'numbers measured today': 'numbers_measured',
+  "what's next session?": 'whats_next',
+  'per-person contributions': 'contributions',
+  'specialty entries triggered': 'specialty_entries',
 };
 ```
 
@@ -570,7 +574,7 @@ async function resolveOptions(def, data, supabase) {
       } else {
         throw new Error(
           `Unknown option for ${field.name}: '${v}'. ` +
-          `Category '${field.category}' does not allow new options.`
+            `Category '${field.category}' does not allow new options.`,
         );
       }
     }
@@ -610,18 +614,18 @@ The Friday 15 weekly review (Charter §14) includes a one-line check: "Any unpro
 
 ## 7. Failure modes and recovery
 
-| Failure | Detection | Recovery |
-|---|---|---|
-| Contributor uses wrong date format | Importer rejects with `Invalid date in field 'session_date'` | Edit file, fix date, re-run |
-| Contributor omits a required field | Importer rejects with `Required field missing: <field>` | Edit file, add field, re-run |
-| Contributor uses an option value that doesn't exist (e.g. typo) and `allowAddNew: true` | Importer silently creates the option | Captain reviews new options post-import; deletes typo'd ones via dashboard or a separate `option_lists` cleanup |
-| Contributor uses a value where `allowAddNew: false` | Importer rejects with `Unknown option ... category does not allow new options` | Edit file, use a valid value, re-run |
-| Body section has wrong header (e.g. "what worked" instead of "what worked?") | Field defaults to empty; if required, validation rejects | Edit file, fix header, re-run |
-| Frontmatter YAML is malformed | Importer reports YAML parse error with line number | Fix the YAML; re-run |
-| Multiple files; some succeed, some fail | Summary at end of run lists failures separately | Re-run on failed files only |
-| Supabase is still down when Captain tries to import | Inserts fail; files stay unrenamed | Re-run when Supabase is back. Files are unchanged so no data is lost. |
-| File is filled but Captain never receives it | Not detected by the importer | Friday 15 review surfaces the contributor's missing entry; contributor re-sends |
-| Schema changed after template was written | New required field missing on import | Captain edits the old file to add the new field (with a reasonable default), re-runs |
+| Failure                                                                                 | Detection                                                                      | Recovery                                                                                                        |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Contributor uses wrong date format                                                      | Importer rejects with `Invalid date in field 'session_date'`                   | Edit file, fix date, re-run                                                                                     |
+| Contributor omits a required field                                                      | Importer rejects with `Required field missing: <field>`                        | Edit file, add field, re-run                                                                                    |
+| Contributor uses an option value that doesn't exist (e.g. typo) and `allowAddNew: true` | Importer silently creates the option                                           | Captain reviews new options post-import; deletes typo'd ones via dashboard or a separate `option_lists` cleanup |
+| Contributor uses a value where `allowAddNew: false`                                     | Importer rejects with `Unknown option ... category does not allow new options` | Edit file, use a valid value, re-run                                                                            |
+| Body section has wrong header (e.g. "what worked" instead of "what worked?")            | Field defaults to empty; if required, validation rejects                       | Edit file, fix header, re-run                                                                                   |
+| Frontmatter YAML is malformed                                                           | Importer reports YAML parse error with line number                             | Fix the YAML; re-run                                                                                            |
+| Multiple files; some succeed, some fail                                                 | Summary at end of run lists failures separately                                | Re-run on failed files only                                                                                     |
+| Supabase is still down when Captain tries to import                                     | Inserts fail; files stay unrenamed                                             | Re-run when Supabase is back. Files are unchanged so no data is lost.                                           |
+| File is filled but Captain never receives it                                            | Not detected by the importer                                                   | Friday 15 review surfaces the contributor's missing entry; contributor re-sends                                 |
+| Schema changed after template was written                                               | New required field missing on import                                           | Captain edits the old file to add the new field (with a reasonable default), re-runs                            |
 
 The recurring property: **the original file is not modified or destroyed until the import succeeds.** Failures are recoverable. Data is not lost in any failure mode here.
 

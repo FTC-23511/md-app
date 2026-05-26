@@ -14,17 +14,17 @@ Open `docs/phase1/00-plan.md`. Find lowest unchecked task. Read the spec it poin
 
 Do not read full files. Use grep + `view --view-range`. Jump to sections.
 
-| Need | File | Section |
-|---|---|---|
-| Pick a task / track progress | `docs/phase1/00-plan.md` | task list; sprint plan |
-| Code patterns (folder, naming, server actions, Zod, errors) | `docs/phase1/01-conventions.md` | §1–§4 universal; §5 field blocks; §11 workflows; §13 ask-don't-guess list |
-| Schema, migrations, column-vs-JSONB rule | `docs/phase1/02-schema.md` | §2 conventions; §3–§6 per migration; §8 column rule; §9 workflows |
-| Field block types, entry definitions, renderer | `docs/phase1/03-forms.md` | §1–§2 types; §3–§12 block library; §13–§15 entries |
-| Auth (email/password, allowlist, forgot-password) | `docs/phase1/04-auth.md` | §3 dashboard config; §4 middleware; §5 login; §6 reset |
-| Text-file fallback templates + importer | `docs/phase1/05-fallback.md` | §3 format; §5 importer |
-| What MD captures (data semantics) | `docs/charters/MD_Project_Charter.md` | **NEVER read whole. Grep for entry name (e.g. SOP-05) or topic.** |
-| Architectural decisions, phased build | `docs/charters/MD_App_Charter.md` | **NEVER read whole. Grep for topic.** |
-| Phase 2 AI integration | `docs/charters/MD_SCL_AI_Integration.md` | **NEVER read whole. Phase 2 only — do not implement in Phase 1.** |
+| Need                                                        | File                                     | Section                                                                   |
+| ----------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------- |
+| Pick a task / track progress                                | `docs/phase1/00-plan.md`                 | task list; sprint plan                                                    |
+| Code patterns (folder, naming, server actions, Zod, errors) | `docs/phase1/01-conventions.md`          | §1–§4 universal; §5 field blocks; §11 workflows; §13 ask-don't-guess list |
+| Schema, migrations, column-vs-JSONB rule                    | `docs/phase1/02-schema.md`               | §2 conventions; §3–§6 per migration; §8 column rule; §9 workflows         |
+| Field block types, entry definitions, renderer              | `docs/phase1/03-forms.md`                | §1–§2 types; §3–§12 block library; §13–§15 entries                        |
+| Auth (email/password, allowlist, forgot-password)           | `docs/phase1/04-auth.md`                 | §3 dashboard config; §4 middleware; §5 login; §6 reset                    |
+| Text-file fallback templates + importer                     | `docs/phase1/05-fallback.md`             | §3 format; §5 importer                                                    |
+| What MD captures (data semantics)                           | `docs/charters/MD_Project_Charter.md`    | **NEVER read whole. Grep for entry name (e.g. SOP-05) or topic.**         |
+| Architectural decisions, phased build                       | `docs/charters/MD_App_Charter.md`        | **NEVER read whole. Grep for topic.**                                     |
+| Phase 2 AI integration                                      | `docs/charters/MD_SCL_AI_Integration.md` | **NEVER read whole. Phase 2 only — do not implement in Phase 1.**         |
 
 ## Phase
 

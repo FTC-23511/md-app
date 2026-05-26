@@ -2,7 +2,7 @@
 
 How code is organized, how patterns work, and why. Read once end-to-end. Reference back when a task touches one of these areas.
 
-The audience is someone newer to this stack. Each section explains *why* alongside *what*, because patterns that aren't understood get applied wrong.
+The audience is someone newer to this stack. Each section explains _why_ alongside _what_, because patterns that aren't understood get applied wrong.
 
 ## 1. Folder structure
 
@@ -54,7 +54,7 @@ src/
 └── middleware.ts                   # email-allowlist enforcement on protected routes
 ```
 
-**The `(auth)` and `(app)` parentheses** are Next.js *route groups*. Routes inside parens are not part of the URL — `(app)/list/page.tsx` is reachable at `/list`, not `/(app)/list`. They group routes that share a layout. `(app)`'s layout enforces auth; `(auth)`'s does not.
+**The `(auth)` and `(app)` parentheses** are Next.js _route groups_. Routes inside parens are not part of the URL — `(app)/list/page.tsx` is reachable at `/list`, not `/(app)/list`. They group routes that share a layout. `(app)`'s layout enforces auth; `(auth)`'s does not.
 
 **Files starting with underscore** (`_types.ts`, `_registry.ts`) are convention for "internal to this folder, not a route or component file." They're not magic to Next.js; the prefix is for human readers and grep.
 
@@ -100,7 +100,7 @@ import { redirect } from 'next/navigation';
 
 export async function createSessionLog(formData: FormData) {
   const result = await insertEntry(sessionLogEntry, formData);
-  if (!result.ok) return result;       // return field errors to the form
+  if (!result.ok) return result; // return field errors to the form
   redirect('/list');
 }
 ```
@@ -119,7 +119,7 @@ Zod is a TypeScript-first schema validation library. You declare a schema as a J
 
 **Where schemas live in this project:**
 
-Schemas for entry types are not hand-written. They are *derived* from the entry definition by `lib/validate-entry.ts`. Each field block declares how it contributes to the Zod schema (a `text` block contributes `z.string().min(1)` if required, `z.string().optional()` if not, etc.). The validator function walks the entry's field list and builds the full schema.
+Schemas for entry types are not hand-written. They are _derived_ from the entry definition by `lib/validate-entry.ts`. Each field block declares how it contributes to the Zod schema (a `text` block contributes `z.string().min(1)` if required, `z.string().optional()` if not, etc.). The validator function walks the entry's field list and builds the full schema.
 
 For things that aren't entries (auth form, fallback form payload), schemas are hand-written and live alongside the code that uses them.
 
@@ -129,24 +129,24 @@ This is the architectural heart of Phase 1 and everything after. Read this secti
 
 **Premise.** The MD system defines ten entry types now and may define more later. Each entry type has a set of fields. Some fields are common across many types (a date, a person attribution). Some are specific to one type (an Outreach Log's engagement-depth multi-select with custom note). If every entry type's form, validation, and DB insert are hand-coded, the marginal cost of adding a new entry type or a new field is high, and the system rots over years.
 
-**Solution.** Decompose every entry into a list of *field blocks*. A field block is a typed primitive with a known renderer, validator, and storage rule. An entry definition is a list of field block instances with configuration. Forms are rendered generically by walking the definition. Validation is generated automatically. Inserts are generated automatically.
+**Solution.** Decompose every entry into a list of _field blocks_. A field block is a typed primitive with a known renderer, validator, and storage rule. An entry definition is a list of field block instances with configuration. Forms are rendered generically by walking the definition. Validation is generated automatically. Inserts are generated automatically.
 
 **The field block library** (Phase 1).
 
 Ten block types, each implemented once and reused across entry types:
 
-| Block type | What it captures | Example use |
-|---|---|---|
-| `text` | Single-line text | Session lead name |
-| `long-text` | Multi-line text (textarea) | "What worked today" |
-| `single-select` | One choice from a fixed list (radio or dropdown) | Outreach Log event type (9 options) |
-| `multi-select` | Zero or more choices from a fixed list, optionally with a free-text custom note | Outreach Log engagement depth (8 options + note) |
-| `date` | A calendar date | Meeting date, event date |
-| `number` | A numeric value | Total attendees, hours of duration |
-| `person-attribution` | A list of `{name, contribution}` rows | "Per-person contributions" |
-| `story-block` | A repeating block of `{person, what happened, quote, permission status, optional photo}` | Outreach Log stories (≥3 required) |
-| `action-items` | A repeating block of `{owner, action, due date}` | Meeting Notes action items |
-| `specialty-triggers` | The universal Tier 1 → Tier 2 flagging UI (checklist of entry types; each check reveals owner and subject inputs) | Bottom of Session/Outreach/Meeting forms |
+| Block type           | What it captures                                                                                                  | Example use                                      |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `text`               | Single-line text                                                                                                  | Session lead name                                |
+| `long-text`          | Multi-line text (textarea)                                                                                        | "What worked today"                              |
+| `single-select`      | One choice from a fixed list (radio or dropdown)                                                                  | Outreach Log event type (9 options)              |
+| `multi-select`       | Zero or more choices from a fixed list, optionally with a free-text custom note                                   | Outreach Log engagement depth (8 options + note) |
+| `date`               | A calendar date                                                                                                   | Meeting date, event date                         |
+| `number`             | A numeric value                                                                                                   | Total attendees, hours of duration               |
+| `person-attribution` | A list of `{name, contribution}` rows                                                                             | "Per-person contributions"                       |
+| `story-block`        | A repeating block of `{person, what happened, quote, permission status, optional photo}`                          | Outreach Log stories (≥3 required)               |
+| `action-items`       | A repeating block of `{owner, action, due date}`                                                                  | Meeting Notes action items                       |
+| `specialty-triggers` | The universal Tier 1 → Tier 2 flagging UI (checklist of entry types; each check reveals owner and subject inputs) | Bottom of Session/Outreach/Meeting forms         |
 
 **An entry definition** is just a list of these blocks with configuration:
 
@@ -157,10 +157,28 @@ export const sessionLogEntry: EntryDefinition = {
   label: 'Session Log',
   fields: [
     { type: 'date', name: 'date', label: 'Date', required: true, storage: 'column' },
-    { type: 'text', name: 'session_lead', label: 'Session lead', required: true, storage: 'column' },
-    { type: 'long-text', name: 'what_worked_on', label: 'What did we work on today?', required: true, maxLength: 500, storage: 'column' },
+    {
+      type: 'text',
+      name: 'session_lead',
+      label: 'Session lead',
+      required: true,
+      storage: 'column',
+    },
+    {
+      type: 'long-text',
+      name: 'what_worked_on',
+      label: 'What did we work on today?',
+      required: true,
+      maxLength: 500,
+      storage: 'column',
+    },
     // ...
-    { type: 'specialty-triggers', name: 'specialty_entries', label: 'Specialty entries triggered', storage: 'extras' },
+    {
+      type: 'specialty-triggers',
+      name: 'specialty_entries',
+      label: 'Specialty entries triggered',
+      storage: 'extras',
+    },
   ],
 };
 ```
@@ -176,7 +194,7 @@ Every entry table has a `extras JSONB` column. Every field block declares `stora
 - **`extras`** when the field is stored and retrieved as a whole, never the basis of a query.
   - Examples: `engagement_depth` array, story sub-blocks, action items, per-person contributions, specialty triggers, follow-up plan details.
 
-The `extras` column is a single JSONB blob. Adding a new `extras` field is *zero* SQL changes — just update the entry definition. Adding a new `column` field is one migration.
+The `extras` column is a single JSONB blob. Adding a new `extras` field is _zero_ SQL changes — just update the entry definition. Adding a new `column` field is one migration.
 
 **Conditional field visibility** is handled by a `visibleWhen` property on the dependent field's block config. It is a **plain object describing a condition**, not a function — same library of blocks is reused everywhere, and the property is serializable (the Phase 5 builder, if it ships, can write these objects directly to a database without generating code).
 
@@ -215,7 +233,7 @@ The renderer hides the field when the condition is false. The validator skips hi
 
 **When to add a new field block type.**
 
-Add a new block type when an existing one can't cleanly capture the field, *and* the new pattern is reusable across at least two entry types. Don't add a block type for a one-off field — use an existing block with config instead.
+Add a new block type when an existing one can't cleanly capture the field, _and_ the new pattern is reusable across at least two entry types. Don't add a block type for a one-off field — use an existing block with config instead.
 
 Example of when to add: if the Outreach Log v2.4 adds a "geographic reach map" field that's a list of `{lat, lng, label}` markers, that's a new `geo-points` block (Hardware Change Log, Test Log might later use the same pattern). Add it.
 
@@ -275,12 +293,12 @@ Database reads and writes go through the Supabase client. Two factories:
 
 ## 9. Environment variables
 
-| Variable | Used in | What it is |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Server + client | Supabase project URL. Public (it's in client bundles). |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Server + client | Supabase anon key. Public; intended for client use. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server only — never expose | For privileged inserts (the fallback Google Form path uses this in Apps Script, separately). |
-| `ALLOWED_EMAIL` | Server (middleware) | The single email allowed to sign in during Phase 1. |
+| Variable                        | Used in                    | What it is                                                                                   |
+| ------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Server + client            | Supabase project URL. Public (it's in client bundles).                                       |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Server + client            | Supabase anon key. Public; intended for client use.                                          |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Server only — never expose | For privileged inserts (the fallback Google Form path uses this in Apps Script, separately). |
+| `ALLOWED_EMAIL`                 | Server (middleware)        | The single email allowed to sign in during Phase 1.                                          |
 
 `.env.local` holds real values locally and is gitignored. `.env.example` documents the variable list with placeholder values and is committed.
 
