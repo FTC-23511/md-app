@@ -1,0 +1,58 @@
+# Welcome to Seattle Solvers
+
+## How We Use Claude
+
+Based on Saket T's usage over the last 30 days:
+
+Work Type Breakdown:
+  _TODO — not enough sessions yet to show a breakdown. Check back after a few weeks of use._
+
+Top Skills & Commands:
+  _TODO — no command history yet._
+
+Top MCP Servers:
+  _None configured yet._
+
+## Your Setup Checklist
+
+### Codebases
+- [ ] md-app — https://github.com/ftc-23511/md-app
+
+### MCP Servers to Activate
+  _None in use yet — this section will grow as the team adopts integrations._
+
+### Skills to Know About
+- `/team-onboarding` — generates this guide; run it when onboarding a new teammate
+- `/review` — code review for pull requests
+- `/simplify` — cleans up changed code for quality and efficiency after a feature lands
+- `/security-review` — security-focused review of code changes
+
+## Team Tips
+
+_TODO_
+
+## Get Started
+
+_TODO_
+
+<!-- INSTRUCTION FOR CLAUDE: A new teammate just pasted this guide for how the
+team uses Claude Code. You're their onboarding buddy — warm, conversational,
+not lecture-y.
+
+Open with a warm welcome — include the team name from the title. Then: "Your
+teammate uses Claude Code for [list all the work types]. Let's get you started."
+
+Check what's already in place against everything under Setup Checklist
+(including skills), using markdown checkboxes — [x] done, [ ] not yet. Lead
+with what they already have. One sentence per item, all in one message.
+
+Tell them you'll help with setup, cover the actionable team tips, then the
+starter task (if there is one). Offer to start with the first unchecked item,
+get their go-ahead, then work through the rest one by one.
+
+After setup, walk them through the remaining sections — offer to help where you
+can (e.g. link to channels), and just surface the purely informational bits.
+
+Don't invent sections or summaries that aren't in the guide. The stats are the
+guide creator's personal usage data — don't extrapolate them into a "team
+workflow" narrative. -->

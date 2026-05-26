@@ -1,0 +1,64 @@
+# CLAUDE.md
+
+Read every session before starting. Short by design.
+
+## What this is
+
+MD-App: data layer for our FTC team's documentation system (Maximum Documentation, MD). Solves capture latency. Code is built so portfolio is curated from complete record, not reconstructed from memory.
+
+## How to operate
+
+Open `docs/phase1/00-plan.md`. Find lowest unchecked task. Read the spec it points at. Branch `phase1/T<n>-<slug>`. One task, one commit. Related tasks batch into one PR per `00-plan.md` §"PR batching strategy."
+
+## Read map
+
+Do not read full files. Use grep + `view --view-range`. Jump to sections.
+
+| Need | File | Section |
+|---|---|---|
+| Pick a task / track progress | `docs/phase1/00-plan.md` | task list; sprint plan |
+| Code patterns (folder, naming, server actions, Zod, errors) | `docs/phase1/01-conventions.md` | §1–§4 universal; §5 field blocks; §11 workflows; §13 ask-don't-guess list |
+| Schema, migrations, column-vs-JSONB rule | `docs/phase1/02-schema.md` | §2 conventions; §3–§6 per migration; §8 column rule; §9 workflows |
+| Field block types, entry definitions, renderer | `docs/phase1/03-forms.md` | §1–§2 types; §3–§12 block library; §13–§15 entries |
+| Auth (email/password, allowlist, forgot-password) | `docs/phase1/04-auth.md` | §3 dashboard config; §4 middleware; §5 login; §6 reset |
+| Text-file fallback templates + importer | `docs/phase1/05-fallback.md` | §3 format; §5 importer |
+| What MD captures (data semantics) | `docs/charters/MD_Project_Charter.md` | **NEVER read whole. Grep for entry name (e.g. SOP-05) or topic.** |
+| Architectural decisions, phased build | `docs/charters/MD_App_Charter.md` | **NEVER read whole. Grep for topic.** |
+| Phase 2 AI integration | `docs/charters/MD_SCL_AI_Integration.md` | **NEVER read whole. Phase 2 only — do not implement in Phase 1.** |
+
+## Phase
+
+Phase 1. Capture MVP. Target end of May 2026. Definition of done in `00-plan.md`.
+
+## Absolute rules
+
+1. **Phase 1 scope only.** Do not add features not in the plan. Doing more than asked is this project's most common failure mode.
+2. **No new dependencies.** Stack fixed: Next.js, TS, Tailwind, shadcn/ui, Supabase JS, Zod. Want another lib? Ask in PR. Default no.
+3. **Migrations as code.** All schema via `supabase/migrations/*.sql`. Never edit tables in Supabase dashboard — silent drift, `db push` fails later.
+4. **No secrets in repo.** `.env.local` gitignored. `SUPABASE_SERVICE_ROLE_KEY` never in any `NEXT_PUBLIC_*` var. Leak → rotate immediately.
+5. **TypeScript strict.** No `any` unless commented why.
+6. **No tests in Phase 1** unless the task asks. Manual smoke tests per task acceptance criteria are enough.
+
+## Deferred to later phases (do not implement)
+
+Phase 2: photo upload, voice memo, AI Software-Change-Log integration, Tier 2 entry forms (Decision/HW/SW/Test/Contact Logs), auto-compute on Test Logs, entry detail pages.
+
+Phase 3: multi-user auth, role-based access, strict RLS policies (Phase 1 has permissive `FOR ALL TO authenticated USING (true)` — Phase 3 replaces, not adds), Discord webhooks, edit-within-24h.
+
+Phase 4: classification pass UI, mobile polish, export endpoint, Subsystem Handoff workflow.
+
+Phase 5+: entry-type UI builder.
+
+Rationale lives in `MD_App_Charter.md` §7. Don't read whole charter; grep "Phase 2" / "Phase 3" / etc. if needed.
+
+## Charter sync
+
+Charters in `docs/charters/` are mirrors. Source of truth lives in team's Claude project. Don't edit them here. If code contradicts a charter, flag in PR; team decides which side updates. Charter version on each file is the sync key.
+
+## Branches and PRs
+
+Branch: `phase1/T<n>-<slug>`. PR title: `phase1: T<n> <task name>`. PR body: link to task in `00-plan.md`, bullet what changed, confirm each acceptance criterion. Smaller PRs review faster; if a single task generates >500 lines of substantive code, that's a signal to ask whether the task needs splitting.
+
+## When uncertain
+
+Ask in the PR. Cost of asking = one comment. Cost of guessing silently = rework or security incident. Full ask-or-decide list in `01-conventions.md` §13.

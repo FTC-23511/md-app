@@ -1,8 +1,9 @@
 # Dev workflow
 
-Once setup is done, this is the loop for every change. Two modes:
+Once setup is done, this is the loop for every change. Three modes, in order of how much you want to be involved:
 
-- **Delegate mode** (default) — you describe what you want; Claude Code does the rest. You verify in the browser at the end.
+- **Backlog mode** (most hands-off) — you drop items into [`BACKLOG.md`](BACKLOG.md); a scheduled routine runs each morning, ships PRs, auto-merges safe ones, stops on anything risky. See [Backlog and morning routine](#backlog-and-morning-routine).
+- **Delegate mode** — you describe what you want in the moment; Claude Code does the rest. You verify in the browser at the end.
 - **Hands-on mode** (rarely needed) — you drive the git/CI steps yourself. Documented in the appendix.
 
 ## Delegate mode
@@ -74,6 +75,45 @@ Lives at [docs/briefs/_TEMPLATE.md](briefs/_TEMPLATE.md). Copy it into Claude Ch
 ## Open questions
 - <decisions you haven't made; Claude Code will ask about these>
 ```
+
+## Backlog and morning routine
+
+The most hands-off way to ship work. You maintain a queue in [`BACKLOG.md`](BACKLOG.md); a scheduled remote agent processes it each weekday morning.
+
+### How it works
+
+1. **You add items to [`BACKLOG.md`](BACKLOG.md)** — one-liners for tiny fixes, or links to briefs in `docs/briefs/` for features. Top of the list = highest priority.
+2. **Each morning, the routine wakes up.** It cleans up any in-flight PRs from previous runs (merges green ones in the auto-merge tier, pushes fix commits if CI failed), then starts one new item from the top of "Next up."
+3. **You wake up to one of three things:**
+   - A PR was opened, CI went green, and the routine auto-merged it. You'll see a Vercel deploy. Click through if you want; revert with `git revert` if anything looks wrong.
+   - A PR is open and the routine stopped, asking for your approval. The PR comment summarizes what changed in plain English, what surface it touched, and whether it's reversible. Click the Vercel preview, reply "approved" (or push back).
+   - Nothing happened — backlog was empty.
+
+### Auto-merge vs approval-required
+
+The routine auto-merges PRs that only touch UI, components, docs, styling, tests, and non-security dependency bumps. CI must be green first.
+
+It **stops and asks you** for anything touching:
+- Database migrations (`supabase/migrations/`)
+- Auth, RLS, middleware, API routes
+- Environment variables or CI config
+- Security-relevant dependencies (Next, React, Supabase)
+- Large deletions or anything potentially irreversible
+
+The full rules live in [`MORNING_ROUTINE.md`](MORNING_ROUTINE.md). Edit that file to change them.
+
+### Starting the routine
+
+It's **not running yet** — to start it, run `/schedule` in Claude Code and paste the prompt from [`MORNING_ROUTINE.md`](MORNING_ROUTINE.md). Recommended cadence: weekday mornings.
+
+**Wait until you've shipped at least one brief manually via delegate mode** before flipping this on. Confirm the brief → PR → preview flow produces what you want, then automate.
+
+### What only you do
+
+Even in fully-autonomous backlog mode:
+- **Write the briefs.** The routine ships whatever the brief says. Vague brief = wrong feature.
+- **Click Vercel previews on approval-required PRs.** Reply "approved" or push back.
+- **Revert** anything you find broken later — `git revert <sha>` undoes any non-migration change cleanly.
 
 ## Common situations
 
