@@ -83,6 +83,8 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 ### Setup batch
 
+> **Status as of 2026-05-26: complete via chat-to-repo planning.** T01–T04 landed with the initial scaffold; the local toolchain is `pnpm` (not `npm` as some task descriptions below say — the plan was written before that decision firmed up). Treat the descriptions in this section as reference for future Claude sessions, not as work to redo.
+
 #### T01. Initialize Next.js scaffold
 
 **Description.** Create the project with Next.js (App Router, TypeScript), Tailwind CSS, and shadcn/ui set up. Use `create-next-app` with TypeScript and Tailwind selected. Initialize shadcn/ui via its CLI; install a minimal initial component set (Button, Input, Label, Textarea, Select, Checkbox, RadioGroup, Card, Popover, Form).
@@ -128,6 +130,8 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 **Est. time.** 30 min.
 
 ### Schema batch
+
+> **Status as of 2026-05-26: complete, with a richer final shape than the original specs in T05–T08 describe.** The chat-to-repo planning produced **8 migrations** (`20260521000001`–`20260521000008`) using a base `entries` table + 10 detail tables (1:1, FK cascade) rather than 10 flat entry tables. RLS came in as **full role-based access** (5 roles + 24h edit window + public-showcase mode) — what `04-auth.md` §9 had earmarked for Phase 3. The app layer (middleware, forms) is still single-user per Phase 1; the schema is just future-ready. Read the migration file headers in `supabase/migrations/` for the actual structure. The descriptions in T05–T08 below are preserved as historical context only.
 
 #### T05. Migration 001: shared trigger function
 
@@ -389,14 +393,14 @@ Phase 2 is not a rewrite. It is an extension. The Phase 1 architecture is design
 Check off each task as it lands in `main`. Add the PR link.
 
 ### Sprint A — Setup + schema
-- [ ] T01. Initialize Next.js scaffold — PR: ___
-- [ ] T02. Configure environment and tooling — PR: ___
-- [ ] T03. Set up Supabase project — PR: ___
-- [ ] T04. Verify migration workflow — PR: ___
-- [ ] T05. Migration 001: shared trigger function — PR: ___
-- [ ] T06. Migration 002: supporting tables + seed + auth trigger — PR: ___
-- [ ] T07. Migration 003: entry tables + test_trials — PR: ___
-- [ ] T08. Migration 004: indexes + RLS + policies — PR: ___
+- [x] T01. Initialize Next.js scaffold — landed via chat-to-repo planning (commit `545e6c8`)
+- [x] T02. Configure environment and tooling — landed via chat-to-repo planning (commit `545e6c8`)
+- [x] T03. Set up Supabase project — done manually per `docs/SETUP.md`
+- [x] T04. Verify migration workflow — confirmed by Sprint A migrations applying cleanly
+- [x] T05. Migration 001: extensions + helpers — `supabase/migrations/20260521000001_extensions_and_helpers.sql`
+- [x] T06. Migration 002: core enums + reference tables — `..._000002_core_tables.sql`
+- [x] T07. Migration 003 + 004: base entries + 10 detail tables — `..._000003_entries_and_crosscutting.sql`, `..._000004_detail_tables.sql`
+- [x] T08. Migration 005 + 006 + 007 + 008: triggers, RLS, seed data, grants — `..._000005`..`_000008`
 
 ### Sprint B — Auth
 - [ ] T09. Configure Supabase Auth (email + password) — PR: ___

@@ -9,6 +9,20 @@ processes [`BACKLOG.md`](BACKLOG.md) each morning. It contains both:
 If you change the rules below, re-run `/schedule` and paste the updated
 prompt so the scheduled agent picks them up.
 
+## Two modes (one prompt, two contexts)
+
+- **Backlog mode** (current). The routine processes [`BACKLOG.md`](BACKLOG.md) — one item per run, one PR per item. Use for cleanups, post-Phase-1 work, and anything outside the active sprint.
+- **Sprint mode** (TBD — to be added when Sprint B starts). When the active sprint is in flight, the routine works through the next unchecked task in [`docs/phase1/00-plan.md`](phase1/00-plan.md), committing per task but only opening **one PR per batch** per the plan's "PR batching strategy." The shape of this mode will be finalized after we've run backlog mode for a few days and seen what actually breaks.
+
+For now this document covers **backlog mode only**.
+
+## Reviewer
+
+The user (App Lead) is the sole reviewer. They have explicitly opted out of line-by-line code review — they verify changes via the Vercel preview, not by reading diffs. If a higher-level mentor review is ever needed, the user pulls in others manually. So:
+
+- For **auto-merge tier** PRs, do not wait for human review — merge when CI is green.
+- For **approval-required tier** PRs, post a plain-English summary + the Vercel preview URL and stop. The user will reply "approved" (or push back) after clicking through the preview. Do **not** demand a code review.
+
 ---
 
 ## One-time setup
