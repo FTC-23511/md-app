@@ -46,3 +46,9 @@ supabase/.env
 
 # Vercel
 .vercel/
+
+# Personal Claude Code settings (machine-local; harness mutates constantly)
+.claude/settings.local.json
+
+# TypeScript incremental build artifact
+tsconfig.tsbuildinfo
