@@ -17,15 +17,17 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-1. **[docs]** Audit `.env.example` against `docs/phase1/01-conventions.md` §9. Missing: `ALLOWED_EMAIL` (single-email allowlist per Phase 1 auth). Also: the comment for `NEXT_PUBLIC_SITE_URL` calls it "the magic-link redirect target," which is stale — per `04-auth.md` Phase 1 sign-in is email+password; the URL is still used by the forgot-password reset link, so update the comment to say that instead. _Expected tier: auto-merge (docs only — touches a `.example` file, not real env handling)._
+1. **[config]** Add `.claude/settings.local.json` and `tsconfig.tsbuildinfo` to `.gitignore`. Both are machine-local files that shouldn't be tracked. `settings.local.json` holds personal Claude Code permission preferences (and the harness mutates it constantly); `tsconfig.tsbuildinfo` is an incremental build artifact. Also `git rm --cached` both files in the same commit so they stop showing as modified. _Expected tier: auto-merge (config/build hygiene)._
 
-2. **[code]** Replace `app/auth/callback/route.ts` with `app/auth/reset-password/route.ts` per `docs/phase1/04-auth.md` §6. The current callback file is the magic-link sign-in handler, which Phase 1 doesn't use. The reset-password route handles the _forgot-password_ magic-link path: exchanges the `code` query param for a session, then redirects to `/change-password`. Spec and exact code pattern are in `04-auth.md` §6. Delete the old callback file. _Expected tier: approval-required (touches `app/auth/`)._
+2. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Expected tier: auto-merge (config only)._
+
+3. **[code]** Replace `app/auth/callback/route.ts` with `app/auth/reset-password/route.ts` per `docs/phase1/04-auth.md` §6. The current callback file is the magic-link sign-in handler, which Phase 1 doesn't use. The reset-password route handles the _forgot-password_ magic-link path: exchanges the `code` query param for a session, then redirects to `/change-password`. Spec and exact code pattern are in `04-auth.md` §6. Delete the old callback file. _Expected tier: approval-required (touches `app/auth/`)._
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[docs]** Audit `.env.example` (add `ALLOWED_EMAIL`, fix `NEXT_PUBLIC_SITE_URL` comment) — [PR #5](https://github.com/FTC-23511/md-app/pull/5) open, **approval-required**, CI green
 
 ## Done
 
