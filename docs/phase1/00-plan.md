@@ -53,14 +53,14 @@ Mentor review is near-real-time during this sprint. With twenty-one tasks and as
 
 To compress review cycles, related tasks land as one PR rather than one PR per task:
 
-| Batch | Tasks | Single PR title |
-|---|---|---|
-| Setup | T01–T04 | `phase1: setup batch — scaffold, env, supabase, migration workflow` |
-| Schema | T05–T08 | `phase1: schema batch — all four migrations` |
-| Auth | T09–T12 | `phase1: auth batch — provider, allowlist, login, layout` |
-| Forms system + entries | T13–T17 | `phase1: forms batch — block system, three entries, list view` |
-| Fallback | T18–T19 | `phase1: fallback batch — templates and importer` |
-| Deploy | T20–T21 | `phase1: deploy batch — vercel + smoke test` |
+| Batch                  | Tasks   | Single PR title                                                     |
+| ---------------------- | ------- | ------------------------------------------------------------------- |
+| Setup                  | T01–T04 | `phase1: setup batch — scaffold, env, supabase, migration workflow` |
+| Schema                 | T05–T08 | `phase1: schema batch — all four migrations`                        |
+| Auth                   | T09–T12 | `phase1: auth batch — provider, allowlist, login, layout`           |
+| Forms system + entries | T13–T17 | `phase1: forms batch — block system, three entries, list view`      |
+| Fallback               | T18–T19 | `phase1: fallback batch — templates and importer`                   |
+| Deploy                 | T20–T21 | `phase1: deploy batch — vercel + smoke test`                        |
 
 Each PR's commit history preserves task-level granularity (one commit per task), so reviewers can read at task granularity but approve at batch granularity. Six PRs instead of twenty-one. If a batch is taking too long, splitting back to per-task PRs mid-batch is always an option.
 
@@ -68,12 +68,12 @@ Each PR's commit history preserves task-level granularity (one commit per task),
 
 Calendar dates assuming start of May 22 and target end of May 31:
 
-| Sprint | Days | Tasks | Hours | Key deliverable |
-|---|---|---|---|---|
-| **A** — Setup + schema | May 22–24 | T01–T08 | ~12–15 | All 10 entry tables in Supabase, migrations tracked, RLS enabled |
-| **B** — Auth | May 25–26 | T09–T12 | ~8–10 | Email-password sign-in works end-to-end with allowlist |
-| **C** — Forms system + entries | May 27–29 | T13–T17 | ~14–18 | Three Tier 1 forms working through the renderer; list view |
-| **D** — Fallback + deploy | May 30–31 | T18–T21 | ~6–9 | Templates + importer working; production live and smoke-tested |
+| Sprint                         | Days      | Tasks   | Hours  | Key deliverable                                                  |
+| ------------------------------ | --------- | ------- | ------ | ---------------------------------------------------------------- |
+| **A** — Setup + schema         | May 22–24 | T01–T08 | ~12–15 | All 10 entry tables in Supabase, migrations tracked, RLS enabled |
+| **B** — Auth                   | May 25–26 | T09–T12 | ~8–10  | Email-password sign-in works end-to-end with allowlist           |
+| **C** — Forms system + entries | May 27–29 | T13–T17 | ~14–18 | Three Tier 1 forms working through the renderer; list view       |
+| **D** — Fallback + deploy      | May 30–31 | T18–T21 | ~6–9   | Templates + importer working; production live and smoke-tested   |
 
 Day 31 is the buffer. If a sprint slips, the natural target to defer is the fallback (T18–T19) into early June — the main UI is the real capture surface, and the fallback is for outages that aren't actively occurring on day one.
 
@@ -335,7 +335,7 @@ Use a stub `notes` entry definition with one of each block type for development 
 
 #### T20. Connect Vercel to GitHub repo
 
-**Description.** Connect the repo to Vercel. Configure environment variables on Vercel (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ALLOWED_EMAIL`). Note that `SUPABASE_SERVICE_ROLE_KEY` is *not* set on Vercel — it lives only in the Captain's local `.env.local` for the fallback importer. Set the production branch to `main`. Update Supabase Auth's site URL and redirect URLs to include the Vercel production URL.
+**Description.** Connect the repo to Vercel. Configure environment variables on Vercel (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ALLOWED_EMAIL`). Note that `SUPABASE_SERVICE_ROLE_KEY` is _not_ set on Vercel — it lives only in the Captain's local `.env.local` for the fallback importer. Set the production branch to `main`. Update Supabase Auth's site URL and redirect URLs to include the Vercel production URL.
 
 **Deliverables.** Vercel project linked, env vars configured, first production deployment from `main` succeeds.
 
@@ -355,16 +355,16 @@ Use a stub `notes` entry definition with one of each block type for development 
 
 ## Risk callouts specific to Phase 1
 
-| Risk | What to watch | Mitigation |
-|---|---|---|
-| Stack-newness slows delivery | Estimated hours bleed over | Ask in PR comments instead of guessing; consult conventions doc before writing patterns from scratch |
-| Field block system is the largest single task; underestimating it derails the schedule | T13 takes longer than the 6–8h estimate | Split T13 across two sittings if it's running long: pause after blocks-and-renderer are working with a stub definition, resume on validate/insert/option-resolution |
-| Schema drift between migrations and dashboard | Manual dashboard edits | Hard rule: all schema changes via migrations only. T04 verifies the workflow before any real schema lands |
-| Auth tangle | Email/password not working in production | T11 explicitly tests the full flow; T21 retests in production. Separate local and production redirect URLs |
-| Service-role key leaks | Importer needs the service key on the Captain's machine | Service key lives only in `.env.local` on the App Lead's machine; never on Vercel; never in the repo. Rotate immediately if accidentally exposed |
-| Scope creep | Adding "small" features outside the plan | This is the most common Phase 1 failure mode; the absolute rules in `CLAUDE.md` exist precisely for this |
-| Mentor review delay during sprint | PRs sit, schedule blows up | Batched PRs (six total, not twenty-one) reduce review cycles; near-real-time mentor commitment for this sprint |
-| Fallback path is untested under actual outage | Discovered broken when needed | T19 smoke test exercises the path end-to-end; Friday 15 reviews any unprocessed files weekly even when nothing is broken |
+| Risk                                                                                   | What to watch                                           | Mitigation                                                                                                                                                          |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack-newness slows delivery                                                           | Estimated hours bleed over                              | Ask in PR comments instead of guessing; consult conventions doc before writing patterns from scratch                                                                |
+| Field block system is the largest single task; underestimating it derails the schedule | T13 takes longer than the 6–8h estimate                 | Split T13 across two sittings if it's running long: pause after blocks-and-renderer are working with a stub definition, resume on validate/insert/option-resolution |
+| Schema drift between migrations and dashboard                                          | Manual dashboard edits                                  | Hard rule: all schema changes via migrations only. T04 verifies the workflow before any real schema lands                                                           |
+| Auth tangle                                                                            | Email/password not working in production                | T11 explicitly tests the full flow; T21 retests in production. Separate local and production redirect URLs                                                          |
+| Service-role key leaks                                                                 | Importer needs the service key on the Captain's machine | Service key lives only in `.env.local` on the App Lead's machine; never on Vercel; never in the repo. Rotate immediately if accidentally exposed                    |
+| Scope creep                                                                            | Adding "small" features outside the plan                | This is the most common Phase 1 failure mode; the absolute rules in `CLAUDE.md` exist precisely for this                                                            |
+| Mentor review delay during sprint                                                      | PRs sit, schedule blows up                              | Batched PRs (six total, not twenty-one) reduce review cycles; near-real-time mentor commitment for this sprint                                                      |
+| Fallback path is untested under actual outage                                          | Discovered broken when needed                           | T19 smoke test exercises the path end-to-end; Friday 15 reviews any unprocessed files weekly even when nothing is broken                                            |
 
 ## Phase 1 → Phase 2 handoff
 
@@ -378,6 +378,7 @@ When Phase 1 closes, what Phase 2 inherits:
 - A deployed, exercised application that the team is using for summer activity.
 
 What Phase 2 adds:
+
 - Tier 2 entry definitions and capture pages (Decision Log, Hardware Change Log, Software Change Log, Test Log with `test_trials` UI, Contact Log)
 - Auto-compute on Test Log statistics (mean, std dev, 95% CI, last-run delta)
 - Photo upload (UI for the existing schema's photo URL fields)
@@ -393,6 +394,7 @@ Phase 2 is not a rewrite. It is an extension. The Phase 1 architecture is design
 Check off each task as it lands in `main`. Add the PR link.
 
 ### Sprint A — Setup + schema
+
 - [x] T01. Initialize Next.js scaffold — landed via chat-to-repo planning (commit `545e6c8`)
 - [x] T02. Configure environment and tooling — landed via chat-to-repo planning (commit `545e6c8`)
 - [x] T03. Set up Supabase project — done manually per `docs/SETUP.md`
@@ -403,20 +405,23 @@ Check off each task as it lands in `main`. Add the PR link.
 - [x] T08. Migration 005 + 006 + 007 + 008: triggers, RLS, seed data, grants — `..._000005`..`_000008`
 
 ### Sprint B — Auth
-- [ ] T09. Configure Supabase Auth (email + password) — PR: ___
-- [ ] T10. Implement single-email allowlist in middleware — PR: ___
-- [ ] T11. Build login + email/password sign-in + forgot-password — PR: ___
-- [ ] T12. Build protected route wrapper — PR: ___
+
+- [ ] T09. Configure Supabase Auth (email + password) — PR: \_\_\_
+- [ ] T10. Implement single-email allowlist in middleware — PR: \_\_\_
+- [ ] T11. Build login + email/password sign-in + forgot-password — PR: \_\_\_
+- [ ] T12. Build protected route wrapper — PR: \_\_\_
 
 ### Sprint C — Forms system + entries
-- [ ] T13. Build field block system + renderer + helpers — PR: ___
-- [ ] T14. Define Session Log entry + page — PR: ___
-- [ ] T15. Define Outreach Log entry + page — PR: ___
-- [ ] T16. Define Meeting Notes entry + page — PR: ___
-- [ ] T17. Build list view across entry types — PR: ___
+
+- [ ] T13. Build field block system + renderer + helpers — PR: \_\_\_
+- [ ] T14. Define Session Log entry + page — PR: \_\_\_
+- [ ] T15. Define Outreach Log entry + page — PR: \_\_\_
+- [ ] T16. Define Meeting Notes entry + page — PR: \_\_\_
+- [ ] T17. Build list view across entry types — PR: \_\_\_
 
 ### Sprint D — Fallback + deploy
-- [ ] T18. Build fallback templates + workflow docs — PR: ___
-- [ ] T19. Build fallback importer + smoke test — PR: ___
-- [ ] T20. Connect Vercel to GitHub repo — PR: ___
-- [ ] T21. Production smoke test — PR: ___
+
+- [ ] T18. Build fallback templates + workflow docs — PR: \_\_\_
+- [ ] T19. Build fallback importer + smoke test — PR: \_\_\_
+- [ ] T20. Connect Vercel to GitHub repo — PR: \_\_\_
+- [ ] T21. Production smoke test — PR: \_\_\_

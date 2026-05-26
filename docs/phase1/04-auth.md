@@ -67,9 +67,7 @@ export async function middleware(request: NextRequest) {
 
   // Only enforce on protected paths
   const protectedPrefixes = ['/sessions', '/outreach', '/meetings', '/list'];
-  const isProtected = protectedPrefixes.some((p) =>
-    request.nextUrl.pathname.startsWith(p)
-  );
+  const isProtected = protectedPrefixes.some((p) => request.nextUrl.pathname.startsWith(p));
   if (!isProtected) return response;
 
   // Wire up Supabase with cookie reading
@@ -80,14 +78,14 @@ export async function middleware(request: NextRequest) {
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (cookies) =>
-          cookies.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          ),
+          cookies.forEach(({ name, value, options }) => response.cookies.set(name, value, options)),
       },
-    }
+    },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -189,9 +187,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createServerClient();
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
-    return NextResponse.redirect(
-      new URL('/login?error=reset_failed', request.url)
-    );
+    return NextResponse.redirect(new URL('/login?error=reset_failed', request.url));
   }
 
   // The user now has a temporary session. Forward them to set a new password.
@@ -239,11 +235,11 @@ What changes when multi-user auth lands in Phase 3:
 4. Middleware reads the user's role from the JWT or from the `team_members` table and decides admission.
 5. RLS policies are added to every entry table, gating read/write on `created_by`, role, and table-specific rules (e.g., the 24-hour edit window).
 
-What does *not* change: the `created_by` column on every entry table (it's already populated correctly in Phase 1), the forms, the renderer, the entry definitions, the insert helper, the password-auth provider, the sign-in form. The Phase 1 architecture is designed so this migration is additive.
+What does _not_ change: the `created_by` column on every entry table (it's already populated correctly in Phase 1), the forms, the renderer, the entry definitions, the insert helper, the password-auth provider, the sign-in form. The Phase 1 architecture is designed so this migration is additive.
 
 ## 10. Things that are not Phase 1 auth
 
-For clarity, the following are *not* implemented in Phase 1 even though related:
+For clarity, the following are _not_ implemented in Phase 1 even though related:
 
 - Magic link sign-in (for normal sign-in). The reset-password flow uses a magic-link-style email, but that's the only path.
 - OAuth providers (Google, GitHub). Email + password only.

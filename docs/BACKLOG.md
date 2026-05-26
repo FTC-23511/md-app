@@ -6,7 +6,8 @@ links to briefs in `docs/briefs/`. The routine picks the top item from
 auto-merges.
 
 You can add items by editing this file directly, or by asking Claude Code:
-> *"Add 'fix typo on sign-in page' to the backlog."*
+
+> _"Add 'fix typo on sign-in page' to the backlog."_
 
 Priority is top-down — drag the most important items to the top of "Next up."
 
@@ -16,15 +17,15 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-1. **[docs]** Fix `README.md` to use `pnpm` consistently. It currently says `npm install` (step 2 of "Getting set up locally") and `npm run dev` (step 7), but the rest of the project — `CLAUDE.md`, `docs/SETUP.md`, `package.json` scripts — uses `pnpm`. Update both occurrences to `pnpm install` and `pnpm dev`. *Expected tier: auto-merge (docs only).*
+1. **[docs]** Fix `README.md` to use `pnpm` consistently. It currently says `npm install` (step 2 of "Getting set up locally") and `npm run dev` (step 7), but the rest of the project — `CLAUDE.md`, `docs/SETUP.md`, `package.json` scripts — uses `pnpm`. Update both occurrences to `pnpm install` and `pnpm dev`. _Expected tier: auto-merge (docs only)._
 
-2. **[docs]** Fix `docs/SETUP.md` Step 4 magic-link reference. Step 4 currently says *"Disable 'Confirm email' (we use magic links instead)"*, but per `docs/phase1/04-auth.md` Phase 1 auth is **email + password with sign-up disabled**, not magic link. Rewrite Step 4 to reflect the Phase 1 plan: enable email+password provider, disable sign-up entirely (the critical setting), keep "Confirm email" off, and update redirect URLs to include `/auth/reset-password` (used by forgot-password flow) instead of `/auth/callback`. *Expected tier: auto-merge (docs only).*
+2. **[docs]** Fix `docs/SETUP.md` Step 4 magic-link reference. Step 4 currently says _"Disable 'Confirm email' (we use magic links instead)"_, but per `docs/phase1/04-auth.md` Phase 1 auth is **email + password with sign-up disabled**, not magic link. Rewrite Step 4 to reflect the Phase 1 plan: enable email+password provider, disable sign-up entirely (the critical setting), keep "Confirm email" off, and update redirect URLs to include `/auth/reset-password` (used by forgot-password flow) instead of `/auth/callback`. _Expected tier: auto-merge (docs only)._
 
-3. **[docs]** Update `docs/phase1/00-plan.md` T05–T08 task descriptions to reference the actual migration filenames (`20260521000001_extensions_and_helpers.sql` … `20260521000008_grants.sql`) instead of the fictional ones in the original spec (e.g., `<timestamp>_functions_and_types.sql`). The status banner I added at the top of the Schema batch already notes the divergence; this item makes each individual task description accurate so future Claude readers don't need to read the banner to understand what shipped. *Expected tier: auto-merge (docs only).*
+3. **[docs]** Update `docs/phase1/00-plan.md` T05–T08 task descriptions to reference the actual migration filenames (`20260521000001_extensions_and_helpers.sql` … `20260521000008_grants.sql`) instead of the fictional ones in the original spec (e.g., `<timestamp>_functions_and_types.sql`). The status banner I added at the top of the Schema batch already notes the divergence; this item makes each individual task description accurate so future Claude readers don't need to read the banner to understand what shipped. _Expected tier: auto-merge (docs only)._
 
-4. **[docs]** Audit `.env.example` against `docs/phase1/01-conventions.md` §9. Missing: `ALLOWED_EMAIL` (single-email allowlist per Phase 1 auth). Also: the comment for `NEXT_PUBLIC_SITE_URL` calls it "the magic-link redirect target," which is stale — per `04-auth.md` Phase 1 sign-in is email+password; the URL is still used by the forgot-password reset link, so update the comment to say that instead. *Expected tier: auto-merge (docs only — touches a `.example` file, not real env handling).*
+4. **[docs]** Audit `.env.example` against `docs/phase1/01-conventions.md` §9. Missing: `ALLOWED_EMAIL` (single-email allowlist per Phase 1 auth). Also: the comment for `NEXT_PUBLIC_SITE_URL` calls it "the magic-link redirect target," which is stale — per `04-auth.md` Phase 1 sign-in is email+password; the URL is still used by the forgot-password reset link, so update the comment to say that instead. _Expected tier: auto-merge (docs only — touches a `.example` file, not real env handling)._
 
-5. **[code]** Replace `app/auth/callback/route.ts` with `app/auth/reset-password/route.ts` per `docs/phase1/04-auth.md` §6. The current callback file is the magic-link sign-in handler, which Phase 1 doesn't use. The reset-password route handles the *forgot-password* magic-link path: exchanges the `code` query param for a session, then redirects to `/change-password`. Spec and exact code pattern are in `04-auth.md` §6. Delete the old callback file. *Expected tier: approval-required (touches `app/auth/`).*
+5. **[code]** Replace `app/auth/callback/route.ts` with `app/auth/reset-password/route.ts` per `docs/phase1/04-auth.md` §6. The current callback file is the magic-link sign-in handler, which Phase 1 doesn't use. The reset-password route handles the _forgot-password_ magic-link path: exchanges the `code` query param for a session, then redirects to `/change-password`. Spec and exact code pattern are in `04-auth.md` §6. Delete the old callback file. _Expected tier: approval-required (touches `app/auth/`)._
 
 ## In progress
 

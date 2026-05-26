@@ -230,6 +230,7 @@ export type OptionCategory =
 **Renderer.** Renders a shadcn `<Select>` (dropdown mode) or radio group (radio mode). Options are loaded from `option_lists` filtered by `category`, sorted by `sort_order`. The selected value is the `option_lists.id` UUID. A final "Add new..." item appears at the bottom of the dropdown when `allowAddNew` is true (the Phase 1 default).
 
 **The "Add new..." affordance.** Clicking opens a small inline form (a popover, not a modal) with a single text input ("New option label") and a "Create" button. Submit:
+
 1. Slugifies the label to derive `value`.
 2. Posts to a server action that inserts into `option_lists`.
 3. If the slug collides with an active row, the server returns the existing row's id and the popover closes with that option selected (no error shown).
@@ -261,10 +262,12 @@ export type MultiSelectBlock = BlockBase & {
 The "Add new..." affordance works the same as `SingleSelectBlock` — clicking opens a popover, the new option appears in the list checked.
 
 **Validation.**
+
 - Without `withCustomNote`: `z.array(z.string().uuid())`. If `minSelected` is set, `.min(minSelected)`.
 - With `withCustomNote`: `z.object({ ids: z.array(z.string().uuid()), note: z.string() })`. If `minSelected` is set, the validator additionally requires `ids.length >= minSelected OR note.trim().length > 0` (the "at least one box OR a note" rule from the Outreach Log engagement-depth field). A custom Zod refinement enforces this.
 
 **Storage.**
+
 - Without `withCustomNote`: value is an array of UUIDs. Stored in extras as `[uuid, uuid, ...]`.
 - With `withCustomNote`: value is `{ids: [uuid, uuid, ...], note: "..."}`. Stored as a JSONB object in extras.
 
@@ -325,11 +328,16 @@ export type PersonAttributionBlock = BlockBase & {
 **Renderer.** Renders as a list of row groups; each row has a name input and a contribution input. A "+ Add another person" button at the bottom adds a new empty row. Each row has a small "remove" button.
 
 **Validation.**
+
 ```typescript
-z.array(z.object({
-  name: z.string().min(1, 'Name is required'),
-  contribution: z.string().min(1, 'Contribution is required')
-})).min(minRows).max(maxRows)
+z.array(
+  z.object({
+    name: z.string().min(1, 'Name is required'),
+    contribution: z.string().min(1, 'Contribution is required'),
+  }),
+)
+  .min(minRows)
+  .max(maxRows);
 ```
 
 **Storage.** Value is an array of `{name, contribution}` objects, stored in extras.
@@ -360,15 +368,20 @@ Each story sub-block has the fields per Template T-02:
 **Renderer.** A vertical stack of story panels. Each panel has the fields above. A "+ Add another story" button at the bottom. Each panel has a "remove" button (disabled if removing would drop below `minStories`).
 
 **Validation.**
+
 ```typescript
-z.array(z.object({
-  person_name: z.string().min(1),
-  person_role_age: z.string().optional(),
-  what_happened: z.string().min(1),
-  direct_quote: z.string().optional(),
-  permission: z.enum(['yes', 'no', 'pending']),
-  photo_url: z.string().url().optional()
-})).min(minStories).max(maxStories)
+z.array(
+  z.object({
+    person_name: z.string().min(1),
+    person_role_age: z.string().optional(),
+    what_happened: z.string().min(1),
+    direct_quote: z.string().optional(),
+    permission: z.enum(['yes', 'no', 'pending']),
+    photo_url: z.string().url().optional(),
+  }),
+)
+  .min(minStories)
+  .max(maxStories);
 ```
 
 **Storage.** Array of story objects in extras as `stories`.
@@ -386,6 +399,7 @@ export type ActionItemsBlock = BlockBase & {
 ```
 
 Each row has:
+
 - `owner` (text, required) — name of the person owning the action
 - `action` (long-text, required) — what they're doing
 - `due_date` (date, optional) — when it's due
@@ -393,12 +407,17 @@ Each row has:
 **Renderer.** A list of rows like person-attribution. "+ Add another action item" at the bottom.
 
 **Validation.**
+
 ```typescript
-z.array(z.object({
-  owner: z.string().min(1),
-  action: z.string().min(1),
-  due_date: z.string().date().optional()
-})).min(minItems).max(maxItems)
+z.array(
+  z.object({
+    owner: z.string().min(1),
+    action: z.string().min(1),
+    due_date: z.string().date().optional(),
+  }),
+)
+  .min(minItems)
+  .max(maxItems);
 ```
 
 **Storage.** Array in extras as `action_items`.
@@ -433,14 +452,22 @@ No additional configuration — the shape is fixed by Charter §11.
 When a checkbox is checked, the row's Owner and Subject inputs become required. Unchecking clears them.
 
 **Validation.**
+
 ```typescript
-z.array(z.object({
-  target_type: z.enum(['decision_log', 'hw_change_log', 'sw_change_log',
-                       'test_log', 'contact_log']),
-  owner_member_id: z.string().uuid().optional().nullable(),  // resolved from typed name in Phase 2+
-  owner_text: z.string().min(1, 'Owner is required'),         // free-text Phase 1; resolved to member_id later
-  subject: z.string().min(1, 'Subject is required')
-}))
+z.array(
+  z.object({
+    target_type: z.enum([
+      'decision_log',
+      'hw_change_log',
+      'sw_change_log',
+      'test_log',
+      'contact_log',
+    ]),
+    owner_member_id: z.string().uuid().optional().nullable(), // resolved from typed name in Phase 2+
+    owner_text: z.string().min(1, 'Owner is required'), // free-text Phase 1; resolved to member_id later
+    subject: z.string().min(1, 'Subject is required'),
+  }),
+);
 ```
 
 **Storage.** Value is an array of trigger objects, stored in extras as `specialty_entries`. The form does **not** create rows in the `flags` table at submit time — that happens in Phase 2 when the flag-tracking UI lands. For Phase 1, the data is preserved in extras and a Phase 2 backfill creates flags rows from existing extras.
@@ -660,8 +687,7 @@ export const outreachLogEntry: EntryDefinition = {
       type: 'person-attribution',
       name: 'contributions',
       label: 'Team members present and their roles at the event',
-      helper:
-        'One line per person — demonstrator, instructor, story capturer, setup, etc.',
+      helper: 'One line per person — demonstrator, instructor, story capturer, setup, etc.',
       required: false,
       storage: 'extras',
       contributionLabel: 'Role at event',
@@ -705,7 +731,7 @@ export const outreachLogEntry: EntryDefinition = {
       category: 'engagement_depth',
       allowAddNew: true,
       withCustomNote: true,
-      minSelected: 1,        // enforced as "at least 1 box OR a non-empty note"
+      minSelected: 1, // enforced as "at least 1 box OR a non-empty note"
       required: true,
       storage: 'extras',
     },
@@ -780,8 +806,7 @@ export const outreachLogEntry: EntryDefinition = {
       type: 'single-select',
       name: 'follow_up_type_option_id',
       label: 'Follow-up plan',
-      helper:
-        'How will we follow up with people from this event? Pick one, or leave blank.',
+      helper: 'How will we follow up with people from this event? Pick one, or leave blank.',
       category: 'follow_up_type',
       allowAddNew: false,
       required: false,
@@ -801,7 +826,7 @@ export const outreachLogEntry: EntryDefinition = {
         field: 'follow_up_type_option_id',
         // Resolved to the UUID at runtime; the validator helper resolves
         // option labels/values to their IDs when the form loads.
-        equals: 'OPTION_UUID_FOR_individual',  // placeholder; see §15 below
+        equals: 'OPTION_UUID_FOR_individual', // placeholder; see §15 below
       },
       maxLength: 1000,
       rows: 4,
@@ -824,8 +849,7 @@ export const outreachLogEntry: EntryDefinition = {
       type: 'specialty-triggers',
       name: 'specialty_entries',
       label: 'Specialty entries triggered',
-      helper:
-        'Most commonly a Contact Log for each new mentor / sponsor / individual follow-up.',
+      helper: 'Most commonly a Contact Log for each new mentor / sponsor / individual follow-up.',
       storage: 'extras',
     },
   ],
@@ -849,7 +873,7 @@ Then in the renderer's visibility evaluator:
 function isVisible(cond: VisibilityCondition, values, optionsByCategory) {
   if ('equalsOptionValue' in cond) {
     const options = optionsByCategory[cond.category];
-    const targetOption = options.find(o => o.value === cond.equalsOptionValue);
+    const targetOption = options.find((o) => o.value === cond.equalsOptionValue);
     return values[cond.field] === targetOption?.id;
   }
   // ... other condition shapes
@@ -1013,8 +1037,10 @@ The registry lets the list view enumerate every known entry type without hard-co
 
 export async function insertEntry(
   definition: EntryDefinition,
-  formData: FormData
-): Promise<{ ok: true; id: string } | { ok: false; fieldErrors?: Record<string, string>; formError?: string }> {
+  formData: FormData,
+): Promise<
+  { ok: true; id: string } | { ok: false; fieldErrors?: Record<string, string>; formError?: string }
+> {
   // 1. Build the Zod schema from the definition.
   const schema = buildZodSchemaFromDefinition(definition);
 
@@ -1041,7 +1067,9 @@ export async function insertEntry(
 
   // 5. Add common columns.
   const supabase = await createServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { ok: false, formError: 'Not authenticated.' };
 
   const row = {
@@ -1053,11 +1081,7 @@ export async function insertEntry(
   };
 
   // 6. Insert.
-  const { data, error } = await supabase
-    .from(definition.table)
-    .insert(row)
-    .select('id')
-    .single();
+  const { data, error } = await supabase.from(definition.table).insert(row).select('id').single();
 
   if (error) return { ok: false, formError: error.message };
   return { ok: true, id: data.id };
@@ -1082,12 +1106,16 @@ export async function listAllEntries(limit = 50) {
       // typed columns selected per definition (see below)
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
-      .limit(limit)
+      .limit(limit),
   );
   const results = await Promise.all(queries);
   // Merge and re-sort.
   const merged = results.flatMap((r, i) =>
-    (r.data ?? []).map((row) => ({ ...row, _type: ENTRY_LIST[i].type, _label: ENTRY_LIST[i].label }))
+    (r.data ?? []).map((row) => ({
+      ...row,
+      _type: ENTRY_LIST[i].type,
+      _label: ENTRY_LIST[i].label,
+    })),
   );
   merged.sort((a, b) => b.created_at.localeCompare(a.created_at));
   return merged.slice(0, limit);

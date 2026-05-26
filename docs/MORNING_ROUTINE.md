@@ -102,6 +102,13 @@ Auto-merge (squash + delete branch) as soon as CI is green if the PR
 - `components/`, `lib/` excluding `lib/supabase/`
 - `docs/`, `public/`, `tailwind.config.ts`, `next.config.mjs`,
   `tsconfig.json` (non-strictness-relaxing changes)
+- Root-level Markdown files (`README.md`, `CLAUDE.md`, `ONBOARDING.md`,
+  and any future `*.md` at repo root) — these are documentation, same
+  safety profile as `docs/`
+- Pure formatting changes from `prettier --write` or `eslint --fix`,
+  even if they sweep many files outside the paths above. A formatting
+  sweep is only auto-merge-eligible if the diff contains zero semantic
+  changes (whitespace, quote style, trailing commas only)
 - Tests under `tests/`
 - `package.json` / `pnpm-lock.yaml` for **non-security** dependency bumps
   (UI libraries, dev tooling, type packages)
@@ -128,6 +135,7 @@ summary, then stop and leave the PR open, if the PR touches:
 - Any change you yourself are uncertain is reversible
 
 When you stop for approval, the PR comment must state:
+
 - **What this changes** in plain English (one paragraph max)
 - **What surface it touches** (database schema, auth, public API, CI, etc.)
 - **Is it reversible?** — `git revert` works for most things; database
@@ -149,7 +157,7 @@ When you stop for approval, the PR comment must state:
 - Never `git reset --hard` or otherwise discard committed work
 - Never delete branches that have unmerged commits
 
-If a backlog item *requires* one of these, stop and post a comment asking
+If a backlog item _requires_ one of these, stop and post a comment asking
 the user how to proceed.
 
 ## When the brief leaves a decision unmade
