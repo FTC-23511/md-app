@@ -26,12 +26,12 @@ Priority is top-down — drag the most important items to the top of "Next up."
 <!-- Routine moves items here with the PR link when work starts. -->
 
 - **[docs]** Audit `.env.example` (add `ALLOWED_EMAIL`, fix `NEXT_PUBLIC_SITE_URL` comment) — [PR #5](https://github.com/FTC-23511/md-app/pull/5) open, **approval-required**, CI green
-- **[config]** Add `.claude/settings.local.json` and `tsconfig.tsbuildinfo` to `.gitignore` — branch `routine/add-gitignore-entries` (PR pending)
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-05-26 — **[config]** Untrack `.claude/settings.local.json` and `tsconfig.tsbuildinfo` (add to `.gitignore`). Auto-merged in [#6](https://github.com/FTC-23511/md-app/pull/6).
 - 2026-05-26 — **[docs]** Update `docs/phase1/00-plan.md` T05–T08 Deliverables to reference actual migration filenames. Auto-merged in [#4](https://github.com/FTC-23511/md-app/pull/4).
 - 2026-05-26 — **[docs]** Fix `docs/SETUP.md` Step 4 magic-link reference. Auto-merged in [#3](https://github.com/FTC-23511/md-app/pull/3).
 - 2026-05-26 — **[docs]** Fix `README.md` to use `pnpm` consistently. Auto-merged in [#2](https://github.com/FTC-23511/md-app/pull/2). (Also bundled a Windows-friendly Prettier `endOfLine: auto` config fix.)
