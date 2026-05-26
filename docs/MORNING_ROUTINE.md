@@ -58,30 +58,38 @@ but each run does one new thing.
 Read [`docs/BACKLOG.md`](docs/BACKLOG.md). For every item under
 "In progress," check the linked PR.
 
-For each open PR from a previous routine run:
+For each open or recently-closed PR from a previous routine run:
 
-- **CI green + PR in the auto-merge tier** (see rules below) → squash-merge,
-  delete the branch, move the BACKLOG item from "In progress" to "Done."
-- **CI green + PR in the approval-required tier** → leave it alone. The
-  user is reviewing. Do not start a new item if the user has unreviewed
-  approval-required PRs sitting open (don't pile up work on them).
+- **PR already merged** (user approved an approval-required PR) → move
+  the BACKLOG item from "In progress" to "Done." Commit directly to main.
+- **CI green + PR in the auto-merge tier** → squash-merge, delete the
+  branch, move the BACKLOG item to "Done." Commit directly to main.
+- **CI green + PR in the approval-required tier** → leave it open.
+  **Continue to Step 2 anyway** — approval-required PRs do NOT block new
+  work. The user reviews them on their own schedule (typically in a
+  batched afternoon pass).
 - **CI red** → read the failing log. Push a fix commit. If you've already
   pushed 3 fix attempts on this PR, leave a comment summarizing what's
-  failing and stop without starting new work.
-- **No CI yet (still running)** → leave it. Move on.
+  failing and continue to Step 2 (don't block on a stuck PR either).
+- **No CI yet (still running)** → leave it. Continue to Step 2.
 
-## Step 2 — Start one new item (if there's capacity)
+## Step 2 — Start one new item (always, if Next up has anything)
 
-After cleanup, if "In progress" is empty (or only contains
-approval-required PRs the user hasn't touched) **and** "Next up" has at
-least one item:
+After cleanup, if "Next up" has at least one item, start work. **It does
+not matter how many approval-required PRs are sitting open** — the user
+prefers having work queued for their afternoon review batch over having
+the routine sit idle.
 
-1. Take the top item from "Next up."
+1. Take the top item from "Next up." (The user controls priority by
+   ordering. If they want auto-merge items processed first, they put
+   them at the top.)
 2. If the item links to a brief in `docs/briefs/`, read the brief — it is
    the spec. If there's no brief, the one-line item description is the
    spec (only use this for small fixes).
-3. Move the item from "Next up" to "In progress" in BACKLOG.md.
-4. Create a feature branch off `main`: `routine/<short-slug>`.
+3. **Commit the BACKLOG move directly to main first** — move the item
+   from "Next up" to "In progress" with the upcoming branch name, then
+   `git push` to main. (See "BACKLOG state tracking" below for why.)
+4. Now create the feature branch: `routine/<short-slug>` off the updated main.
 5. Implement the change. Track multi-step work with TaskCreate.
 6. Run `pnpm verify` locally before pushing. Fix anything red.
 7. Push, open a PR. PR description should:
@@ -90,8 +98,23 @@ least one item:
    - Note whether the change is auto-merge or requires approval (per
      rules below), and why
 8. Wait for CI. Apply the same handling as Step 1.
+9. After auto-merge (if auto-merge tier): move the BACKLOG item from
+   "In progress" to "Done" directly on main.
 
 If "Next up" is empty, post nothing, do nothing. Stop.
+
+## BACKLOG state tracking — commit directly to main
+
+All BACKLOG.md state changes ("Next up" ↔ "In progress" ↔ "Done") commit
+**directly to main**, not in feature branches. This decouples backlog
+tracking from PR review timing and prevents the conflict that happens
+when multiple items are in flight and each PR tries to renumber the
+list.
+
+Concretely: the feature branch contains only the change for the item
+being shipped (the README edit, the migration, the SETUP.md fix, etc.).
+The BACKLOG.md commit happens on main before the branch is created and
+again after the PR closes.
 
 ## Auto-merge tier (default)
 

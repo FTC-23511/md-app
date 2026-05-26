@@ -3,8 +3,14 @@
     "allow": [
       "Bash(*)",
       "PowerShell(*)",
+      "Skill(*)",
       "WebFetch(domain:*)",
-      "WebSearch"
+      "WebSearch",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Glob(*)",
+      "Grep(*)"
     ],
     "deny": [
       "Bash(git push --force*)",
