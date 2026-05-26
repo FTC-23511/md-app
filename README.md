@@ -41,10 +41,10 @@ The full architecture is documented in `docs/phase1/01-conventions.md` (folder s
 
 ## Getting set up locally
 
-You need Node.js 20+, the Supabase CLI, and a Supabase project.
+You need Node.js 20+, pnpm 9+, the Supabase CLI, and a Supabase project.
 
 1. Clone the repo and `cd` in.
-2. `npm install`
+2. `pnpm install`
 3. Copy `.env.example` to `.env.local` and fill in real values:
    - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your Supabase project settings
    - `SUPABASE_SERVICE_ROLE_KEY` (also from settings; only needed for the fallback importer)
@@ -52,7 +52,7 @@ You need Node.js 20+, the Supabase CLI, and a Supabase project.
 4. Link the local repo to your Supabase project: `supabase link --project-ref <your-project-ref>`
 5. Apply migrations: `supabase db push`
 6. Create your user account manually in the Supabase dashboard (Authentication → Users → Add user → Create new user; set "Auto Confirm User"). Use the same email you put in `ALLOWED_EMAIL`.
-7. `npm run dev`
+7. `pnpm dev`
 8. Open `http://localhost:3000`, sign in with the email and password you just created.
 
 Total setup time should be under fifteen minutes if you have the credentials ready.
