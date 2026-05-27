@@ -4,8 +4,10 @@ import { env } from '@/lib/env';
 
 // Paths reachable without an authenticated, allowlisted session. Everything
 // else is protected. The auth pages, the forbidden page, the public showcase,
-// and the root (which does its own auth-aware redirect) all live here.
-const PUBLIC_PREFIXES = ['/auth', '/forbidden', '/showcase'];
+// the health probe, and the root (which does its own auth-aware redirect) all
+// live here. Note: /api/health must stay public — redirecting it to the HTML
+// sign-in page makes it return HTML instead of JSON and breaks the probe.
+const PUBLIC_PREFIXES = ['/auth', '/forbidden', '/showcase', '/api/health'];
 
 function isPublicPath(pathname: string): boolean {
   if (pathname === '/') return true;
