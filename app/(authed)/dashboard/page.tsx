@@ -1,5 +1,4 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { Button } from '@/components/ui/button';
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
@@ -17,19 +16,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Signed in as <span className="font-medium">{user!.email}</span>
-          </p>
-        </div>
-        <form action="/auth/sign-out" method="post">
-          <Button type="submit" variant="outline" size="sm">
-            Sign out
-          </Button>
-        </form>
-      </div>
+      <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
 
       <section className="bg-card mt-8 rounded-lg border border-border p-6">
         {member ? (
