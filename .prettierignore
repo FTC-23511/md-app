@@ -1,0 +1,8 @@
+# Claude Code operational config — not source; don't let Prettier reflow
+# command prompts or churn the auto-mutated settings file.
+.claude/
+
+# Build artifacts / generated
+.next/
+tsconfig.tsbuildinfo
+pnpm-lock.yaml
