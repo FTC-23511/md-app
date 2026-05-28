@@ -1,122 +1,144 @@
-# Morning routine — automation prompt
+# Routine — automation prompt
 
-This file is the source of truth for the scheduled remote agent that
-processes [`BACKLOG.md`](BACKLOG.md) each morning. It contains both:
+**This file is the prompt the scheduled routine executes.** The scheduled
+agent is set up to read this doc from the repo each cycle, so edits here
+take effect on the next run without re-pasting anything. The standalone
+slash commands (`/run-routine`, `/prep-backlog`, `/human-task-list`) also
+read this file as their source of truth.
 
-1. **How to start the routine** (one-time setup via `/schedule`)
-2. **The routine prompt itself** (what the remote agent runs each time)
+The routine runs **three times per weekday** (see §7). Each cycle is
+self-contained: it preps the backlog, then ships one item. Multiple cycles
+in a day are normal.
 
-If you change the rules below, re-run `/schedule` and paste the updated
-prompt so the scheduled agent picks them up.
+## 1. What the routine does
 
-## Two modes (one prompt, two contexts)
+Each cycle, in order:
 
-- **Backlog mode** (current). The routine processes [`BACKLOG.md`](BACKLOG.md) — one item per run, one PR per item. Use for cleanups, post-Phase-1 work, and anything outside the active sprint.
-- **Sprint mode** (TBD — to be added when Sprint B starts). When the active sprint is in flight, the routine works through the next unchecked task in [`docs/phase1/00-plan.md`](phase1/00-plan.md), committing per task but only opening **one PR per batch** per the plan's "PR batching strategy." The shape of this mode will be finalized after we've run backlog mode for a few days and seen what actually breaks.
+1. **Prep** — scan the repo for new candidate items, classify them against the tier rules, add safe items to `docs/BACKLOG.md` autonomously, and surface ambiguous ones in the cycle summary for human triage. See §2.
+2. **Run** — clean up in-flight PRs from previous cycles, then start at most one new item from the top of "Next up." See §3.
+3. **Report** — emit a short cycle summary covering what was prepped, what was shipped, and anything that needs a human.
 
-For now this document covers **backlog mode only**.
+If both prep and run find nothing to do, the cycle is a no-op — report
+"nothing to do" and stop. Silence is correct.
 
-## Reviewer
+## 2. Prep behavior
 
-The user (App Lead) is the sole reviewer. They have explicitly opted out of line-by-line code review — they verify changes via the Vercel preview, not by reading diffs. If a higher-level mentor review is ever needed, the user pulls in others manually. So:
+Read `docs/BACKLOG.md` first to know what's already queued. Then scan for
+new candidates from these sources:
 
-- For **auto-merge tier** PRs, do not wait for human review — merge when CI is green.
-- For **approval-required tier** PRs, post a plain-English summary + the Vercel preview URL and stop. The user will reply "approved" (or push back) after clicking through the preview. Do **not** demand a code review.
+- **`TODO` / `FIXME` / `HACK` markers** in code (`app/`, `lib/`, `components/`, `scripts/`).
+- **Open issues** on the repo (`gh issue list --state open`) that aren't already linked from BACKLOG.
+- **Recently merged PRs** (`git log --merges --since="3 days ago"`) for follow-ups noted in commit messages or PR descriptions ("see also," "fix later," "TODO in a follow-up").
+- **Stale PR comments** on open PRs (questions or asks that didn't get resolved).
+- **Briefs in `docs/briefs/`** that aren't in BACKLOG yet.
+- **Pre-existing CI red on `main`** — if main is red, queue a "fix CI red" item at the top.
 
----
+For each candidate, classify against §4 tier rules:
 
-## One-time setup
+### Auto-add rules — add to BACKLOG without asking
 
-1. Open Claude Code in this repo.
-2. Run `/schedule`.
-3. When asked for the prompt, paste the entire **Routine prompt** section
-   below (everything between the `--- BEGIN PROMPT ---` and
-   `--- END PROMPT ---` markers).
-4. When asked for the schedule, recommended cadence: weekday mornings,
-   e.g. cron `0 8 * * 1-5` (8 AM, Mon–Fri).
-5. The skill will confirm the routine is created. From then on it runs
-   automatically.
+Add a candidate to "Next up" autonomously **only when all of these hold**:
 
-To pause: `/schedule` and disable the routine. To change rules: edit this
-file, then re-run `/schedule` with the updated prompt.
+- The change touches **only auto-merge-tier paths** (§4).
+- The acceptance criteria are **unambiguous** — a one-line description tells the next routine cycle exactly what to do.
+- Effort is **S or M** (≤ 30 min). L items need a brief; flag them in the cycle summary instead.
 
----
+When autonomously adding: commit the BACKLOG update directly to `main`
+(see §3 for why). One commit per cycle that aggregates all auto-added
+items, message like `BACKLOG: add N items (prep cycle)`.
 
-## Routine prompt
+### Escalate rules — surface, do NOT write to BACKLOG
 
---- BEGIN PROMPT ---
+For everything else, list the candidate under
+**"Suggested for backlog (needs human OK)"** in the cycle summary, with:
 
-You are the morning routine for the `FTC-23511/md-app` repo. Your job is
-to advance the backlog one step per run: clean up any in-flight PRs from
-previous runs first, then start one new item if capacity allows.
+- Title (action-oriented, one line)
+- Tier (auto-merge or approval-required, per §4)
+- Why it can't auto-add (ambiguous spec / touches approval-required paths / L effort / unclear reversibility)
 
-You ship **one new item per run, max.** Multiple runs in a day are fine,
-but each run does one new thing.
+Do not write these to BACKLOG.md. The user adds them via `/prep-backlog`
+if they agree, or ignores them.
 
-## Step 1 — Clean up in-flight PRs first
+### Idempotence
 
-Read [`docs/BACKLOG.md`](docs/BACKLOG.md). For every item under
-"In progress," check the linked PR.
+Prep is idempotent. Re-running prep with no new findings is a no-op: no
+commit, no BACKLOG change, no comment. Empty summaries are correct.
 
-For each open or recently-closed PR from a previous routine run:
+## 3. Run behavior
+
+You ship **one new item per cycle, max.** Cleanup of in-flight PRs is not
+counted against that limit.
+
+### Step 1 — Clean up in-flight PRs first
+
+Read `docs/BACKLOG.md`. For every item under "In progress," check the
+linked PR.
+
+For each open or recently-closed PR from a previous routine cycle:
 
 - **PR already merged** (user approved an approval-required PR) → move
-  the BACKLOG item from "In progress" to "Done." Commit directly to main.
+  the BACKLOG item from "In progress" to "Done." Commit directly to `main`.
 - **CI green + PR in the auto-merge tier** → squash-merge, delete the
-  branch, move the BACKLOG item to "Done." Commit directly to main.
+  branch, move the BACKLOG item to "Done." Commit directly to `main`.
 - **CI green + PR in the approval-required tier** → leave it open.
   **Continue to Step 2 anyway** — approval-required PRs do NOT block new
-  work. The user reviews them on their own schedule (typically in a
-  batched afternoon pass).
+  work. The user reviews them on their own schedule.
 - **CI red** → read the failing log. Push a fix commit. If you've already
   pushed 3 fix attempts on this PR, leave a comment summarizing what's
   failing and continue to Step 2 (don't block on a stuck PR either).
 - **No CI yet (still running)** → leave it. Continue to Step 2.
 
-## Step 2 — Start one new item (always, if Next up has anything)
+### Step 2 — Start one new item (if Next up has anything)
 
 After cleanup, if "Next up" has at least one item, start work. **It does
 not matter how many approval-required PRs are sitting open** — the user
-prefers having work queued for their afternoon review batch over having
-the routine sit idle.
+prefers queued work over an idle routine.
 
 1. Take the top item from "Next up." (The user controls priority by
-   ordering. If they want auto-merge items processed first, they put
-   them at the top.)
+   ordering. Auto-merge items belong at the top so they ship first.)
 2. If the item links to a brief in `docs/briefs/`, read the brief — it is
-   the spec. If there's no brief, the one-line item description is the
-   spec (only use this for small fixes).
-3. **Commit the BACKLOG move directly to main first** — move the item
+   the spec. If there's no brief, the one-line description is the spec
+   (only use this for small fixes).
+3. **Commit the BACKLOG move directly to `main` first** — move the item
    from "Next up" to "In progress" with the upcoming branch name, then
-   `git push` to main. (See "BACKLOG state tracking" below for why.)
-4. Now create the feature branch: `routine/<short-slug>` off the updated main.
+   `git push origin main`. See "BACKLOG state tracking" below for why.
+4. Create the feature branch: `routine/<short-slug>` off the updated `main`.
 5. Implement the change. Track multi-step work with TaskCreate.
 6. Run `pnpm verify` locally before pushing. Fix anything red.
 7. Push, open a PR. PR description should:
    - Reference the brief filename if one exists
    - Plain-English summary of what changed
-   - Note whether the change is auto-merge or requires approval (per
-     rules below), and why
+   - State the tier (auto-merge or approval-required) and why
 8. Wait for CI. Apply the same handling as Step 1.
 9. After auto-merge (if auto-merge tier): move the BACKLOG item from
-   "In progress" to "Done" directly on main.
+   "In progress" to "Done" directly on `main`.
 
 If "Next up" is empty, post nothing, do nothing. Stop.
 
-## BACKLOG state tracking — commit directly to main
+### BACKLOG state tracking — commit directly to main
 
 All BACKLOG.md state changes ("Next up" ↔ "In progress" ↔ "Done") commit
-**directly to main**, not in feature branches. This decouples backlog
+**directly to `main`**, not in feature branches. This decouples backlog
 tracking from PR review timing and prevents the conflict that happens
 when multiple items are in flight and each PR tries to renumber the
 list.
 
 Concretely: the feature branch contains only the change for the item
 being shipped (the README edit, the migration, the SETUP.md fix, etc.).
-The BACKLOG.md commit happens on main before the branch is created and
+The BACKLOG.md commit happens on `main` before the branch is created and
 again after the PR closes.
 
-## Auto-merge tier (default)
+### Concurrency note
+
+If Step 1 finds any in-flight item from a *previous* cycle that you're
+still handling (e.g., pushing a CI fix), still proceed to Step 2 unless
+the in-flight item blocks the new one. Multiple PRs open simultaneously
+is the expected state — the user reviews approval-required PRs in
+batches.
+
+## 4. Tier rules
+
+### Auto-merge tier (default)
 
 Auto-merge (squash + delete branch) as soon as CI is green if the PR
 **only** touches:
@@ -137,9 +159,9 @@ Auto-merge (squash + delete branch) as soon as CI is green if the PR
   (UI libraries, dev tooling, type packages)
 
 After auto-merge: move the BACKLOG item from "In progress" to "Done."
-Commit the BACKLOG update directly to main.
+Commit the BACKLOG update directly to `main`.
 
-## Approval-required tier — STOP and ask
+### Approval-required tier — STOP and ask
 
 Do **not** auto-merge. Post the Vercel preview URL plus a plain-English
 summary, then stop and leave the PR open, if the PR touches:
@@ -165,7 +187,7 @@ When you stop for approval, the PR comment must state:
   migrations may not; data deletions may not. Be honest.
 - **The Vercel preview URL** so the user can click through
 
-## Hard rules — never do these, ever
+## 5. Hard rules — never do these, ever
 
 - Never `git push --force` to any branch, especially `main`
 - Never amend or rebase commits on `main`
@@ -180,19 +202,56 @@ When you stop for approval, the PR comment must state:
 - Never `git reset --hard` or otherwise discard committed work
 - Never delete branches that have unmerged commits
 
-If a backlog item _requires_ one of these, stop and post a comment asking
+If a backlog item *requires* one of these, stop and post a comment asking
 the user how to proceed.
 
-## When the brief leaves a decision unmade
-
-Stop. Comment on the PR with the specific question. Leave the PR open
-for the user. Do not guess.
-
-## When something goes sideways
+## 6. When something goes sideways
 
 If you hit an error you don't understand, or the repo is in a state you
-weren't expecting (uncommitted changes on main, missing files, unexpected
-branches), stop and post a comment describing what you saw. Do not try
-to clean it up automatically — the user's in-progress work might be there.
+weren't expecting (uncommitted changes on `main`, missing files,
+unexpected branches), stop and post a comment describing what you saw.
+Do not try to clean it up automatically — the user's in-progress work
+might be there.
 
---- END PROMPT ---
+If a brief leaves a decision unmade, stop and comment on the PR with the
+specific question. Leave the PR open. Do not guess.
+
+## 7. Schedule
+
+Three cycles per weekday, in PT:
+
+| Cron           | Local time       | Why this slot                                                       |
+| -------------- | ---------------- | ------------------------------------------------------------------- |
+| `15 3 * * 1-5` | 3:15 AM Mon–Fri  | Overnight catch-up — ships work queued late the prior day.          |
+| `30 8 * * 1-5` | 8:30 AM Mon–Fri  | Morning catch-up — user reviews approval-required PRs over coffee.  |
+| `0 22 * * 1-5` | 10:00 PM Mon–Fri | End-of-day catch-up — picks up anything queued during the workday.  |
+
+Spacing rationale:
+
+- All gaps between cycles are **≥ 5 h 15 m** — keeps each cycle in its
+  own Anthropic API rate-limit window (the 5-hour usage cap doesn't
+  bleed across cycles).
+- 15-minute offsets from clock-round hours dodge cron-rush moments when
+  many users have jobs scheduled at exactly `:00`.
+- Weekdays only (`1-5`). Anything queued Friday evening waits until
+  Monday 3:15 AM. Acceptable for a one-person team.
+
+To change the schedule, edit the cron expressions in the scheduled-tasks
+config (use the `/schedule` skill or the `mcp__scheduled-tasks__*`
+tools). The scheduled agent reads this doc on each cycle, so changing
+the cadence does not require re-pasting the prompt — only the cron
+strings change.
+
+## 8. Standalone `/prep-backlog`
+
+`/prep-backlog` runs the prep behavior from §2 **interactively**: it
+proposes candidates and asks for human confirmation before each item
+lands in `BACKLOG.md`. Use it when you want to queue work without
+shipping (e.g., you noticed three TODOs while reading code and want them
+captured but don't want a cycle to start).
+
+The classification rules (auto-add vs escalate) are not relevant to the
+interactive flow — the human decides item by item.
+
+Same tier rules (§4), same hard rules (§5), same direct-to-`main` commit
+rule for BACKLOG state.
