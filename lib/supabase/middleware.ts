@@ -2,13 +2,27 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { env } from '@/lib/env';
 
+// Paths reachable without an authenticated, allowlisted session. Everything
+// else is protected. The auth pages, the forbidden page, the public showcase,
+// the health probe, and the root (which does its own auth-aware redirect) all
+// live here. Note: /api/health must stay public — redirecting it to the HTML
+// sign-in page makes it return HTML instead of JSON and breaks the probe.
+const PUBLIC_PREFIXES = ['/auth', '/forbidden', '/showcase', '/api/health'];
+
+function isPublicPath(pathname: string): boolean {
+  if (pathname === '/') return true;
+  return PUBLIC_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 /**
  * Called from middleware.ts (at repo root) on every request. Refreshes the
- * Supabase auth session if needed and ensures the response carries any
- * updated auth cookies.
+ * Supabase auth session if needed, ensures the response carries any updated
+ * auth cookies, and enforces the single-email allowlist on protected routes.
  *
- * Without this, expired access tokens would silently fail and users would
- * get unexplained "not authorized" errors on protected routes.
+ * Without the refresh, expired access tokens would silently fail and users
+ * would get unexplained "not authorized" errors on protected routes. The
+ * allowlist is defense in depth: signup is disabled in Supabase, but this
+ * guarantees only ALLOWED_EMAIL reaches protected pages even if config drifts.
  */
 export async function updateSupabaseSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -31,8 +45,23 @@ export async function updateSupabaseSession(request: NextRequest) {
   });
 
   // Refresh the session if expired. This call is what actually rotates the
-  // tokens — must run on every protected-route request.
-  await supabase.auth.getUser();
+  // tokens — must run on every request.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (isPublicPath(request.nextUrl.pathname)) {
+    return response;
+  }
+
+  if (!user) {
+    return NextResponse.redirect(new URL('/auth/sign-in', request.url));
+  }
+
+  if (user.email !== env.ALLOWED_EMAIL) {
+    await supabase.auth.signOut();
+    return NextResponse.redirect(new URL('/forbidden', request.url));
+  }
 
   return response;
 }
