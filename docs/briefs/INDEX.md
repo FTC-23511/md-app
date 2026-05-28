@@ -10,7 +10,7 @@ The intent is **focused planning while awake → autonomous execution while asle
 | ------------------- | ------- | ----------------- | ----------------------- |
 | Setup               | T01–T04 | n/a               | ✅ shipped              |
 | Schema              | T05–T08 | n/a               | ✅ shipped              |
-| **Auth**            | T09–T12 | _not yet written_ | 🟡 **owed by App Lead** |
+| Auth                | T09–T12 | n/a (chat handoff in [#7](https://github.com/FTC-23511/md-app/pull/7)) | ✅ shipped              |
 | **Forms + entries** | T13–T17 | _not yet written_ | 🟡 **owed by App Lead** |
 | **Fallback**        | T18–T19 | _not yet written_ | 🟡 **owed by App Lead** |
 | Deploy              | T20–T21 | n/a (manual ops)  | ✅ ready                |
