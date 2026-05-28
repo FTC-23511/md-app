@@ -9,6 +9,7 @@ Scan the repo and produce a compact step-by-step list of things only the user ca
 ## What counts as a "human task"
 
 - Open approval-required PRs awaiting review (`gh pr list` filtered by tier)
+- **Briefs the App Lead still owes** — check `docs/briefs/INDEX.md` for any batch marked "owed by App Lead" or "not yet written." These are the highest-leverage human task because without them the routine has no work to ship for that batch.
 - Items requiring dashboard work the routine can't do (Supabase config, Vercel settings, GitHub repo settings, billing)
 - One-off setup the routine flagged (token rotation, GitHub App install, env var values, secret provisioning)
 - "Stop and ask" decision points logged by previous routine runs (check recent PR comments and routine reports in `git log`)
@@ -52,9 +53,17 @@ Direct. Imperative. No hedging. Don't explain *why* something is a blocker unles
 In parallel:
 1. `gh pr list --state open --json number,title,headRefName,statusCheckRollup`
 2. Read `docs/BACKLOG.md` (focus on the "In progress" section)
-3. `git log --oneline --since="3 days ago"` — scan for routine-emitted "stop and ask" patterns
-4. Cross-reference each open PR with the tier rules in `docs/ROUTINE.md` §4 to confirm which need approval vs auto-merge
-5. For each approval-required PR, fetch its description to extract the plain-English summary and Vercel preview URL
+3. Read `docs/briefs/INDEX.md` — flag every batch marked "owed" or "not yet written" as a high-priority human task
+4. `git log --oneline --since="3 days ago"` — scan for routine-emitted "stop and ask" patterns
+5. Cross-reference each open PR with the tier rules in `docs/ROUTINE.md` §4 to confirm which need approval vs auto-merge
+6. For each approval-required PR, fetch its description to extract the plain-English summary and Vercel preview URL
+
+## Priority order when sorting the output
+
+1. **Owed briefs** (blockers — without them, the routine has no Sprint work to do)
+2. **Quick approval-required PRs** (≤2 min preview + "approved" reply each)
+3. **One-off setup / dashboard tasks**
+4. **Bigger reviews** (PRs with substantial changes worth a careful look)
 
 ## Don't fabricate items
 
