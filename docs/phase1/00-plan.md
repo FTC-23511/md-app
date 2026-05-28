@@ -406,10 +406,10 @@ Check off each task as it lands in `main`. Add the PR link.
 
 ### Sprint B — Auth
 
-- [ ] T09. Configure Supabase Auth (email + password) — PR: \_\_\_
-- [ ] T10. Implement single-email allowlist in middleware — PR: \_\_\_
-- [ ] T11. Build login + email/password sign-in + forgot-password — PR: \_\_\_
-- [ ] T12. Build protected route wrapper — PR: \_\_\_
+- [x] T09. Configure Supabase Auth (email + password) — manual dashboard step (dev + prod projects)
+- [x] T10. Implement single-email allowlist in middleware — PR #7
+- [x] T11. Build login + email/password sign-in + forgot-password — PR #7 (replaced the earlier magic-link scaffold)
+- [x] T12. Build protected route wrapper — PR #7
 
 ### Sprint C — Forms system + entries
 
