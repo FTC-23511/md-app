@@ -130,7 +130,7 @@ again after the PR closes.
 
 ### Concurrency note
 
-If Step 1 finds any in-flight item from a *previous* cycle that you're
+If Step 1 finds any in-flight item from a _previous_ cycle that you're
 still handling (e.g., pushing a CI fix), still proceed to Step 2 unless
 the in-flight item blocks the new one. Multiple PRs open simultaneously
 is the expected state — the user reviews approval-required PRs in
@@ -202,7 +202,7 @@ When you stop for approval, the PR comment must state:
 - Never `git reset --hard` or otherwise discard committed work
 - Never delete branches that have unmerged commits
 
-If a backlog item *requires* one of these, stop and post a comment asking
+If a backlog item _requires_ one of these, stop and post a comment asking
 the user how to proceed.
 
 ## 6. When something goes sideways
@@ -220,11 +220,11 @@ specific question. Leave the PR open. Do not guess.
 
 Three cycles per weekday, in PT:
 
-| Cron           | Local time       | Why this slot                                                       |
-| -------------- | ---------------- | ------------------------------------------------------------------- |
-| `15 3 * * 1-5` | 3:15 AM Mon–Fri  | Overnight catch-up — ships work queued late the prior day.          |
-| `30 8 * * 1-5` | 8:30 AM Mon–Fri  | Morning catch-up — user reviews approval-required PRs over coffee.  |
-| `0 22 * * 1-5` | 10:00 PM Mon–Fri | End-of-day catch-up — picks up anything queued during the workday.  |
+| Cron           | Local time       | Why this slot                                                      |
+| -------------- | ---------------- | ------------------------------------------------------------------ |
+| `15 3 * * 1-5` | 3:15 AM Mon–Fri  | Overnight catch-up — ships work queued late the prior day.         |
+| `30 8 * * 1-5` | 8:30 AM Mon–Fri  | Morning catch-up — user reviews approval-required PRs over coffee. |
+| `0 22 * * 1-5` | 10:00 PM Mon–Fri | End-of-day catch-up — picks up anything queued during the workday. |
 
 Spacing rationale:
 

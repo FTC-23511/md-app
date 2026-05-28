@@ -2,7 +2,7 @@
 
 Once setup is done, this is the loop for every change. Three modes, in order of how much you want to be involved:
 
-- **Backlog mode** (most hands-off) — you drop items into [`BACKLOG.md`](BACKLOG.md); a scheduled routine runs each morning, ships PRs, auto-merges safe ones, stops on anything risky. See [Backlog and morning routine](#backlog-and-morning-routine).
+- **Backlog mode** (most hands-off) — you drop items into [`BACKLOG.md`](BACKLOG.md); a scheduled routine runs 3×/weekday, ships PRs, auto-merges safe ones, stops on anything risky. See [Backlog and the routine](#backlog-and-the-routine).
 - **Delegate mode** — you describe what you want in the moment; Claude Code does the rest. You verify in the browser at the end.
 - **Hands-on mode** (rarely needed) — you drive the git/CI steps yourself. Documented in the appendix.
 
@@ -81,38 +81,28 @@ Lives at [docs/briefs/\_TEMPLATE.md](briefs/_TEMPLATE.md). Copy it into Claude C
 - <decisions you haven't made; Claude Code will ask about these>
 ```
 
-## Backlog and morning routine
+## Backlog and the routine
 
-The most hands-off way to ship work. You maintain a queue in [`BACKLOG.md`](BACKLOG.md); a scheduled remote agent processes it each weekday morning.
+The most hands-off way to ship work. You maintain a queue in [`BACKLOG.md`](BACKLOG.md); a scheduled remote agent processes it three times each weekday.
 
 ### How it works
 
-1. **You add items to [`BACKLOG.md`](BACKLOG.md)** — one-liners for tiny fixes, or links to briefs in `docs/briefs/` for features. Top of the list = highest priority.
-2. **Each morning, the routine wakes up.** It cleans up any in-flight PRs from previous runs (merges green ones in the auto-merge tier, pushes fix commits if CI failed), then starts one new item from the top of "Next up."
-3. **You wake up to one of three things:**
+1. **You add items to [`BACKLOG.md`](BACKLOG.md)** — one-liners for tiny fixes, or links to briefs in `docs/briefs/` for features. Top of the list = highest priority. (The routine also auto-adds safe candidates it discovers during its prep step — see [`ROUTINE.md`](ROUTINE.md) §2.)
+2. **The routine runs three times per weekday** (3:15 AM, 8:30 AM, 10 PM PT). Each cycle: prep the backlog (scan for new safe items, surface ambiguous ones), clean up in-flight PRs from previous cycles, then start at most one new item from the top of "Next up."
+3. **You see one of three outcomes per cycle:**
    - A PR was opened, CI went green, and the routine auto-merged it. You'll see a Vercel deploy. Click through if you want; revert with `git revert` if anything looks wrong.
    - A PR is open and the routine stopped, asking for your approval. The PR comment summarizes what changed in plain English, what surface it touched, and whether it's reversible. Click the Vercel preview, reply "approved" (or push back).
-   - Nothing happened — backlog was empty.
+   - Nothing happened — backlog was empty and prep found nothing new.
 
 ### Auto-merge vs approval-required
 
-The routine auto-merges PRs that only touch UI, components, docs, styling, tests, and non-security dependency bumps. CI must be green first.
+See [`ROUTINE.md`](ROUTINE.md) §4 for the canonical tier rules. The short version: UI/components/docs/styling/tests/non-security deps auto-merge when CI is green; anything touching migrations, auth, middleware, API routes, env vars, CI config, security dependencies, or large deletions stops for your approval. Edit [`ROUTINE.md`](ROUTINE.md) to change the rules.
 
-It **stops and asks you** for anything touching:
+### Starting / changing the routine
 
-- Database migrations (`supabase/migrations/`)
-- Auth, RLS, middleware, API routes
-- Environment variables or CI config
-- Security-relevant dependencies (Next, React, Supabase)
-- Large deletions or anything potentially irreversible
+The scheduled agent reads [`ROUTINE.md`](ROUTINE.md) on each cycle, so edits to the doc take effect on the next run — no re-pasting. To register or update the three scheduled tasks themselves, use `/schedule` or the `mcp__scheduled-tasks__*` tools; the recommended cron expressions are in [`ROUTINE.md`](ROUTINE.md) §7.
 
-The full rules live in [`MORNING_ROUTINE.md`](MORNING_ROUTINE.md). Edit that file to change them.
-
-### Starting the routine
-
-It's **not running yet** — to start it, run `/schedule` in Claude Code and paste the prompt from [`MORNING_ROUTINE.md`](MORNING_ROUTINE.md). Recommended cadence: weekday mornings.
-
-**Wait until you've shipped at least one brief manually via delegate mode** before flipping this on. Confirm the brief → PR → preview flow produces what you want, then automate.
+**Wait until you've shipped at least one brief manually via delegate mode** before flipping the scheduled agent on. Confirm the brief → PR → preview flow produces what you want, then automate.
 
 ### What only you do
 
