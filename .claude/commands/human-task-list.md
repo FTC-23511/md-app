@@ -9,7 +9,7 @@ Scan the repo and produce a compact step-by-step list of things only the user ca
 ## What counts as a "human task"
 
 - Open approval-required PRs awaiting review (`gh pr list` filtered by tier)
-- **Briefs the App Lead still owes** — check `docs/briefs/INDEX.md` for any batch marked "owed by App Lead" or "not yet written." These are the highest-leverage human task because without them the routine has no work to ship for that batch.
+- **Briefs the App Lead still owes** — check `docs/briefs/INDEX.md` for any batch marked "owed by App Lead" or "not yet written." These are the highest-leverage human task because without them the routine has no work to ship for that batch. **The action to surface for each owed brief is `/plan-feature <batch>`** (e.g. `/plan-feature Forms`) — that skill handles the planning end-to-end and writes the brief artifact.
 - Items requiring dashboard work the routine can't do (Supabase config, Vercel settings, GitHub repo settings, billing)
 - One-off setup the routine flagged (token rotation, GitHub App install, env var values, secret provisioning)
 - "Stop and ask" decision points logged by previous routine runs (check recent PR comments and routine reports in `git log`)
