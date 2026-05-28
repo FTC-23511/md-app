@@ -1,9 +1,9 @@
 # Backlog
 
-The queue the morning routine processes. Add items here as one-liners or
-links to briefs in `docs/briefs/`. The routine picks the top item from
-"Next up," moves it to "In progress," ships a PR, and (where safe)
-auto-merges.
+The queue the routine processes (3×/weekday — see [`ROUTINE.md`](ROUTINE.md)).
+Add items here as one-liners or links to briefs in `docs/briefs/`. Each
+cycle, the routine picks the top item from "Next up," moves it to
+"In progress," ships a PR, and (where safe) auto-merges.
 
 You can add items by editing this file directly, or by asking Claude Code:
 

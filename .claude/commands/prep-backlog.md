@@ -1,54 +1,51 @@
 ---
-description: Populate docs/BACKLOG.md with new items and prep main for a routine run. Use when the user says "prep the backlog", "queue up work", "set up for the routine", "what should we add to the backlog", "fill the backlog", or otherwise wants to add items before triggering /run-routine. Do NOT use this for executing items — that's /run-routine. Do NOT use for Phase 1 sprint task planning (those go through briefs in docs/briefs/).
+description: Populate docs/BACKLOG.md with new items interactively (with human confirmation), without running the routine. Use when the user says "prep the backlog", "queue up work", "set up for the routine", "what should we add to the backlog", "fill the backlog", or otherwise wants to add items but NOT trigger a routine cycle. Do NOT use for executing items — that's /run-routine. Do NOT use for Phase 1 sprint task planning (those go through briefs in docs/briefs/).
 ---
 
-# Prep BACKLOG for a routine run
+# Prep BACKLOG interactively
 
-You are populating `docs/BACKLOG.md` with items the routine will process. The user is queuing up work, not executing it.
+Populate `docs/BACKLOG.md` with items the next routine cycle will process. The user is queuing up work, not executing it. This skill is the **interactive counterpart** to the prep behavior in `docs/ROUTINE.md` §2 — same scan, same tier classification, but with human confirmation in the loop instead of the autonomous add-or-escalate split.
 
-## Workflow
+## What to do
 
-1. **Read current state** (in parallel):
+1. **Read `docs/ROUTINE.md` §2 (Prep behavior) and §4 (Tier rules).** They are the source of truth for what to scan and how to classify. Re-read every invocation — the doc evolves.
+
+2. **Read current state** (in parallel):
    - `docs/BACKLOG.md` — what's in Next up / In progress / Done
    - `gh pr list --state open` — in-flight PRs
    - `git log --oneline -10` — recent commits
-   - `docs/MORNING_ROUTINE.md` — current tier rules (re-read each invocation; rules may have changed)
 
-2. **Scan for real drift.** Don't invent work. Look for:
-   - Stale doc references (paths, commands, env vars that don't match reality)
-   - Orphan files (deprecated routes, leftover scaffold, unused configs)
-   - Missing config (gitignore gaps, missing entries in `.env.example` vs `01-conventions.md` §9)
-   - Pre-existing CI failures on main
-   - Tooling friction the user has hit recently
+3. **Scan the sources listed in `docs/ROUTINE.md` §2** for real drift. Don't invent work.
 
-3. **Propose 2–5 items.** For each one show:
+4. **Propose 2–5 items.** For each one show:
    - **Title** — one line, action-oriented
-   - **Tier** — auto-merge or approval-required (per `docs/MORNING_ROUTINE.md`)
+   - **Tier** — auto-merge or approval-required (per `docs/ROUTINE.md` §4)
    - **Rationale** — 1–2 sentences on what's wrong and what fixes it
-   - **Effort** — S (≤10 min), M (10–30 min), L (>30 min). The routine struggles with L items; flag them for a brief instead.
+   - **Effort** — S (≤ 10 min), M (10–30 min), L (> 30 min). L items need a brief; flag them and don't queue them as backlog items directly.
 
-4. **Get user confirmation** before writing. Ask whether they want all items, a subset, or different priorities.
+5. **Get user confirmation** before writing. Ask whether they want all items, a subset, or different priorities. Unlike the routine's autonomous mode, *nothing* lands in BACKLOG without the user's OK here.
 
-5. **Write to BACKLOG.md** in priority order. Default: auto-merge items at the top (so the routine ships them first and approval-required items don't block). User can override.
+6. **Write to BACKLOG.md** in priority order. Default: auto-merge items at the top so the next cycle ships them first; approval-required items below.
 
-6. **Commit directly to main** with a clear message like `BACKLOG: add N items (M auto-merge, K approval-required)`. Push.
+7. **Commit directly to `main`** (per `docs/ROUTINE.md` §3 BACKLOG state tracking rule) with a message like `BACKLOG: add N items (M auto-merge, K approval-required)`. Push.
 
-7. **Report tightly:**
+8. **Report tightly:**
    - Items queued + their tiers
-   - Whether to run `/run-routine` now or wait for the 8 AM PT scheduled run
+   - Whether to run `/run-routine` now or wait for the next scheduled cycle (3:15 AM / 8:30 AM / 10 PM PT weekdays)
    - Any blockers noticed (open approval-required PRs awaiting review, broken CI on main, etc.)
 
 ## Hard nos
 
-- Don't queue Phase 1 sprint tasks (T01–T21) as BACKLOG items. Those need full briefs in `docs/briefs/` — point the user at the brief template and Claude Chat planning instead.
+- Don't queue Phase 1 sprint tasks (T01–T21) as BACKLOG items. Those need full briefs in `docs/briefs/`.
 - Don't queue items that require human dashboard work (Supabase config, Vercel settings). The routine can't do those.
-- Don't auto-execute. This skill stops at "queue populated"; `/run-routine` runs it.
-- Don't push BACKLOG state in feature branches. Always direct-to-main per the routine's tracking rule.
+- Don't auto-execute. This skill stops at "queue populated"; `/run-routine` or the scheduled cycle runs it.
+- Don't push BACKLOG state in feature branches. Always direct-to-`main` per `docs/ROUTINE.md` §3.
 
 ## When you find a blocker
 
-If main has red CI, the routine will spend its run trying to fix it instead of doing real work. Suggest the user either:
+If `main` has red CI, the next routine cycle will spend its run trying to fix that instead of doing new work. Suggest the user either:
+
 - Add a "fix CI red" item at the top of the queue (so the routine handles it), or
-- Fix it manually before the next routine run
+- Fix it manually before the next cycle
 
 Either is fine. Just don't let it sit.

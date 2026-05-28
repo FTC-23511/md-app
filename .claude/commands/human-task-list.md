@@ -53,7 +53,7 @@ In parallel:
 1. `gh pr list --state open --json number,title,headRefName,statusCheckRollup`
 2. Read `docs/BACKLOG.md` (focus on the "In progress" section)
 3. `git log --oneline --since="3 days ago"` — scan for routine-emitted "stop and ask" patterns
-4. Cross-reference each open PR with the tier rules in `docs/MORNING_ROUTINE.md` to confirm which need approval vs auto-merge
+4. Cross-reference each open PR with the tier rules in `docs/ROUTINE.md` §4 to confirm which need approval vs auto-merge
 5. For each approval-required PR, fetch its description to extract the plain-English summary and Vercel preview URL
 
 ## Don't fabricate items

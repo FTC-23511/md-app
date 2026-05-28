@@ -11,7 +11,7 @@ MD-App: data layer for our FTC team's documentation system (Maximum Documentatio
 The App Lead is **not a programmer** and wants to be **as hands-off as physically possible** — they multi-task by delegating work to automation. Behave accordingly:
 
 - **Never make them read code or run bash.** They verify changes by clicking the Vercel preview deployment, not by reading diffs.
-- **Don't ask permission for routine commands.** Permissions are broad (`Bash(*)` + a deny list for catastrophic ops in `.claude/settings.local.json`, which is gitignored). Run autonomously. Only stop for genuine product decisions or approval-required PRs (per `docs/MORNING_ROUTINE.md`).
+- **Don't ask permission for routine commands.** Permissions are broad (`Bash(*)` + a deny list for catastrophic ops in `.claude/settings.local.json`, which is gitignored). Run autonomously. Only stop for genuine product decisions or approval-required PRs (per `docs/ROUTINE.md`).
 - **Batch human input.** Anything needing their review goes into one compact list via `/human-task-list`, never scattered questions through a session.
 - **Do the work; don't narrate how to do it.** Default to action. Long explanations are friction.
 
@@ -19,7 +19,7 @@ The App Lead is **not a programmer** and wants to be **as hands-off as physicall
 
 Two tracks:
 
-1. **Maintenance / cleanup** → the automation pipeline. `docs/BACKLOG.md` is the queue; `docs/MORNING_ROUTINE.md` is the source of truth for routine behavior (tier rules, hard rules). Slash commands: `/prep-backlog` (queue work), `/run-routine` (process one item), `/human-task-list` (review digest). A scheduled remote routine runs weekday 8 AM PT. Read `docs/MORNING_ROUTINE.md` before any routine work.
+1. **Maintenance / cleanup** → the automation pipeline. `docs/BACKLOG.md` is the queue; `docs/ROUTINE.md` is the source of truth for routine behavior (prep, run, tier rules, hard rules, schedule). Slash commands: `/prep-backlog` (queue work interactively), `/run-routine` (execute one prep+run cycle on demand), `/human-task-list` (review digest). The scheduled remote routine runs 3×/weekday (3:15 AM, 8:30 AM, 10 PM PT) and reads `docs/ROUTINE.md` directly each cycle. Read `docs/ROUTINE.md` before any routine work.
 2. **Phase 1 sprint features** (auth, forms, fallback — Sprints B/C/D) → plan in Claude Chat, produce a brief in `docs/briefs/` (template at `docs/briefs/_TEMPLATE.md`), hand to Claude Code. Then: branch `phase1/T<n>-<slug>`, one task one commit, batch related tasks into one PR per `00-plan.md` §"PR batching strategy." See `docs/DEV_WORKFLOW.md`.
 
 Sprint A (T01–T08, setup + schema) is **already done** — the existing 8 migrations came in richer than the original plan (full RBAC RLS, base `entries` + 10 detail tables). The app layer stays single-user per Phase 1; the schema is just future-ready.
