@@ -17,7 +17,21 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-1. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Expected tier: auto-merge (config only)._
+From brief [`docs/briefs/2026-05-28-forms.md`](briefs/2026-05-28-forms.md) — Forms + entries (T13–T17). Process in order; spec sync ships first so subsequent items reference correct paths.
+
+1. **[docs]** Forms brief item 1 — spec sync: update `docs/phase1/00-plan.md` T13–T17 deliverables, `docs/phase1/01-conventions.md` §1 folder structure, and `docs/phase1/03-forms.md` §§1–18 paths from `src/*` → root-level + `(app)` → `(authed)` + `/sessions/new` → `/entries/sessions/new`. Drop `voice_memo_url` from Phase 1 references. _Tier: auto-merge (docs only)._
+2. **[forms]** Forms brief item 2 — foundations: `entries/_types.ts` (full `FieldBlock` discriminated union per `03-forms.md` §§1–12, `VisibilityCondition` with `equalsOptionValue`, `OptionCategory` union) + `lib/option-list-helpers.ts` (server-side `getOptionsByCategory` + `createOption` server action with slug derivation and collision handling). _Tier: auto-merge._
+3. **[forms]** Forms brief item 3 — primitive blocks: `components/entry-form/blocks/TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx` (thin shadcn wrappers). _Tier: auto-merge._
+4. **[forms]** Forms brief item 4 — select blocks: `SingleSelectBlock.tsx` + `MultiSelectBlock.tsx` (with optional `withCustomNote` textarea), both wired to the "Add new…" popover calling `createOption`. _Tier: auto-merge._
+5. **[forms]** Forms brief item 5 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx` (dynamic-row pattern, optional shared `RepeatingRows` helper). _Tier: auto-merge._
+6. **[forms]** Forms brief item 6 — composite blocks part 2: `StoryBlock.tsx` (≥3 stories, hard-coded `permission` enum, optional `photo_url`) + `SpecialtyTriggersBlock.tsx` (five fixed Tier 2 checkboxes per Charter §11; owner+subject required when checked). _Tier: auto-merge._
+7. **[forms]** Forms brief item 7 — renderer: `components/entry-form/EntryForm.tsx` + `FieldRenderer.tsx` + `visibleWhen` evaluator with `equalsOptionValue` resolution. Server-component wrapper that fetches options for every declared category. _Tier: auto-merge._
+8. **[forms]** Forms brief item 8 — validate + insert helpers: `lib/validate-entry.ts` (Zod builder from definition, skips hidden fields) + `lib/insert-entry.ts` (splits column/extras, attaches `created_by` + `created_via='app'` + `entry_state`). Delete `lib/schemas/session-log.ts`. _Tier: auto-merge._
+9. **[forms]** Forms brief item 9 — T14 Session Log: `entries/session-log.ts` per `03-forms.md` §13, `entries/_registry.ts`, `app/(authed)/entries/sessions/new/page.tsx`. _Tier: auto-merge._
+10. **[forms]** Forms brief item 10 — T15 Outreach Log: `entries/outreach-log.ts` per `03-forms.md` §14 (story-block, multi-select with note, two `visibleWhen` fields, 22 fields), registry update, `app/(authed)/entries/outreach/new/page.tsx`. _Tier: auto-merge._
+11. **[forms]** Forms brief item 11 — T16 Meeting Notes: `entries/meeting-notes.ts` per `03-forms.md` §15, registry update, `app/(authed)/entries/meetings/new/page.tsx`. _Tier: auto-merge._
+12. **[forms]** Forms brief item 12 — T17 list view: `app/(authed)/entries/list/page.tsx`, `lib/queries.ts` with `listAllEntries()`, `listSummary` exports on each entry definition, type-pill component, empty state, placeholder detail route at `app/(authed)/entries/[type]/[id]/page.tsx`, dashboard placeholder copy linking the new pages. _Tier: auto-merge._
+13. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
 
 ## In progress
 
