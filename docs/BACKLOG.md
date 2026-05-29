@@ -36,12 +36,13 @@ From brief [`docs/briefs/2026-05-28-forms.md`](briefs/2026-05-28-forms.md) — F
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[docs]** Forms brief item 1 — spec sync: update `docs/phase1/00-plan.md` T13–T17 deliverables, `docs/phase1/01-conventions.md` §1 folder structure, and `docs/phase1/03-forms.md` §§1–18 paths from `src/*` → root-level + `(app)` → `(authed)` + `/sessions/new` → `/entries/sessions/new`. Drop `voice_memo_url` from Phase 1 references. Branch `routine/forms-spec-sync`. PR: pending.
+_(empty)_
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-05-28 — **[docs]** Forms brief item 1 — spec sync: align `00-plan.md` T13–T17, `01-conventions.md` §1, and `03-forms.md` §§1–18 paths to repo reality (root-level paths, `(authed)` route group, `/entries/<type>/new`); drop Phase-2 `voice_memo_url` reference. Auto-merged in [#9](https://github.com/FTC-23511/md-app/pull/9).
 - 2026-05-27 — **[chore]** Consolidate the automation routine — rename `MORNING_ROUTINE.md` → `ROUTINE.md`, fold prep+run, document 3×/weekday schedule. Squash-merged in [#8](https://github.com/FTC-23511/md-app/pull/8).
 - 2026-05-27 — **[auth]** Phase 1 auth batch (T09–T12): single-email allowlist in middleware + `/forbidden`, email+password sign-in replacing magic-link, forgot/reset/change-password flow, protected layout top bar. Squash-merged in [#7](https://github.com/FTC-23511/md-app/pull/7).
 - 2026-05-27 — **[docs]** Audit `.env.example` (add `ALLOWED_EMAIL`, fix stale magic-link comment) — superseded by #7 (which made the same changes as part of the auth batch). Closed: [#5](https://github.com/FTC-23511/md-app/pull/5).
