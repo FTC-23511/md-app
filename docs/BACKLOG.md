@@ -19,8 +19,7 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 From brief [`docs/briefs/2026-05-28-forms.md`](briefs/2026-05-28-forms.md) — Forms + entries (T13–T17). Process in order; spec sync ships first so subsequent items reference correct paths.
 
-1. **[forms]** Forms brief item 2 — foundations: `entries/_types.ts` (full `FieldBlock` discriminated union per `03-forms.md` §§1–12, `VisibilityCondition` with `equalsOptionValue`, `OptionCategory` union) + `lib/option-list-helpers.ts` (server-side `getOptionsByCategory` + `createOption` server action with slug derivation and collision handling). _Tier: auto-merge._
-2. **[forms]** Forms brief item 3 — primitive blocks: `components/entry-form/blocks/TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx` (thin shadcn wrappers). _Tier: auto-merge._
+1. **[forms]** Forms brief item 3 — primitive blocks: `components/entry-form/blocks/TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx` (thin shadcn wrappers). _Tier: auto-merge._
 3. **[forms]** Forms brief item 4 — select blocks: `SingleSelectBlock.tsx` + `MultiSelectBlock.tsx` (with optional `withCustomNote` textarea), both wired to the "Add new…" popover calling `createOption`. _Tier: auto-merge._
 4. **[forms]** Forms brief item 5 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx` (dynamic-row pattern, optional shared `RepeatingRows` helper). _Tier: auto-merge._
 5. **[forms]** Forms brief item 6 — composite blocks part 2: `StoryBlock.tsx` (≥3 stories, hard-coded `permission` enum, optional `photo_url`) + `SpecialtyTriggersBlock.tsx` (five fixed Tier 2 checkboxes per Charter §11; owner+subject required when checked). _Tier: auto-merge._
@@ -36,7 +35,7 @@ From brief [`docs/briefs/2026-05-28-forms.md`](briefs/2026-05-28-forms.md) — F
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[forms]** Forms brief item 2 — foundations: `entries/_types.ts` (full `FieldBlock` discriminated union per `03-forms.md` §§1–12, `VisibilityCondition` with `equalsOptionValue`, `OptionCategory` union) + `lib/option-list-helpers.ts` (server-side `getOptionsByCategory` + `createOption` server action with slug derivation and collision handling). Branch `routine/forms-foundations`. PR: pending.
 
 ## Done
 
