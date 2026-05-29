@@ -17,9 +17,12 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
+> ⚠️ **Forms brief items 2–12 are BLOCKED on a structural decision** — see the cycle summary committed alongside this BACKLOG update, and the [forms brief](briefs/2026-05-28-forms.md) doesn't yet reflect this. The actual auth-batch migrations took a different schema architecture (Postgres ENUMs + explicit typed columns + separate tables) than the spec assumed (`option_lists` table + `extras` JSONB). Almost every forms item depends on which approach we use. Three resolution paths surfaced in the escalation; the brief needs a revision before items 2–12 can ship.
+
 From brief [`docs/briefs/2026-05-28-forms.md`](briefs/2026-05-28-forms.md) — Forms + entries (T13–T17). Process in order; spec sync ships first so subsequent items reference correct paths.
 
-1. **[forms]** Forms brief item 3 — primitive blocks: `components/entry-form/blocks/TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx` (thin shadcn wrappers). _Tier: auto-merge._
+1. **[forms]** Forms brief item 2 — foundations: `entries/_types.ts` + `lib/option-list-helpers.ts`. **⚠️ BLOCKED** — depends on resolution above. _Tier: auto-merge if path A; approval-required if path B._
+2. **[forms]** Forms brief item 3 — primitive blocks: `components/entry-form/blocks/TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx` (thin shadcn wrappers). _Tier: auto-merge._
 3. **[forms]** Forms brief item 4 — select blocks: `SingleSelectBlock.tsx` + `MultiSelectBlock.tsx` (with optional `withCustomNote` textarea), both wired to the "Add new…" popover calling `createOption`. _Tier: auto-merge._
 4. **[forms]** Forms brief item 5 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx` (dynamic-row pattern, optional shared `RepeatingRows` helper). _Tier: auto-merge._
 5. **[forms]** Forms brief item 6 — composite blocks part 2: `StoryBlock.tsx` (≥3 stories, hard-coded `permission` enum, optional `photo_url`) + `SpecialtyTriggersBlock.tsx` (five fixed Tier 2 checkboxes per Charter §11; owner+subject required when checked). _Tier: auto-merge._
@@ -35,7 +38,7 @@ From brief [`docs/briefs/2026-05-28-forms.md`](briefs/2026-05-28-forms.md) — F
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[forms]** Forms brief item 2 — foundations: `entries/_types.ts` (full `FieldBlock` discriminated union per `03-forms.md` §§1–12, `VisibilityCondition` with `equalsOptionValue`, `OptionCategory` union) + `lib/option-list-helpers.ts` (server-side `getOptionsByCategory` + `createOption` server action with slug derivation and collision handling). Branch `routine/forms-foundations`. PR: pending.
+_(empty — forms item 2 attempted but rolled back; see escalation in cycle summary)_
 
 ## Done
 
