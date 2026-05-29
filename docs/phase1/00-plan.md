@@ -237,13 +237,13 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** This is the largest single task in Phase 1 and the architectural foundation for every entry type. Build:
 
-- `src/entries/_types.ts` — `EntryDefinition`, `FieldBlock` discriminated union, all ten block type definitions, `VisibilityCondition` shape.
-- `src/components/entry-form/EntryForm.tsx` — the generic renderer.
-- `src/components/entry-form/FieldRenderer.tsx` — type-switching block renderer.
-- `src/components/entry-form/blocks/` — one file per block type. Ten files total. Each implements a controlled or uncontrolled input per the patterns in `docs/phase1/03-forms.md` §§3–12.
-- `src/lib/validate-entry.ts` — builds Zod schemas from definitions.
-- `src/lib/insert-entry.ts` — generic insert helper splitting column/extras.
-- `src/lib/option-list-helpers.ts` — server-side fetch by category, "Add new..." server action.
+- `entries/_types.ts` — `EntryDefinition`, `FieldBlock` discriminated union, all ten block type definitions, `VisibilityCondition` shape.
+- `components/entry-form/EntryForm.tsx` — the generic renderer.
+- `components/entry-form/FieldRenderer.tsx` — type-switching block renderer.
+- `components/entry-form/blocks/` — one file per block type. Ten files total. Each implements a controlled or uncontrolled input per the patterns in `docs/phase1/03-forms.md` §§3–12.
+- `lib/validate-entry.ts` — builds Zod schemas from definitions.
+- `lib/insert-entry.ts` — generic insert helper splitting column/extras.
+- `lib/option-list-helpers.ts` — server-side fetch by category, "Add new..." server action.
 - Visibility-condition evaluator inside the renderer.
 - Option-list loading wrapper (a server component that fetches all needed categories and passes options to the renderer).
 
@@ -259,9 +259,9 @@ Use a stub `notes` entry definition with one of each block type for development 
 
 #### T14. Define Session Log entry + page
 
-**Description.** Write the Session Log entry definition in `src/entries/session-log.ts` per `docs/phase1/03-forms.md` §13. Add to `src/entries/_registry.ts`. Build the route page at `src/app/(app)/sessions/new/page.tsx` (a thin file: import the renderer, the definition, the action; render). Export the `sessionLogBodyMapping` for the fallback importer (used in T19; can be a stub for now).
+**Description.** Write the Session Log entry definition in `entries/session-log.ts` per `docs/phase1/03-forms.md` §13. Add to `entries/_registry.ts`. Build the route page at `app/(authed)/entries/sessions/new/page.tsx` (a thin file: import the renderer, the definition, the action; render). Export the `sessionLogBodyMapping` for the fallback importer (used in T19; can be a stub for now).
 
-**Deliverables.** `src/entries/session-log.ts`, `src/entries/_registry.ts`, `src/app/(app)/sessions/new/page.tsx`.
+**Deliverables.** `entries/session-log.ts`, `entries/_registry.ts`, `app/(authed)/entries/sessions/new/page.tsx`.
 
 **Acceptance.** From `/list`, navigating to "New Session Log" loads the form. Filling it out with valid data inserts a row in `session_logs` and redirects to `/list`. Filling specialty-entry checkboxes with owner/subject works; the data lands in `extras.specialty_entries`. Submitting required fields blank shows red error text under each missing field.
 
@@ -273,7 +273,7 @@ Use a stub `notes` entry definition with one of each block type for development 
 
 **Description.** Write the Outreach Log entry definition per `docs/phase1/03-forms.md` §14. This is the most complex entry — uses `story-block`, `multi-select` with custom note, and `visibleWhen` conditional fields. Add to registry. Build the route page. Export body mapping.
 
-**Deliverables.** `src/entries/outreach-log.ts`, registry update, `src/app/(app)/outreach/new/page.tsx`.
+**Deliverables.** `entries/outreach-log.ts`, registry update, `app/(authed)/entries/outreach/new/page.tsx`.
 
 **Acceptance.** Form renders with all 22 fields. Engagement-depth requires either ≥1 checkbox OR a non-empty custom note. Three stories required, all named with permission status. Follow-up-type changes trigger conditional fields. Submitting with all required fields inserts a row in `outreach_logs` with the expected typed columns and `extras` structure.
 
@@ -285,7 +285,7 @@ Use a stub `notes` entry definition with one of each block type for development 
 
 **Description.** Write the Meeting Notes entry definition per `docs/phase1/03-forms.md` §15. Add to registry. Build the route page. Export body mapping.
 
-**Deliverables.** `src/entries/meeting-notes.ts`, registry update, `src/app/(app)/meetings/new/page.tsx`.
+**Deliverables.** `entries/meeting-notes.ts`, registry update, `app/(authed)/entries/meetings/new/page.tsx`.
 
 **Acceptance.** Form renders, ≥1 attendee required, action items optional, submitting inserts a row in `meeting_notes`.
 
@@ -297,7 +297,7 @@ Use a stub `notes` entry definition with one of each block type for development 
 
 **Description.** Build `/list` (which is also the post-login landing page) showing every active entry across all three Tier 1 types, sorted by `created_at DESC`. Each row shows: a colored type pill, the date, the entry's headline summary (from the definition's `listSummary` function), and the filer's email. Empty state is handled ("No entries yet — file one above").
 
-**Deliverables.** `src/app/(app)/list/page.tsx`, server-side query function in `src/lib/queries.ts`, `listSummary` exports added to each entry definition file.
+**Deliverables.** `app/(authed)/entries/list/page.tsx`, server-side query function in `lib/queries.ts`, `listSummary` exports added to each entry definition file.
 
 **Acceptance.** All entries from all three forms appear, sorted by date descending. Each row links to a placeholder `/<type>/<id>` detail page (Phase 2 builds the real detail view; Phase 1 just renders "Detail view: Phase 2"). Empty state renders correctly when no entries exist.
 
