@@ -41,7 +41,7 @@ From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[schema]** Forms rev2 item 1 — Migration A (drop legacy). Branch `routine/forms-migration-a-drop-legacy`. PR: pending. **Approval-required.**
 
 ## Done
 
