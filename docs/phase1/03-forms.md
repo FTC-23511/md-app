@@ -9,7 +9,7 @@ Sections 1–2 establish the type system and renderer behavior. Sections 3–12 
 An entry definition is a TypeScript value that describes one entry type completely. It is the single source of truth for that entry's form, validation, database insert, and list-view rendering.
 
 ```typescript
-// src/entries/_types.ts
+// entries/_types.ts
 
 export type EntryDefinition = {
   /** Machine-readable entry type. Matches the option_lists category style. */
@@ -34,7 +34,7 @@ export type EntryDefinition = {
 The `FieldBlock` type is a discriminated union of every block type in the Phase 1 library. Each block variant has a `type` literal discriminator and its own configuration shape.
 
 ```typescript
-// src/entries/_types.ts (continued)
+// entries/_types.ts (continued)
 
 export type FieldBlock =
   | TextBlock
@@ -76,7 +76,7 @@ The block-type-specific properties extend `BlockBase` and add type-specific conf
 The renderer is one component used by every entry form:
 
 ```typescript
-// src/components/entry-form/EntryForm.tsx — usage
+// components/entry-form/EntryForm.tsx — usage
 
 import { EntryForm } from '@/components/entry-form/EntryForm';
 import { sessionLogEntry } from '@/entries/session-log';
@@ -477,7 +477,7 @@ z.array(
 ## 13. Session Log entry definition
 
 ```typescript
-// src/entries/session-log.ts
+// entries/session-log.ts
 
 import type { EntryDefinition } from './_types';
 
@@ -604,7 +604,7 @@ export const sessionLogEntry: EntryDefinition = {
 ## 14. Outreach Log entry definition
 
 ```typescript
-// src/entries/outreach-log.ts
+// entries/outreach-log.ts
 
 import type { EntryDefinition } from './_types';
 
@@ -895,7 +895,7 @@ This avoids hard-coding UUIDs in the entry definitions.
 ## 15. Meeting Notes entry definition
 
 ```typescript
-// src/entries/meeting-notes.ts
+// entries/meeting-notes.ts
 
 import type { EntryDefinition } from './_types';
 
@@ -1012,7 +1012,7 @@ export const meetingNotesEntry: EntryDefinition = {
 ## 16. The registry
 
 ```typescript
-// src/entries/_registry.ts
+// entries/_registry.ts
 
 import { sessionLogEntry } from './session-log';
 import { outreachLogEntry } from './outreach-log';
@@ -1033,7 +1033,7 @@ The registry lets the list view enumerate every known entry type without hard-co
 ## 17. The insert helper
 
 ```typescript
-// src/lib/insert-entry.ts — pseudo-implementation showing the contract
+// lib/insert-entry.ts — pseudo-implementation showing the contract
 
 export async function insertEntry(
   definition: EntryDefinition,
@@ -1095,7 +1095,7 @@ This is one function that handles every entry type. Adding a new entry type does
 The list view at `/list` shows every active entry across every registered entry type, sorted by `created_at DESC`.
 
 ```typescript
-// src/lib/queries.ts
+// lib/queries.ts
 
 export async function listAllEntries(limit = 50) {
   const supabase = await createServerClient();
@@ -1137,9 +1137,9 @@ Each row in the list view renders as: `[type pill]` `[date]` `[headline]` `[file
 
 To add (say) Decision Log capture in Phase 2:
 
-1. Create `src/entries/decision-log.ts` exporting a `decisionLogEntry: EntryDefinition`.
-2. Add it to `src/entries/_registry.ts`.
-3. Create `src/app/(app)/decisions/new/page.tsx` (a 5-line file: import the renderer, the definition, the action).
+1. Create `entries/decision-log.ts` exporting a `decisionLogEntry: EntryDefinition`.
+2. Add it to `entries/_registry.ts`.
+3. Create `app/(authed)/entries/decisions/new/page.tsx` (a 5-line file: import the renderer, the definition, the action).
 4. The list view automatically picks up the new type via the registry.
 5. The insert helper automatically handles the new type.
 

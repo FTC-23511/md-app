@@ -7,58 +7,74 @@ The audience is someone newer to this stack. Each section explains _why_ alongsi
 ## 1. Folder structure
 
 ```
-src/
-├── app/                            # Next.js App Router
-│   ├── (auth)/                     # auth-related routes (login, forbidden)
-│   │   ├── login/page.tsx
-│   │   └── forbidden/page.tsx
-│   ├── (app)/                      # protected app routes (everything past login)
-│   │   ├── layout.tsx              # auth check + nav shell
-│   │   ├── sessions/new/page.tsx
-│   │   ├── outreach/new/page.tsx
-│   │   ├── meetings/new/page.tsx
-│   │   └── list/page.tsx
-│   ├── auth/callback/route.ts      # magic-link handler (not protected)
-│   ├── layout.tsx                  # root layout
-│   └── page.tsx                    # root redirect (→ /login or /list)
-├── components/
-│   ├── ui/                         # shadcn primitives, copy-pasted (Button, Input, etc.)
-│   └── entry-form/                 # generic entry form renderer + field block renderers
-│       ├── EntryForm.tsx           # the renderer; takes an EntryDefinition, renders fields
-│       ├── FieldRenderer.tsx       # switches on block.type, renders the right block
-│       └── blocks/                 # one file per field block type
-│           ├── TextBlock.tsx
-│           ├── LongTextBlock.tsx
-│           ├── SingleSelectBlock.tsx
-│           ├── MultiSelectBlock.tsx
-│           ├── DateBlock.tsx
-│           ├── NumberBlock.tsx
-│           ├── PersonAttributionBlock.tsx
-│           ├── StoryBlock.tsx
-│           ├── ActionItemsBlock.tsx
-│           └── SpecialtyTriggersBlock.tsx
-├── entries/                        # one entry definition per file
-│   ├── _types.ts                   # FieldBlock and EntryDefinition TS types
-│   ├── _registry.ts                # exports all entry definitions
-│   ├── session-log.ts
-│   ├── outreach-log.ts
-│   └── meeting-notes.ts
-├── lib/
-│   ├── supabase/
-│   │   ├── server.ts               # server-side Supabase client factory
-│   │   └── client.ts               # browser-side Supabase client factory
-│   ├── insert-entry.ts             # generic server-action helper: definition + data → DB row
-│   ├── validate-entry.ts           # builds a Zod schema from a definition; parses form data
-│   ├── queries.ts                  # server-side query helpers (list view, etc.)
-│   └── utils.ts                    # cn() and other shared helpers
-└── middleware.ts                   # email-allowlist enforcement on protected routes
+app/                                # Next.js App Router (no src/ wrapper)
+├── auth/                           # auth-related routes (sign-in, password flows, sign-out)
+│   ├── sign-in/page.tsx
+│   ├── sign-out/...
+│   ├── forgot-password/page.tsx
+│   ├── reset-password/...
+│   └── change-password/page.tsx
+├── forbidden/page.tsx              # shown when an allowlisted email check fails
+├── (authed)/                       # protected app routes (everything past sign-in)
+│   ├── layout.tsx                  # auth check + nav shell
+│   ├── dashboard/page.tsx          # post-sign-in landing (member info)
+│   └── entries/                    # entry capture + list lives here
+│       ├── sessions/new/page.tsx
+│       ├── outreach/new/page.tsx
+│       ├── meetings/new/page.tsx
+│       ├── list/page.tsx
+│       └── [type]/[id]/page.tsx    # placeholder detail (Phase 1) → real view (Phase 2)
+├── api/health/route.ts             # health probe
+├── layout.tsx                      # root layout
+└── page.tsx                        # root redirect (→ /auth/sign-in or /dashboard)
+
+components/
+├── ui/                             # shadcn primitives, copy-pasted (Button, Input, etc.)
+└── entry-form/                     # generic entry form renderer + field block renderers
+    ├── EntryForm.tsx               # the renderer; takes an EntryDefinition, renders fields
+    ├── FieldRenderer.tsx           # switches on block.type, renders the right block
+    └── blocks/                     # one file per field block type
+        ├── TextBlock.tsx
+        ├── LongTextBlock.tsx
+        ├── SingleSelectBlock.tsx
+        ├── MultiSelectBlock.tsx
+        ├── DateBlock.tsx
+        ├── NumberBlock.tsx
+        ├── PersonAttributionBlock.tsx
+        ├── StoryBlock.tsx
+        ├── ActionItemsBlock.tsx
+        └── SpecialtyTriggersBlock.tsx
+
+entries/                            # one entry definition per file
+├── _types.ts                       # FieldBlock and EntryDefinition TS types
+├── _registry.ts                    # exports all entry definitions
+├── session-log.ts
+├── outreach-log.ts
+└── meeting-notes.ts
+
+lib/
+├── supabase/
+│   ├── server.ts                   # server-side Supabase client factory
+│   ├── client.ts                   # browser-side Supabase client factory
+│   └── middleware.ts               # auth cookie refresh used by /middleware.ts
+├── actions/                        # shared server actions
+├── insert-entry.ts                 # generic server-action helper: definition + data → DB row
+├── validate-entry.ts               # builds a Zod schema from a definition; parses form data
+├── option-list-helpers.ts          # server-side fetch + "Add new…" server action for option_lists
+├── queries.ts                      # server-side query helpers (list view, etc.)
+├── env.ts                          # env-var validation
+└── utils.ts                        # cn() and other shared helpers
+
+middleware.ts                       # session refresh + email-allowlist enforcement
 ```
 
-**The `(auth)` and `(app)` parentheses** are Next.js _route groups_. Routes inside parens are not part of the URL — `(app)/list/page.tsx` is reachable at `/list`, not `/(app)/list`. They group routes that share a layout. `(app)`'s layout enforces auth; `(auth)`'s does not.
+**Path aliases.** `tsconfig.json` maps `@/* → ./*` (no `src/` prefix). Import as `@/lib/insert-entry`, `@/entries/session-log`, etc.
+
+**The `(authed)` parentheses** are a Next.js _route group_. Routes inside parens are not part of the URL — `(authed)/entries/list/page.tsx` is reachable at `/entries/list`, not `/(authed)/entries/list`. Route groups share a layout — `(authed)/layout.tsx` enforces auth for every route under it.
 
 **Files starting with underscore** (`_types.ts`, `_registry.ts`) are convention for "internal to this folder, not a route or component file." They're not magic to Next.js; the prefix is for human readers and grep.
 
-**Why `src/entries/` exists at all.** Because every entry type's definition lives here as a declarative TS file. The form, the validation, the DB insert, and the list-view rendering all read from this file. One source of truth per entry type. See §5.
+**Why `entries/` exists at all.** Because every entry type's definition lives here as a declarative TS file. The form, the validation, the DB insert, and the list-view rendering all read from this file. One source of truth per entry type. See §5.
 
 ## 2. Naming
 
@@ -205,7 +221,7 @@ The condition shapes:
 { field: 'follow_up_type', equals: 'individual' }
 
 // Hidden until the parent field has any non-empty / truthy value
-{ field: 'has_voice_memo', truthy: true }
+{ field: 'next_meeting_date', truthy: true }
 
 // Hidden unless the parent's value is one of several options
 { field: 'event_type', in: ['public-showcase', 'classroom-visit', 'workshop'] }
