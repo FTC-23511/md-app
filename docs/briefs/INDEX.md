@@ -11,7 +11,7 @@ The intent is **focused planning while awake → autonomous execution while asle
 | Setup               | T01–T04 | n/a               | ✅ shipped              |
 | Schema              | T05–T08 | n/a               | ✅ shipped              |
 | Auth                | T09–T12 | n/a (chat handoff in [#7](https://github.com/FTC-23511/md-app/pull/7)) | ✅ shipped              |
-| **Forms + entries** | T13–T17 | _not yet written_ | 🟡 **owed by App Lead** |
+| **Forms + entries** | T13–T17 | [2026-05-28-forms.md](2026-05-28-forms.md) | 🟢 brief written — routine picks up next cycle |
 | **Fallback**        | T18–T19 | [2026-05-28-fallback.md](2026-05-28-fallback.md) | 🟢 brief written — blocked on Forms batch shipping first |
 | Deploy              | T20–T21 | n/a (manual ops)  | ✅ ready                |
 
@@ -28,6 +28,7 @@ That's all you do. The next routine cycle (or an on-demand `/prep-backlog`) read
 
 ## Brief inventory
 
+- [`2026-05-28-forms.md`](2026-05-28-forms.md) — Forms + entries batch (T13–T17). Sprint C. 12 BACKLOG items, all auto-merge tier.
 - [`2026-05-28-fallback.md`](2026-05-28-fallback.md) — Fallback batch (T18–T19). Sprint D. Execution blocked until Forms (T13–T17) ships.
 
 <!-- When a brief lands, add a row like:
