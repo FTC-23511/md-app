@@ -43,7 +43,7 @@ From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2
 
 - **[schema]** Forms rev2 item 1 — Migration A (drop legacy). Branch `routine/forms-migration-a-drop-legacy`. PR: [#10](https://github.com/FTC-23511/md-app/pull/10) (CI green, awaiting App Lead approval). **Approval-required.**
 - **[schema]** Forms rev2 item 2 — Migration B (option_lists). Branch `routine/forms-migration-b-option-lists`. PR: [#11](https://github.com/FTC-23511/md-app/pull/11) (CI pending, awaiting App Lead approval). **Approval-required.**
-- **[schema]** Forms rev2 item 3 — Migration C (Phase 1 detail tables). Branch `routine/forms-migration-c-phase1-tables`. PR: pending. **Approval-required.**
+- **[schema]** Forms rev2 item 3 — Migration C (Phase 1 detail tables). Branch `routine/forms-migration-c-phase1-tables`. PR: [#12](https://github.com/FTC-23511/md-app/pull/12) (awaiting App Lead approval). **Approval-required.**
 
 ## Done
 
