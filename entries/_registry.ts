@@ -1,4 +1,5 @@
 import { sessionLogEntry } from './session-log';
+import { outreachLogEntry } from './outreach-log';
 import type { EntryDefinition } from './_types';
 
 /**
@@ -8,6 +9,7 @@ import type { EntryDefinition } from './_types';
  */
 export const ENTRY_REGISTRY: Record<string, EntryDefinition> = {
   session_log: sessionLogEntry,
+  outreach_log: outreachLogEntry,
 };
 
 export const ENTRY_LIST: EntryDefinition[] = Object.values(ENTRY_REGISTRY);
