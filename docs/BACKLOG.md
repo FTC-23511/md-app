@@ -22,28 +22,28 @@ From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2
 1. **[schema]** Forms rev2 item 1 — Migration A: drop legacy. `supabase/migrations/20260528000001_drop_legacy_schema.sql` drops all auth-batch detail/cross-cutting tables (`entries`, `entry_revisions`, `entry_attendees`, `media_attachments`, `flags`, `action_items`, `awards`, `award_criteria`, `classification_tags`, all three Tier-1 + seven Tier-2 detail tables, `outreach_stories`, `subsystems`, `teams`, `seasons`, `subsystem_leads`) + ENUM types + the `handle_new_auth_user` trigger; alters `members` to drop `name`/`role`/`team_id` and add `display_name`. _**Tier: approval-required** — touches `supabase/migrations/`._
 2. **[schema]** Forms rev2 item 2 — Migration B: option\*lists. `supabase/migrations/20260528000002_option_lists.sql` per `02-schema.md` §§4.2–4.3 — `option_lists` table + 8 categories of seed data. **\*Tier: approval-required.**\_
 3. **[schema]** Forms rev2 item 3 — Migration C: Phase 1 detail tables + flags + Phase 4 placeholders. `supabase/migrations/20260528000003_phase1_tables.sql` creates `session_logs`, `outreach_logs`, `meeting_notes` per spec §§5.1–5.3 (with `extras jsonb` and option\*lists FKs); plus `flags` per §4.4; plus `classification_index` + `award_criteria_snapshot` per §§4.5–4.6 (Phase 4 use, Phase 1 schema); permissive Phase 1 RLS. **\*Tier: approval-required.**\_
-4. **[forms]** Forms rev2 item 7 — primitive blocks: `components/entry-form/blocks/TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx`. _Tier: auto-merge._
-5. **[forms]** Forms rev2 item 8 — select blocks: `SingleSelectBlock.tsx` + `MultiSelectBlock.tsx` + "Add new…" popover. _Tier: auto-merge._
-6. **[forms]** Forms rev2 item 9 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx`. _Tier: auto-merge._
-7. **[forms]** Forms rev2 item 10 — composite blocks part 2: `StoryBlock.tsx` + `SpecialtyTriggersBlock.tsx`. _Tier: auto-merge._
-8. **[forms]** Forms rev2 item 11 — renderer: `EntryForm.tsx` + `FieldRenderer.tsx` + `visibleWhen` evaluator. _Tier: auto-merge._
-9. **[forms]** Forms rev2 item 12 — validate + insert helpers: `lib/validate-entry.ts` + `lib/insert-entry.ts`. _Tier: auto-merge._
-10. **[forms]** Forms rev2 item 13 — T14 Session Log: `entries/session-log.ts` + `entries/_registry.ts` + `app/(authed)/entries/sessions/new/page.tsx`. _Tier: auto-merge._
-11. **[forms]** Forms rev2 item 14 — T15 Outreach Log: `entries/outreach-log.ts` + registry update + `app/(authed)/entries/outreach/new/page.tsx`. _Tier: auto-merge._
-12. **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. _Tier: auto-merge._
-13. **[forms]** Forms rev2 item 16 — T17 list view: `app/(authed)/entries/list/page.tsx`, `lib/queries.ts` with `listAllEntries()`, `listSummary` exports, type-pill component, empty state, placeholder detail route, dashboard wiring. _Tier: auto-merge._
-14. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
+4. **[forms]** Forms rev2 item 8 — select blocks: `SingleSelectBlock.tsx` + `MultiSelectBlock.tsx` + "Add new…" popover. _Tier: auto-merge._
+5. **[forms]** Forms rev2 item 9 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx`. _Tier: auto-merge._
+6. **[forms]** Forms rev2 item 10 — composite blocks part 2: `StoryBlock.tsx` + `SpecialtyTriggersBlock.tsx`. _Tier: auto-merge._
+7. **[forms]** Forms rev2 item 11 — renderer: `EntryForm.tsx` + `FieldRenderer.tsx` + `visibleWhen` evaluator. _Tier: auto-merge._
+8. **[forms]** Forms rev2 item 12 — validate + insert helpers: `lib/validate-entry.ts` + `lib/insert-entry.ts`. _Tier: auto-merge._
+9. **[forms]** Forms rev2 item 13 — T14 Session Log: `entries/session-log.ts` + `entries/_registry.ts` + `app/(authed)/entries/sessions/new/page.tsx`. _Tier: auto-merge._
+10. **[forms]** Forms rev2 item 14 — T15 Outreach Log: `entries/outreach-log.ts` + registry update + `app/(authed)/entries/outreach/new/page.tsx`. _Tier: auto-merge._
+11. **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. _Tier: auto-merge._
+12. **[forms]** Forms rev2 item 16 — T17 list view: `app/(authed)/entries/list/page.tsx`, `lib/queries.ts` with `listAllEntries()`, `listSummary` exports, type-pill component, empty state, placeholder detail route, dashboard wiring. _Tier: auto-merge._
+13. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[forms]** Forms rev2 item 6 — foundations (`entries/_types.ts` + `lib/option-list-helpers.ts`). Branch `routine/forms-foundations`. PR: pending. _Tier: auto-merge._
+- **[forms]** Forms rev2 item 7 — primitive blocks (Text/LongText/Date/Number). Branch `routine/forms-primitive-blocks`. PR: pending. _Tier: auto-merge._
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-05-29 — **[forms]** Forms rev2 item 6 — foundations: `entries/_types.ts` (FieldBlock discriminated union + VisibilityCondition + OptionCategory + EntryDefinition + OptionListRow) + `lib/option-list-helpers.ts` (`getOptionsByCategory` + `createOption` server action with slug/collision handling). Auto-merged in [#15](https://github.com/FTC-23511/md-app/pull/15).
 - 2026-05-29 — **[docs]** Forms rev2 item 5 — docs sync follow-up: remaining `src/` references and route-group references in `00-plan.md`/`01-conventions.md`/`02-schema.md`/`04-auth.md`/`05-fallback.md` aligned to repo reality. Auto-merged in [#14](https://github.com/FTC-23511/md-app/pull/14).
 - 2026-05-29 — **[fix]** Forms rev2 item 4 — code unblock: rewrote `app/(authed)/dashboard/page.tsx` to query new `members(email, display_name)` shape; stubbed `app/showcase/page.tsx` as Phase 4 placeholder; deleted `lib/schemas/session-log.ts` + its unit test; added `passWithNoTests: true` to vitest config. Auto-merged in [#13](https://github.com/FTC-23511/md-app/pull/13).
 - 2026-05-29 — **[schema]** Forms rev2 item 3 — Migration C: Phase 1 detail tables (`session_logs`, `outreach_logs`, `meeting_notes`) + `flags` + Phase 4 placeholders, all with permissive Phase 1 RLS. Squash-merged in [#12](https://github.com/FTC-23511/md-app/pull/12). Applied to dev DB.
