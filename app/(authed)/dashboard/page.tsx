@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export default async function DashboardPage() {
@@ -6,10 +7,6 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // The auth trigger `handle_new_auth_user` creates a members row for every
-  // signed-up auth user. The backfill in migration 009 covers the App Lead's
-  // pre-existing account too. So a row should always exist for any
-  // authenticated user — but we render gracefully if it doesn't.
   const { data: member } = await supabase
     .from('members')
     .select('email, display_name')
@@ -31,9 +28,6 @@ export default async function DashboardPage() {
               <span className="text-muted-foreground">Email:</span>{' '}
               <span className="font-medium">{member.email}</span>
             </p>
-            <p className="text-sm text-muted-foreground">
-              Entry capture forms ship soon — Session Logs, Outreach Logs, and Meeting Notes.
-            </p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -44,6 +38,36 @@ export default async function DashboardPage() {
             </p>
           </div>
         )}
+      </section>
+
+      <section className="mt-8 space-y-3">
+        <h2 className="text-lg font-semibold">Capture an entry</h2>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <Link
+            href={'/entries/sessions/new' as never}
+            className="inline-flex h-9 items-center rounded-md bg-primary px-3 font-medium text-primary-foreground shadow hover:bg-primary/90"
+          >
+            New Session Log
+          </Link>
+          <Link
+            href={'/entries/outreach/new' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            New Outreach Log
+          </Link>
+          <Link
+            href={'/entries/meetings/new' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            New Meeting Notes
+          </Link>
+          <Link
+            href={'/entries/list' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            View recent entries
+          </Link>
+        </div>
       </section>
     </main>
   );
