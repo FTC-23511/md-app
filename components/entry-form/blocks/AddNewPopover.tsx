@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { createOption } from '@/lib/option-list-helpers';
+import { createOption } from '@/lib/option-list-actions';
 import type { OptionCategory, OptionListRow } from '@/entries/_types';
 
 /**

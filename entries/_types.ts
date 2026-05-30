@@ -190,3 +190,11 @@ export type OptionListRow = {
   sort_order: number;
   is_seed: boolean;
 };
+
+// Result shape returned by the `createOption` server action. Lives here
+// (not in option-list-helpers.ts) so option-list-helpers.ts can be a
+// file-level 'use server' module — which Next 15 requires to export only
+// async functions.
+export type CreateOptionResult =
+  | { ok: true; option: OptionListRow; existed: boolean }
+  | { ok: false; error: string };
