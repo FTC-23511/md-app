@@ -6,12 +6,14 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Look up the member row for this auth user (may not exist yet for a brand-
-  // new sign-up — Captain provisions members manually for Phase 1).
+  // The auth trigger `handle_new_auth_user` creates a members row for every
+  // signed-up auth user. The backfill in migration 009 covers the App Lead's
+  // pre-existing account too. So a row should always exist for any
+  // authenticated user — but we render gracefully if it doesn't.
   const { data: member } = await supabase
     .from('members')
-    .select('id, name, role, team_id')
-    .eq('auth_user_id', user!.id)
+    .select('email, display_name')
+    .eq('id', user!.id)
     .maybeSingle();
 
   return (
@@ -22,23 +24,23 @@ export default async function DashboardPage() {
         {member ? (
           <div className="space-y-2">
             <p className="text-sm">
-              <span className="text-muted-foreground">Name:</span>{' '}
-              <span className="font-medium">{member.name}</span>
+              <span className="text-muted-foreground">Signed in as:</span>{' '}
+              <span className="font-medium">{member.display_name}</span>
             </p>
             <p className="text-sm">
-              <span className="text-muted-foreground">Role:</span>{' '}
-              <span className="font-medium">{member.role}</span>
+              <span className="text-muted-foreground">Email:</span>{' '}
+              <span className="font-medium">{member.email}</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Hello, MD app. Entry capture forms ship in the next phase.
+              Entry capture forms ship soon — Session Logs, Outreach Logs, and Meeting Notes.
             </p>
           </div>
         ) : (
           <div className="space-y-2">
             <p className="text-sm font-medium">No member record found.</p>
             <p className="text-sm text-muted-foreground">
-              Ask the Documentation Captain to add you to the team roster. Your auth account exists
-              but isn&apos;t linked to a team member yet.
+              Your auth account exists but isn&apos;t linked to a member row. Try signing out and
+              back in to trigger the auth-link backfill.
             </p>
           </div>
         )}
