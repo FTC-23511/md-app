@@ -966,7 +966,7 @@ When a Phase 2+ task requires schema changes:
 3. If the column is queried, add an index in the same migration.
 4. `supabase db reset` to verify.
 5. `supabase db push`.
-6. Update the entry definition in `src/entries/<type>.ts`.
+6. Update the entry definition in `entries/<type>.ts`.
 
 ### Promoting a field from `extras` to a typed column
 
@@ -989,7 +989,7 @@ When a Phase 2+ task requires schema changes:
 3. Add the `set_updated_at` trigger.
 4. Add the RLS enable + permissive policy.
 5. Add indexes for created_by, created_at DESC, and any FKs in `004` (or a new indexes migration if many are needed).
-6. Create the entry definition in `src/entries/<type>.ts`.
-7. Add to `src/entries/_registry.ts`.
+6. Create the entry definition in `entries/<type>.ts`.
+7. Add to `entries/_registry.ts`.
 
 Never edit an existing migration file after it's been applied to the remote. Always write a new migration. Editing applied migrations breaks the migration history table and produces `db push` sync errors.

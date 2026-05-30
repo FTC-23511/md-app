@@ -50,7 +50,7 @@ This is defense in depth: signup is already disabled (so no other accounts shoul
 **Logic:**
 
 1. The request comes in for any route.
-2. Middleware checks: is this route protected? (Anything under `(app)` is; the `/login`, `/forgot-password`, and `/auth/reset-password` routes are not.)
+2. Middleware checks: is this route protected? (Anything under `(authed)` is; the `/auth/sign-in`, `/auth/forgot-password`, and `/auth/reset-password` routes are not.)
 3. If protected: read the session cookie. If no session, redirect to `/login`.
 4. If session present: read the user's email. Compare to `process.env.ALLOWED_EMAIL`. If mismatch, sign out (clear the session) and redirect to `/forbidden`.
 5. If match, allow the request through.
@@ -112,7 +112,7 @@ The exact code may need adjustment as `@supabase/ssr` evolves; the above is the 
 
 ## 5. Login page
 
-`src/app/(auth)/login/page.tsx` is a single-purpose page with email and password inputs and a "Sign in" button. Below the form, a "Forgot password?" link goes to `/forgot-password`.
+`app/auth/login/page.tsx` is a single-purpose page with email and password inputs and a "Sign in" button. Below the form, a "Forgot password?" link goes to `/forgot-password`.
 
 **Flow:**
 
@@ -125,7 +125,7 @@ The exact code may need adjustment as `@supabase/ssr` evolves; the above is the 
 **Server action pattern:**
 
 ```typescript
-// src/app/(auth)/login/actions.ts
+// app/auth/login/actions.ts
 'use server';
 
 import { createServerClient } from '@/lib/supabase/server';
@@ -167,14 +167,14 @@ The one remaining magic-link path in the system, used only when the App Lead for
 
 **Pages and routes:**
 
-- `src/app/(auth)/forgot-password/page.tsx` — form with one email input and a "Send reset link" button. Submits to a server action that calls `supabase.auth.resetPasswordForEmail(email, { redirectTo: <SITE_URL>/auth/reset-password })`. Shows "If an account exists for that email, a reset link has been sent" regardless of whether the email is registered (avoids leaking which emails exist).
-- `src/app/auth/reset-password/route.ts` — the redirect target from the email. Exchanges the recovery code for a temporary session and forwards to the change-password form.
-- `src/app/(auth)/change-password/page.tsx` — form with one password input (and a confirm field) and a "Set new password" button. Submits to a server action that calls `supabase.auth.updateUser({ password })`. On success, redirects to `/login` with a success banner.
+- `app/auth/forgot-password/page.tsx` — form with one email input and a "Send reset link" button. Submits to a server action that calls `supabase.auth.resetPasswordForEmail(email, { redirectTo: <SITE_URL>/auth/reset-password })`. Shows "If an account exists for that email, a reset link has been sent" regardless of whether the email is registered (avoids leaking which emails exist).
+- `app/auth/reset-password/route.ts` — the redirect target from the email. Exchanges the recovery code for a temporary session and forwards to the change-password form.
+- `app/auth/change-password/page.tsx` — form with one password input (and a confirm field) and a "Set new password" button. Submits to a server action that calls `supabase.auth.updateUser({ password })`. On success, redirects to `/login` with a success banner.
 
 **Reset-password callback pattern:**
 
 ```typescript
-// src/app/auth/reset-password/route.ts
+// app/auth/reset-password/route.ts
 import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -195,11 +195,11 @@ export async function GET(request: NextRequest) {
 }
 ```
 
-The temporary session created by the reset flow is bound to the same user, so the middleware allowlist check passes when they navigate to `/change-password` (which sits under `(auth)`, so the middleware ignores it anyway). After the password is updated, they're sent to `/login` to sign in fresh.
+The temporary session created by the reset flow is bound to the same user, so the middleware allowlist check passes when they navigate to `/auth/change-password` (which sits under `app/auth/`, so the middleware ignores it anyway). After the password is updated, they're sent to `/auth/sign-in` to sign in fresh.
 
 ## 7. The protected route layout
 
-`src/app/(app)/layout.tsx` is the layout shared by all protected routes. It:
+`app/(authed)/layout.tsx` is the layout shared by all protected routes. It:
 
 1. Confirms the user is authenticated (a defensive check beyond middleware — if middleware misconfigures, the layout still catches it).
 2. Renders the top bar showing the user's email and a sign-out button.
