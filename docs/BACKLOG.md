@@ -22,23 +22,23 @@ From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2
 1. **[schema]** Forms rev2 item 1 — Migration A: drop legacy. `supabase/migrations/20260528000001_drop_legacy_schema.sql` drops all auth-batch detail/cross-cutting tables (`entries`, `entry_revisions`, `entry_attendees`, `media_attachments`, `flags`, `action_items`, `awards`, `award_criteria`, `classification_tags`, all three Tier-1 + seven Tier-2 detail tables, `outreach_stories`, `subsystems`, `teams`, `seasons`, `subsystem_leads`) + ENUM types + the `handle_new_auth_user` trigger; alters `members` to drop `name`/`role`/`team_id` and add `display_name`. _**Tier: approval-required** — touches `supabase/migrations/`._
 2. **[schema]** Forms rev2 item 2 — Migration B: option\*lists. `supabase/migrations/20260528000002_option_lists.sql` per `02-schema.md` §§4.2–4.3 — `option_lists` table + 8 categories of seed data. **\*Tier: approval-required.**\_
 3. **[schema]** Forms rev2 item 3 — Migration C: Phase 1 detail tables + flags + Phase 4 placeholders. `supabase/migrations/20260528000003_phase1_tables.sql` creates `session_logs`, `outreach_logs`, `meeting_notes` per spec §§5.1–5.3 (with `extras jsonb` and option\*lists FKs); plus `flags` per §4.4; plus `classification_index` + `award_criteria_snapshot` per §§4.5–4.6 (Phase 4 use, Phase 1 schema); permissive Phase 1 RLS. **\*Tier: approval-required.**\_
-4. **[forms]** Forms rev2 item 12 — validate + insert helpers: `lib/validate-entry.ts` + `lib/insert-entry.ts`. _Tier: auto-merge._
-5. **[forms]** Forms rev2 item 13 — T14 Session Log: `entries/session-log.ts` + `entries/_registry.ts` + `app/(authed)/entries/sessions/new/page.tsx`. _Tier: auto-merge._
-6. **[forms]** Forms rev2 item 14 — T15 Outreach Log: `entries/outreach-log.ts` + registry update + `app/(authed)/entries/outreach/new/page.tsx`. _Tier: auto-merge._
-7. **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. _Tier: auto-merge._
-8. **[forms]** Forms rev2 item 16 — T17 list view: `app/(authed)/entries/list/page.tsx`, `lib/queries.ts` with `listAllEntries()`, `listSummary` exports, type-pill component, empty state, placeholder detail route, dashboard wiring. _Tier: auto-merge._
-9. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
+4. **[forms]** Forms rev2 item 13 — T14 Session Log: `entries/session-log.ts` + `entries/_registry.ts` + `app/(authed)/entries/sessions/new/page.tsx`. _Tier: auto-merge._
+5. **[forms]** Forms rev2 item 14 — T15 Outreach Log: `entries/outreach-log.ts` + registry update + `app/(authed)/entries/outreach/new/page.tsx`. _Tier: auto-merge._
+6. **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. _Tier: auto-merge._
+7. **[forms]** Forms rev2 item 16 — T17 list view: `app/(authed)/entries/list/page.tsx`, `lib/queries.ts` with `listAllEntries()`, `listSummary` exports, type-pill component, empty state, placeholder detail route, dashboard wiring. _Tier: auto-merge._
+8. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[forms]** Forms rev2 item 11 — renderer (EntryForm + FieldRenderer + visibleWhen evaluator). Branch `routine/forms-renderer`. PR: pending. _Tier: auto-merge._
+- **[forms]** Forms rev2 item 12 — validate + insert helpers (lib/validate-entry.ts + lib/insert-entry.ts). Branch `routine/forms-validate-insert`. PR: pending. _Tier: auto-merge._
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-05-29 — **[forms]** Forms rev2 item 11 — renderer: `components/entry-form/EntryForm.tsx` + `FieldRenderer.tsx` + `visibility.ts` (with `equalsOptionValue` resolution). Auto-merged in [#20](https://github.com/FTC-23511/md-app/pull/20).
 - 2026-05-29 — **[forms]** Forms rev2 item 10 — composite blocks part 2: `StoryBlock.tsx` (≥3 stories + permission enum) + `SpecialtyTriggersBlock.tsx` (5 fixed Tier 2 checkboxes per Charter §11). Auto-merged in [#19](https://github.com/FTC-23511/md-app/pull/19).
 - 2026-05-29 — **[forms]** Forms rev2 item 9 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx` (dynamic-row pattern). Auto-merged in [#18](https://github.com/FTC-23511/md-app/pull/18).
 - 2026-05-29 — **[forms]** Forms rev2 item 8 — select blocks: `SingleSelectBlock.tsx` (dropdown + radio) + `MultiSelectBlock.tsx` (with optional custom note) + `AddNewPopover.tsx`. Auto-merged in [#17](https://github.com/FTC-23511/md-app/pull/17).
