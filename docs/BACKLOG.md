@@ -28,12 +28,13 @@ From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[forms]** Forms rev2 item 16 — T17 list view + dashboard wiring. Branch `routine/forms-list-view`. PR: pending. _Tier: auto-merge._
+_(empty)_
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-05-29 — **[forms]** Forms rev2 item 16 — T17 list view + placeholder detail route + dashboard wiring: `app/(authed)/entries/list/page.tsx` (cross-type list with type pills + filer email + empty state) + `lib/queries.ts` (parallel fetch + member-email join + merge/sort) + `app/(authed)/entries/[type]/[id]/page.tsx` (Phase-2 placeholder so list rows don't 404) + dashboard quick-action buttons. **Forms batch (T13–T17) complete end-to-end.** Auto-merged in [#25](https://github.com/FTC-23511/md-app/pull/25).
 - 2026-05-29 — **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. Auto-merged in [#24](https://github.com/FTC-23511/md-app/pull/24).
 - 2026-05-29 — **[forms]** Forms rev2 item 14 — T15 Outreach Log: `entries/outreach-log.ts` (22 fields, story-block, multi-select with note, two `visibleWhen` fields) + registry update + `app/(authed)/entries/outreach/new/page.tsx`. Auto-merged in [#23](https://github.com/FTC-23511/md-app/pull/23).
 - 2026-05-29 — **[forms]** Forms rev2 item 13 — T14 Session Log: `entries/session-log.ts` + `entries/_registry.ts` + `lib/preload-options.ts` + `app/(authed)/entries/sessions/new/page.tsx`. Auto-merged in [#22](https://github.com/FTC-23511/md-app/pull/22).

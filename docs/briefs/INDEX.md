@@ -6,14 +6,14 @@ The intent is **focused planning while awake → autonomous execution while asle
 
 ## Phase 1 batch status
 
-| Batch               | Tasks   | Brief                                                                                         | Status                                                                          |
-| ------------------- | ------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Setup               | T01–T04 | n/a                                                                                           | ✅ shipped                                                                      |
-| Schema              | T05–T08 | n/a                                                                                           | ✅ shipped                                                                      |
-| Auth                | T09–T12 | n/a (chat handoff in [#7](https://github.com/FTC-23511/md-app/pull/7))                        | ✅ shipped                                                                      |
-| **Forms + entries** | T13–T17 | [2026-05-28-forms-rev2.md](2026-05-28-forms-rev2.md) (supersedes [rev1](2026-05-28-forms.md)) | 🟢 rev2 written — path B chosen, 3 approval-required PRs gate auto-merge stream |
-| **Fallback**        | T18–T19 | [2026-05-28-fallback.md](2026-05-28-fallback.md)                                              | 🟢 brief written — blocked on Forms batch shipping first                        |
-| Deploy              | T20–T21 | n/a (manual ops)                                                                              | ✅ ready                                                                        |
+| Batch               | Tasks   | Brief                                                                                         | Status                                                                                         |
+| ------------------- | ------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Setup               | T01–T04 | n/a                                                                                           | ✅ shipped                                                                                     |
+| Schema              | T05–T08 | n/a                                                                                           | ✅ shipped                                                                                     |
+| Auth                | T09–T12 | n/a (chat handoff in [#7](https://github.com/FTC-23511/md-app/pull/7))                        | ✅ shipped                                                                                     |
+| **Forms + entries** | T13–T17 | [2026-05-28-forms-rev2.md](2026-05-28-forms-rev2.md) (supersedes [rev1](2026-05-28-forms.md)) | ✅ shipped — all 16 BACKLOG items merged, full forms layer + 3 Tier-1 entries + list view live |
+| **Fallback**        | T18–T19 | [2026-05-28-fallback.md](2026-05-28-fallback.md)                                              | 🟢 brief written — blocked on Forms batch shipping first                                       |
+| Deploy              | T20–T21 | n/a (manual ops)                                                                              | ✅ ready                                                                                       |
 
 ## How to write a brief
 
