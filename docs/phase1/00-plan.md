@@ -89,7 +89,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Create the project with Next.js (App Router, TypeScript), Tailwind CSS, and shadcn/ui set up. Use `create-next-app` with TypeScript and Tailwind selected. Initialize shadcn/ui via its CLI; install a minimal initial component set (Button, Input, Label, Textarea, Select, Checkbox, RadioGroup, Card, Popover, Form).
 
-**Deliverables.** `package.json`, `tsconfig.json`, `tailwind.config.ts`, `next.config.ts`, `src/app/layout.tsx`, `src/app/page.tsx` (placeholder redirect to `/login`), `src/components/ui/` populated.
+**Deliverables.** `package.json`, `tsconfig.json`, `tailwind.config.ts`, `next.config.ts`, `app/layout.tsx`, `app/page.tsx` (placeholder redirect to `/auth/sign-in`), `components/ui/` populated.
 
 **Acceptance.** `npm run dev` starts the dev server with no errors. The placeholder page renders. `tsconfig.json` has `"strict": true`. shadcn primitives import correctly (test by adding a Button to the placeholder page).
 
@@ -199,7 +199,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Write `middleware.ts` at the project root. On every request to a protected route, check that the authenticated user's email matches `process.env.ALLOWED_EMAIL`. If not authenticated, redirect to `/login`. If authenticated with the wrong email, sign out and redirect to `/forbidden`.
 
-**Deliverables.** `middleware.ts`, `src/app/(auth)/forbidden/page.tsx`, `src/lib/supabase/server.ts` (server-side client factory), `src/lib/supabase/client.ts` (browser client factory if needed).
+**Deliverables.** `middleware.ts`, `app/forbidden/page.tsx`, `lib/supabase/server.ts` (server-side client factory), `lib/supabase/client.ts` (browser client factory if needed).
 
 **Acceptance.** Attempting to access a protected route while unauthenticated lands on `/login`. Attempting while authenticated with a non-allowlisted email (testable via dashboard-created second user) lands on `/forbidden`.
 
@@ -211,7 +211,7 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 **Description.** Build the login page at `/login` with email + password inputs. Submit via server action that calls `signInWithPassword`. Build the forgot-password page at `/forgot-password`, the password-reset callback at `/auth/reset-password`, and the change-password page at `/change-password`. All per `docs/phase1/04-auth.md` §§5–6.
 
-**Deliverables.** `src/app/(auth)/login/page.tsx`, `src/app/(auth)/login/actions.ts`, `src/app/(auth)/forgot-password/page.tsx` + actions, `src/app/auth/reset-password/route.ts`, `src/app/(auth)/change-password/page.tsx` + actions.
+**Deliverables.** `app/auth/sign-in/page.tsx`, `app/auth/sign-in/actions.ts`, `app/auth/forgot-password/page.tsx` + actions, `app/auth/reset-password/...`, `app/auth/change-password/page.tsx` + actions.
 
 **Acceptance.** Sign-in with the allowlisted email and correct password succeeds and redirects to `/list`. Sign-in with wrong password shows generic error. Forgot-password flow sends reset email; clicking the link lands on `/change-password`; setting a new password works; signing back in with the new password works.
 
@@ -221,9 +221,9 @@ Tasks numbered in dependency order. Each task is its own git branch (`phase1/T<n
 
 #### T12. Build protected route wrapper
 
-**Description.** Create the `(app)` route group with a layout. The layout confirms authentication server-side (defense in depth beyond middleware), renders a top bar with the user's email and a sign-out button, and renders the child page.
+**Description.** Create the `(authed)` route group with a layout. The layout confirms authentication server-side (defense in depth beyond middleware), renders a top bar with the user's email and a sign-out button, and renders the child page.
 
-**Deliverables.** `src/app/(app)/layout.tsx`, sign-out server action.
+**Deliverables.** `app/(authed)/layout.tsx`, sign-out server action.
 
 **Acceptance.** The layout renders correctly on `/list`. Sign-out button works (clears session, redirects to `/login`).
 

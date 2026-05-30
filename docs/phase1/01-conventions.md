@@ -80,7 +80,7 @@ middleware.ts                       # session refresh + email-allowlist enforcem
 
 - **Files for React components**: PascalCase, matching the default export's name. `EntryForm.tsx` exports `EntryForm`.
 - **Files for non-component TS**: kebab-case. `insert-entry.ts`, `session-log.ts`.
-- **Folders**: kebab-case for non-route folders (`entry-form/`), parentheses for Next.js route groups (`(app)/`), and the route segment name otherwise (`sessions/`, `new/`).
+- **Folders**: kebab-case for non-route folders (`entry-form/`), parentheses for Next.js route groups (`(authed)/`), and the route segment name otherwise (`sessions/`, `new/`).
 - **Type names**: PascalCase. `FieldBlock`, `EntryDefinition`.
 - **Functions and variables**: camelCase.
 - **Constants**: SCREAMING_SNAKE_CASE only for true module-level constants that never change (e.g., `MAX_STORY_COUNT`). camelCase for everything else, even values that don't get reassigned at runtime.
@@ -107,7 +107,7 @@ Next.js gives you two ways to handle form submissions: API routes (a separate `r
 **Pattern:**
 
 ```typescript
-// src/app/(app)/sessions/new/actions.ts
+// app/(authed)/entries/sessions/new/actions.ts
 'use server';
 
 import { insertEntry } from '@/lib/insert-entry';
@@ -257,15 +257,15 @@ Example of when not to add: if Session Log needs a "weather conditions at the bu
 
 **Adding a new block type checklist:**
 
-1. Add the block type to the `FieldBlock` union in `src/entries/_types.ts`.
-2. Implement the renderer component in `src/components/entry-form/blocks/<Name>Block.tsx`.
-3. Add the validator contribution in `src/lib/validate-entry.ts`.
-4. Add the insert-payload contribution in `src/lib/insert-entry.ts` (if it has a non-trivial mapping).
+1. Add the block type to the `FieldBlock` union in `entries/_types.ts`.
+2. Implement the renderer component in `components/entry-form/blocks/<Name>Block.tsx`.
+3. Add the validator contribution in `lib/validate-entry.ts`.
+4. Add the insert-payload contribution in `lib/insert-entry.ts` (if it has a non-trivial mapping).
 5. If `storage: 'column'`, include the column type pattern in `docs/phase1/02-schema.md`.
 
 ## 6. Form rendering
 
-The renderer is `src/components/entry-form/EntryForm.tsx`. Usage:
+The renderer is `components/entry-form/EntryForm.tsx`. Usage:
 
 ```typescript
 'use client';
@@ -292,8 +292,8 @@ Behind the scenes the form:
 
 Database reads and writes go through the Supabase client. Two factories:
 
-- `src/lib/supabase/server.ts` exports `createServerClient()` for use in server components, server actions, and route handlers. It reads the auth cookie from the request and is bound to the current user's session.
-- `src/lib/supabase/client.ts` exports `createBrowserClient()` for use in client components. Currently only the auth flow needs it (for redirecting after sign-in).
+- `lib/supabase/server.ts` exports `createServerClient()` for use in server components, server actions, and route handlers. It reads the auth cookie from the request and is bound to the current user's session.
+- `lib/supabase/client.ts` exports `createBrowserClient()` for use in client components. Currently only the auth flow needs it (for redirecting after sign-in).
 
 **Rule: writes happen server-side.** Forms submit to server actions; server actions call `createServerClient()` and do the insert. The browser client never inserts directly. This is the path Phase 3 RLS will lock down — keeping all writes server-side now means Phase 3 is a policy change, not an app change.
 
@@ -332,18 +332,18 @@ Database reads and writes go through the Supabase client. Two factories:
 
 ### Adding a new entry type
 
-1. Create `src/entries/<type>.ts` exporting an `EntryDefinition`.
-2. Add it to `src/entries/_registry.ts`.
+1. Create `entries/<type>.ts` exporting an `EntryDefinition`.
+2. Add it to `entries/_registry.ts`.
 3. Write a migration in `supabase/migrations/` for the new table (use the columns from the definition).
 4. Run `supabase db push`.
-5. Create the route at `src/app/(app)/<type>/new/page.tsx` (a 5-line file that imports the renderer and definition).
-6. Add the type to the list view's union query in `src/lib/queries.ts`.
+5. Create the route at `app/(authed)/entries/<type>/new/page.tsx` (a 5-line file that imports the renderer and definition).
+6. Add the type to the list view's union query in `lib/queries.ts`.
 
 No new form code. No new validation code. No new server-action code beyond a one-line wrapper.
 
 ### Adding a new field to an existing entry
 
-1. Edit the entry's definition in `src/entries/<type>.ts` — add the new field block.
+1. Edit the entry's definition in `entries/<type>.ts` — add the new field block.
 2. If `storage: 'column'`, add a migration in `supabase/migrations/` to add the column.
 3. Run `supabase db push`.
 
