@@ -201,6 +201,10 @@ When you stop for approval, the PR comment must state:
 - Never modify `.github/workflows/` to skip, disable, or weaken checks
 - Never `git reset --hard` or otherwise discard committed work
 - Never delete branches that have unmerged commits
+- Never treat a migration as shipped once its PR merges — `supabase db push`
+  only hits the **linked** project, and dev/prod are **separate** Supabase
+  projects. A merged-but-not-pushed migration silently breaks prod. Deploy to
+  prod and verify in the same cycle (see §9).
 
 If a backlog item _requires_ one of these, stop and post a comment asking
 the user how to proceed.
@@ -255,3 +259,33 @@ interactive flow — the human decides item by item.
 
 Same tier rules (§4), same hard rules (§5), same direct-to-`main` commit
 rule for BACKLOG state.
+
+## 9. Migration deploys — dev AND prod
+
+`md-dev` and `md-prod` are **separate Supabase projects** (refs live in
+`.env.local` as `SUPABASE_PROJECT_REF_DEV` / `SUPABASE_PROJECT_REF_PROD`).
+Local work and CI build against **dev**; **nothing deploys migrations to prod
+automatically.** `supabase db push` only applies to the **linked** project, and
+the repo is normally linked to dev. So a migration that merges to `main` is live
+on dev but **not on prod** until it is pushed there explicitly.
+
+**In the same cycle a migration PR merges, deploy it to prod and verify:**
+
+```bash
+pnpm db:link:prod
+supabase db push --linked     # applies pending migrations to the LINKED project (now prod)
+pnpm db:link:dev              # ALWAYS relink back to dev when done
+```
+
+Then confirm the new schema is live on prod: `supabase migration list --linked`
+shows the new timestamps as applied, or a REST query against a new table returns
+`200` (not `404` / `PGRST205`).
+
+**Symptom of a skipped prod push:** a page that reads the new schema throws a
+server-side error digest in production while working fine in dev — typically
+`permission denied for table` (`42501`) or `Could not find the table … in the
+schema cache` (`PGRST205`). When you see that pattern, check `migration list
+--linked` against prod **before** debugging app code.
+
+Manual on purpose for Phase 1 (you want eyes on exactly what hits prod), but
+**not optional** — skipping it is what breaks production.
