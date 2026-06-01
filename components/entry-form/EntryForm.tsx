@@ -42,6 +42,19 @@ export function EntryForm({
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  // Re-read all form values so visibleWhen conditions re-evaluate. Driven by the
+  // form's bubbling `onChange` ONLY.
+  //
+  // Do NOT also wire this to `onInput`. The `input` event fires *before* `change`
+  // on a <select>/radio, and the select's `value` is owned by SingleSelectBlock's
+  // local state. Refreshing on `input` re-renders the form while that child state
+  // is still the previous value, so React re-asserts the controlled <select> back
+  // to its old value (the placeholder) — and the subsequent `change` handler then
+  // reads the reset, empty value. Net effect: picking a built-in option snaps the
+  // dropdown straight back to "Select an option…". All visibleWhen triggers here
+  // are option-based (selects/radios), which fire `change`, so `onChange` alone is
+  // sufficient and the child's own onChange runs first (same event, child-first
+  // bubbling), updating its state before this refresh re-renders.
   const refreshValues = useCallback(() => {
     if (!formRef.current) return;
     const fd = new FormData(formRef.current);
@@ -93,7 +106,6 @@ export function EntryForm({
       ref={formRef}
       onSubmit={handleSubmit}
       onChange={refreshValues}
-      onInput={refreshValues}
       className="mx-auto max-w-2xl space-y-5 px-6 py-8"
       noValidate
     >
