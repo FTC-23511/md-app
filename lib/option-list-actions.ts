@@ -89,3 +89,15 @@ export async function createOption(
 
   return { ok: true, option: inserted as OptionListRow, existed: false };
 }
+
+export async function softDeleteOption(id: string): Promise<{ ok: boolean; error?: string }> {
+  if (!id) return { ok: false, error: 'id is required.' };
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from('option_lists')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', id)
+    .eq('is_seed', false); // never delete seed rows
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}

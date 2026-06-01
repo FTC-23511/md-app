@@ -69,6 +69,18 @@ export default async function DashboardPage() {
           </Link>
         </div>
       </section>
+
+      <section className="mt-8 space-y-3">
+        <h2 className="text-lg font-semibold">Admin</h2>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <Link
+            href={'/admin/manage-tags' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            Manage tags
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
