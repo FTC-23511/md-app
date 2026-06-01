@@ -17,23 +17,21 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-1. **[fix]** Fix CI red on `main` — `pnpm format:check` is failing (Prettier found formatting drift in docs committed directly to main without CI). Run `pnpm format` and commit the result. _Tier: auto-merge — pure formatting, zero semantic change._
+From `docs/briefs/2026-05-28-fallback.md`:
 
-Standalone:
-
-- **[feature]** Manage-tags admin screen. Small UI to clean up accidental option-list tags created via the "Add new…" affordance on entry forms. List `option_lists` rows grouped by category (only `is_seed = false`, i.e. user-created — keep seeds undeletable), each with a soft-delete button that sets `deleted_at` (the column already exists; no schema change). Soft-delete only — existing entries that reference a tag stay intact, the tag just stops appearing in dropdowns. Add a `softDeleteOption(id)` server action alongside `createOption` in `lib/option-list-actions.ts`, and gate the page so it's reachable from the dashboard. _Tier: auto-merge (app code only, no migration)._
+- **[feature]** T18 — Fallback templates + workflow docs: create `docs/fallback/templates/` with three filled-out markdown templates (`session-log.md`, `outreach-log.md`, `meeting-notes.md`) matching the YAML+body shape in `docs/phase1/05-fallback.md` §4; add `docs/fallback/README.md` (contributor-facing, no git/importer mentions); add `docs/fallback/inbox/.gitkeep`. _Tier: auto-merge (docs only, no app code)._
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[feature]** Manage-tags admin screen — branch `routine/manage-tags` (PR pending). _Tier: auto-merge (app code only, no migration)._
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
-- 2026-06-01 — **[config]** Add `.gitattributes` to normalize line endings (`* text=auto eol=lf`, `*.bat text eol=crlf`). Merged in [#29](https://github.com/FTC-23511/md-app/pull/29). Note: CI was red on the PR (pre-existing format drift on main); merged via admin bypass.
+- 2026-06-01 — **[config]** Add `.gitattributes` (LF default, CRLF for .bat) + fix Prettier format drift on ROUTINE.md + ROUTINE_RECOVERY.md. Auto-merged in [#29](https://github.com/FTC-23511/md-app/pull/29).
 - 2026-05-29 — **[forms]** Forms rev2 item 16 — T17 list view + placeholder detail route + dashboard wiring: `app/(authed)/entries/list/page.tsx` (cross-type list with type pills + filer email + empty state) + `lib/queries.ts` (parallel fetch + member-email join + merge/sort) + `app/(authed)/entries/[type]/[id]/page.tsx` (Phase-2 placeholder so list rows don't 404) + dashboard quick-action buttons. **Forms batch (T13–T17) complete end-to-end.** Auto-merged in [#25](https://github.com/FTC-23511/md-app/pull/25).
 - 2026-05-29 — **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. Auto-merged in [#24](https://github.com/FTC-23511/md-app/pull/24).
 - 2026-05-29 — **[forms]** Forms rev2 item 14 — T15 Outreach Log: `entries/outreach-log.ts` (22 fields, story-block, multi-select with note, two `visibleWhen` fields) + registry update + `app/(authed)/entries/outreach/new/page.tsx`. Auto-merged in [#23](https://github.com/FTC-23511/md-app/pull/23).
@@ -42,7 +40,7 @@ _(empty)_
 - 2026-05-29 — **[forms]** Forms rev2 item 11 — renderer: `components/entry-form/EntryForm.tsx` + `FieldRenderer.tsx` + `visibility.ts` (with `equalsOptionValue` resolution). Auto-merged in [#20](https://github.com/FTC-23511/md-app/pull/20).
 - 2026-05-29 — **[forms]** Forms rev2 item 10 — composite blocks part 2: `StoryBlock.tsx` (≥3 stories + permission enum) + `SpecialtyTriggersBlock.tsx` (5 fixed Tier 2 checkboxes per Charter §11). Auto-merged in [#19](https://github.com/FTC-23511/md-app/pull/19).
 - 2026-05-29 — **[forms]** Forms rev2 item 9 — composite blocks part 1: `PersonAttributionBlock.tsx` + `ActionItemsBlock.tsx` (dynamic-row pattern). Auto-merged in [#18](https://github.com/FTC-23511/md-app/pull/18).
-- 2026-05-29 — **[forms]** Forms rev2 item 8 — select blocks: `SingleSelectBlock.tsx` (dropdown + radio) + `MultiSelectBlock.tsx` (with optional custom note) + `AddNewPopover.xlsx`. Auto-merged in [#17](https://github.com/FTC-23511/md-app/pull/17).
+- 2026-05-29 — **[forms]** Forms rev2 item 8 — select blocks: `SingleSelectBlock.tsx` (dropdown + radio) + `MultiSelectBlock.tsx` (with optional custom note) + `AddNewPopover.tsx`. Auto-merged in [#17](https://github.com/FTC-23511/md-app/pull/17).
 - 2026-05-29 — **[forms]** Forms rev2 item 7 — primitive blocks: `BlockShell.tsx` + `TextBlock.tsx`, `LongTextBlock.tsx`, `DateBlock.tsx`, `NumberBlock.tsx` (uncontrolled, native HTML + Tailwind). Auto-merged in [#16](https://github.com/FTC-23511/md-app/pull/16).
 - 2026-05-29 — **[forms]** Forms rev2 item 6 — foundations: `entries/_types.ts` (FieldBlock discriminated union + VisibilityCondition + OptionCategory + EntryDefinition + OptionListRow) + `lib/option-list-helpers.ts` (`getOptionsByCategory` + `createOption` server action with slug/collision handling). Auto-merged in [#15](https://github.com/FTC-23511/md-app/pull/15).
 - 2026-05-29 — **[docs]** Forms rev2 item 5 — docs sync follow-up: remaining `src/` references and route-group references in `00-plan.md`/`01-conventions.md`/`02-schema.md`/`04-auth.md`/`05-fallback.md` aligned to repo reality. Auto-merged in [#14](https://github.com/FTC-23511/md-app/pull/14).
