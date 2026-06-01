@@ -19,11 +19,13 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 From `docs/briefs/2026-05-28-fallback.md`:
 
-- **[feature]** T18 — Fallback templates + workflow docs: create `docs/fallback/templates/` with three filled-out markdown templates (`session-log.md`, `outreach-log.md`, `meeting-notes.md`) matching the YAML+body shape in `docs/phase1/05-fallback.md` §4; add `docs/fallback/README.md` (contributor-facing, no git/importer mentions); add `docs/fallback/inbox/.gitkeep`. _Tier: auto-merge (docs only, no app code)._
+- **[fallback]** T19 step 2 — Add `BodyMapping` exports to `entries/session-log.ts`, `entries/outreach-log.ts`, `entries/meeting-notes.ts` per `docs/phase1/05-fallback.md` §5.3 — header→field mappings the importer uses to route body sections. _Tier: auto-merge (`entries/` code, no auth or migration surface)._
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
+
+- **[feature]** T18 — Fallback templates + workflow docs → branch `routine/fallback-templates`
 
 ## Done
 
