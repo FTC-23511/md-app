@@ -28,6 +28,9 @@ export function SingleSelectBlock({
   const [debug, setDebug] = useState(false);
   const [changeCount, setChangeCount] = useState(0);
   const [hydrated, setHydrated] = useState(false);
+  const [lastRaw, setLastRaw] = useState<string>('—');
+  // Random per-mount id: if it changes between clicks, the component remounted.
+  const [mountId] = useState(() => Math.random().toString(36).slice(2, 6));
   useEffect(() => {
     setHydrated(true);
     if (typeof window !== 'undefined') {
@@ -96,6 +99,7 @@ export function SingleSelectBlock({
         value={value}
         onChange={(e) => {
           setChangeCount((c) => c + 1);
+          setLastRaw(e.target.value === '' ? '(blank!)' : e.target.value.slice(0, 8));
           setValue(e.target.value);
         }}
         required={block.required}
@@ -112,8 +116,8 @@ export function SingleSelectBlock({
       </select>
       {debug ? (
         <p className="mt-1 rounded bg-yellow-100 px-2 py-1 font-mono text-xs text-yellow-900">
-          🔧 {block.name} · hydrated:{hydrated ? 'yes' : 'no'} · changes:{changeCount} · value:
-          {value ? value.slice(0, 8) : '(empty)'}
+          🔧 mount:{mountId} · hydrated:{hydrated ? 'yes' : 'no'} · changes:{changeCount} · raw:
+          {lastRaw} · value:{value ? value.slice(0, 8) : '(empty)'}
         </p>
       ) : null}
       {allowAddNew &&
