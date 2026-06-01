@@ -118,6 +118,11 @@ export function SingleSelectBlock({
         <p className="mt-1 rounded bg-yellow-100 px-2 py-1 font-mono text-xs text-yellow-900">
           🔧 mount:{mountId} · hydrated:{hydrated ? 'yes' : 'no'} · changes:{changeCount} · raw:
           {lastRaw} · value:{value ? value.slice(0, 8) : '(empty)'}
+          <br />
+          opts:{options.length} · o1id:{options[1]?.id ? options[1].id.slice(0, 8) : 'NONE'} ·
+          o1len:
+          {options[1]?.id?.length ?? 0} · db:
+          {(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').replace('https://', '').slice(0, 6)}
         </p>
       ) : null}
       {allowAddNew &&
