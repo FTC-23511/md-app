@@ -1,6 +1,6 @@
 # Backlog
 
-The queue the routine processes (3×/day, every day — see [`ROUTINE.md`](ROUTINE.md)).
+The queue the routine processes (3×/weekday — see [`ROUTINE.md`](ROUTINE.md)).
 Add items here as one-liners or links to briefs in `docs/briefs/`. Each
 cycle, the routine picks the top item from "Next up," moves it to
 "In progress," ships a PR, and (where safe) auto-merges.
@@ -17,13 +17,6 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2.md) — Forms + entries (T13–T17), path B (migrate to spec's architecture). **Items 1–3 are approval-required (schema migrations) and ship as separate PRs for reversibility.** Items 4+ are auto-merge.
-
-1. **[schema]** Forms rev2 item 1 — Migration A: drop legacy. `supabase/migrations/20260528000001_drop_legacy_schema.sql` drops all auth-batch detail/cross-cutting tables (`entries`, `entry_revisions`, `entry_attendees`, `media_attachments`, `flags`, `action_items`, `awards`, `award_criteria`, `classification_tags`, all three Tier-1 + seven Tier-2 detail tables, `outreach_stories`, `subsystems`, `teams`, `seasons`, `subsystem_leads`) + ENUM types + the `handle_new_auth_user` trigger; alters `members` to drop `name`/`role`/`team_id` and add `display_name`. _**Tier: approval-required** — touches `supabase/migrations/`._
-2. **[schema]** Forms rev2 item 2 — Migration B: option\*lists. `supabase/migrations/20260528000002_option_lists.sql` per `02-schema.md` §§4.2–4.3 — `option_lists` table + 8 categories of seed data. **\*Tier: approval-required.**\_
-3. **[schema]** Forms rev2 item 3 — Migration C: Phase 1 detail tables + flags + Phase 4 placeholders. `supabase/migrations/20260528000003_phase1_tables.sql` creates `session_logs`, `outreach_logs`, `meeting_notes` per spec §§5.1–5.3 (with `extras jsonb` and option\*lists FKs); plus `flags` per §4.4; plus `classification_index` + `award_criteria_snapshot` per §§4.5–4.6 (Phase 4 use, Phase 1 schema); permissive Phase 1 RLS. **\*Tier: approval-required.**\_
-4. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
-
 Standalone:
 
 - **[feature]** Manage-tags admin screen. Small UI to clean up accidental option-list tags created via the "Add new…" affordance on entry forms. List `option_lists` rows grouped by category (only `is_seed = false`, i.e. user-created — keep seeds undeletable), each with a soft-delete button that sets `deleted_at` (the column already exists; no schema change). Soft-delete only — existing entries that reference a tag stay intact, the tag just stops appearing in dropdowns. Add a `softDeleteOption(id)` server action alongside `createOption` in `lib/option-list-actions.ts`, and gate the page so it's reachable from the dashboard. _Tier: auto-merge (app code only, no migration)._
@@ -32,7 +25,7 @@ Standalone:
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[config]** Add `.gitattributes` — branch `routine/add-gitattributes` (PR pending). _Tier: auto-merge._
 
 ## Done
 
