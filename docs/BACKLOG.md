@@ -24,6 +24,10 @@ From brief [`docs/briefs/2026-05-28-forms-rev2.md`](briefs/2026-05-28-forms-rev2
 3. **[schema]** Forms rev2 item 3 — Migration C: Phase 1 detail tables + flags + Phase 4 placeholders. `supabase/migrations/20260528000003_phase1_tables.sql` creates `session_logs`, `outreach_logs`, `meeting_notes` per spec §§5.1–5.3 (with `extras jsonb` and option\*lists FKs); plus `flags` per §4.4; plus `classification_index` + `award_criteria_snapshot` per §§4.5–4.6 (Phase 4 use, Phase 1 schema); permissive Phase 1 RLS. **\*Tier: approval-required.**\_
 4. **[config]** Add `.gitattributes` with `* text=auto eol=lf` and `*.bat text eol=crlf` to normalize line endings across platforms. More idiomatic than the Prettier `endOfLine: auto` workaround currently in `.prettierrc.json` (which we can leave as a belt-and-suspenders). Prevents the Windows CRLF/LF cycle that broke `pnpm verify` locally yesterday. _Tier: auto-merge (config only)._
 
+Standalone:
+
+- **[feature]** Manage-tags admin screen. Small UI to clean up accidental option-list tags created via the "Add new…" affordance on entry forms. List `option_lists` rows grouped by category (only `is_seed = false`, i.e. user-created — keep seeds undeletable), each with a soft-delete button that sets `deleted_at` (the column already exists; no schema change). Soft-delete only — existing entries that reference a tag stay intact, the tag just stops appearing in dropdowns. Add a `softDeleteOption(id)` server action alongside `createOption` in `lib/option-list-actions.ts`, and gate the page so it's reachable from the dashboard. _Tier: auto-merge (app code only, no migration)._
+
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
