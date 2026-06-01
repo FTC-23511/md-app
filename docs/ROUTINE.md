@@ -224,11 +224,11 @@ specific question. Leave the PR open. Do not guess.
 
 Three cycles a day, every day, in PT:
 
-| Cron          | Local time      | Why this slot                                                      |
-| ------------- | --------------- | ------------------------------------------------------------------ |
-| `15 3 * * *`  | 3:15 AM daily   | Overnight catch-up — ships work queued late the prior day.         |
-| `30 8 * * *`  | 8:30 AM daily   | Morning catch-up — user reviews approval-required PRs over coffee. |
-| `0 22 * * *`  | 10:00 PM daily  | End-of-day catch-up — picks up anything queued during the workday. |
+| Cron         | Local time     | Why this slot                                                      |
+| ------------ | -------------- | ------------------------------------------------------------------ |
+| `15 3 * * *` | 3:15 AM daily  | Overnight catch-up — ships work queued late the prior day.         |
+| `30 8 * * *` | 8:30 AM daily  | Morning catch-up — user reviews approval-required PRs over coffee. |
+| `0 22 * * *` | 10:00 PM daily | End-of-day catch-up — picks up anything queued during the workday. |
 
 Spacing rationale:
 

@@ -1,7 +1,7 @@
 # Routine Recovery — "Claude lost access to the repository"
 
 When the scheduled routines stop running overnight and the UI says something
-like *"Claude lost access to the repository… reconnect and re-enable,"* one or
+like _"Claude lost access to the repository… reconnect and re-enable,"_ one or
 both routines will show as disabled (the auto-disabled one has
 `ended_reason: auto_disabled_repo_access`). This doc is the 2-minute fix.
 
@@ -11,9 +11,9 @@ GitHub access for the remote routines has **two independent layers**. Fixing
 one without the other leaves you still locked out — that's why this feels like
 it "never works."
 
-1. **GitHub App install** — grants the Claude app permission to *the repo*.
+1. **GitHub App install** — grants the Claude app permission to _the repo_.
    Lives on GitHub's side.
-2. **Account connector (OAuth)** — proves *your Claude account* is allowed to
+2. **Account connector (OAuth)** — proves _your Claude account_ is allowed to
    act as your GitHub identity. Lives on claude.ai's side.
 
 A lapse usually kills layer 2, but re-installing the app (layer 1) doesn't
@@ -61,11 +61,11 @@ the repo. (A 400 with `github_repo_access_denied` means go back to step 2.)
 `/schedule` → for each disabled routine, set it back to **enabled**. There are
 three, all pointing at `FTC-23511/md-app`:
 
-| Name | Cron (UTC) | Local time |
-| --- | --- | --- |
-| MD-App routine — 3:15 AM PT | `15 10 * * *` | 3:15 AM PT, daily |
-| MD-App routine — 8:30 AM PT | `30 15 * * *` | 8:30 AM PT, daily |
-| MD-App routine — 10:00 PM PT | `0 5 * * *` | 10:00 PM PT, daily |
+| Name                         | Cron (UTC)    | Local time         |
+| ---------------------------- | ------------- | ------------------ |
+| MD-App routine — 3:15 AM PT  | `15 10 * * *` | 3:15 AM PT, daily  |
+| MD-App routine — 8:30 AM PT  | `30 15 * * *` | 8:30 AM PT, daily  |
+| MD-App routine — 10:00 PM PT | `0 5 * * *`   | 10:00 PM PT, daily |
 
 ## Why this keeps happening
 
