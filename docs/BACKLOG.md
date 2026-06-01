@@ -25,12 +25,11 @@ From `docs/briefs/2026-05-28-fallback.md`:
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[feature]** Manage-tags admin screen — branch `routine/manage-tags` (PR pending). _Tier: auto-merge (app code only, no migration)._
-
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-06-01 — **[feature]** Manage-tags admin screen: `softDeleteOption` server action + `app/(authed)/admin/manage-tags/page.tsx` (grouped by category, delete buttons) + dashboard Admin section link. Auto-merged in [#30](https://github.com/FTC-23511/md-app/pull/30).
 - 2026-06-01 — **[config]** Add `.gitattributes` (LF default, CRLF for .bat) + fix Prettier format drift on ROUTINE.md + ROUTINE_RECOVERY.md. Auto-merged in [#29](https://github.com/FTC-23511/md-app/pull/29).
 - 2026-05-29 — **[forms]** Forms rev2 item 16 — T17 list view + placeholder detail route + dashboard wiring: `app/(authed)/entries/list/page.tsx` (cross-type list with type pills + filer email + empty state) + `lib/queries.ts` (parallel fetch + member-email join + merge/sort) + `app/(authed)/entries/[type]/[id]/page.tsx` (Phase-2 placeholder so list rows don't 404) + dashboard quick-action buttons. **Forms batch (T13–T17) complete end-to-end.** Auto-merged in [#25](https://github.com/FTC-23511/md-app/pull/25).
 - 2026-05-29 — **[forms]** Forms rev2 item 15 — T16 Meeting Notes: `entries/meeting-notes.ts` + registry update + `app/(authed)/entries/meetings/new/page.tsx`. Auto-merged in [#24](https://github.com/FTC-23511/md-app/pull/24).
