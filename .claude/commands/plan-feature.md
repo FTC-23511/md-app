@@ -110,7 +110,7 @@ Acceptance criteria: <count>
 Open questions: <count> (or "none")
 Decomposition: <N> BACKLOG items proposed (~<minutes> each, <X auto-merge / Y approval-required>)
 
-Routine pickup: next cycle (3:15 AM / 8:30 AM / 10:00 PM PT, weekdays).
+Routine pickup: next cycle (3:15 AM / 8:30 AM / 10:00 PM PT, daily).
 
 Also on your plate (from the embedded human-task-list scan):
 <list approval-required PRs awaiting review, stuck CI items — or "nothing else">

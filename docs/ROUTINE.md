@@ -6,7 +6,7 @@ take effect on the next run without re-pasting anything. The standalone
 slash commands (`/run-routine`, `/prep-backlog`, `/human-task-list`) also
 read this file as their source of truth.
 
-The routine runs **three times per weekday** (see §7). Each cycle is
+The routine runs **three times a day, every day** (see §7). Each cycle is
 self-contained: it preps the backlog, then ships one item. Multiple cycles
 in a day are normal.
 
@@ -222,13 +222,13 @@ specific question. Leave the PR open. Do not guess.
 
 ## 7. Schedule
 
-Three cycles per weekday, in PT:
+Three cycles a day, every day, in PT:
 
-| Cron           | Local time       | Why this slot                                                      |
-| -------------- | ---------------- | ------------------------------------------------------------------ |
-| `15 3 * * 1-5` | 3:15 AM Mon–Fri  | Overnight catch-up — ships work queued late the prior day.         |
-| `30 8 * * 1-5` | 8:30 AM Mon–Fri  | Morning catch-up — user reviews approval-required PRs over coffee. |
-| `0 22 * * 1-5` | 10:00 PM Mon–Fri | End-of-day catch-up — picks up anything queued during the workday. |
+| Cron          | Local time      | Why this slot                                                      |
+| ------------- | --------------- | ------------------------------------------------------------------ |
+| `15 3 * * *`  | 3:15 AM daily   | Overnight catch-up — ships work queued late the prior day.         |
+| `30 8 * * *`  | 8:30 AM daily   | Morning catch-up — user reviews approval-required PRs over coffee. |
+| `0 22 * * *`  | 10:00 PM daily  | End-of-day catch-up — picks up anything queued during the workday. |
 
 Spacing rationale:
 
@@ -237,8 +237,8 @@ Spacing rationale:
   bleed across cycles).
 - 15-minute offsets from clock-round hours dodge cron-rush moments when
   many users have jobs scheduled at exactly `:00`.
-- Weekdays only (`1-5`). Anything queued Friday evening waits until
-  Monday 3:15 AM. Acceptable for a one-person team.
+- Runs every day (`* * *`), weekends included — work queued Friday
+  evening gets picked up Saturday rather than waiting for Monday.
 
 To change the schedule, edit the cron expressions in the scheduled-tasks
 config (use the `/schedule` skill or the `mcp__scheduled-tasks__*`

@@ -63,9 +63,9 @@ three, all pointing at `FTC-23511/md-app`:
 
 | Name | Cron (UTC) | Local time |
 | --- | --- | --- |
-| MD-App routine — 3:15 AM PT | `15 10 * * 1-5` | 3:15 AM PT, weekdays |
-| MD-App routine — 8:30 AM PT | `30 15 * * 1-5` | 8:30 AM PT, weekdays |
-| MD-App routine — 10:00 PM PT | `0 5 * * 2-6` | 10:00 PM PT, weekdays |
+| MD-App routine — 3:15 AM PT | `15 10 * * *` | 3:15 AM PT, daily |
+| MD-App routine — 8:30 AM PT | `30 15 * * *` | 8:30 AM PT, daily |
+| MD-App routine — 10:00 PM PT | `0 5 * * *` | 10:00 PM PT, daily |
 
 ## Why this keeps happening
 

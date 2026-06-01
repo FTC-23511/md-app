@@ -1,6 +1,6 @@
 # Backlog
 
-The queue the routine processes (3×/weekday — see [`ROUTINE.md`](ROUTINE.md)).
+The queue the routine processes (3×/day, every day — see [`ROUTINE.md`](ROUTINE.md)).
 Add items here as one-liners or links to briefs in `docs/briefs/`. Each
 cycle, the routine picks the top item from "Next up," moves it to
 "In progress," ships a PR, and (where safe) auto-merges.

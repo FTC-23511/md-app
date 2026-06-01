@@ -31,7 +31,7 @@ Populate `docs/BACKLOG.md` with items the next routine cycle will process. The u
 
 8. **Report tightly:**
    - Items queued + their tiers
-   - Whether to run `/run-routine` now or wait for the next scheduled cycle (3:15 AM / 8:30 AM / 10 PM PT weekdays)
+   - Whether to run `/run-routine` now or wait for the next scheduled cycle (3:15 AM / 8:30 AM / 10 PM PT, daily)
    - Any blockers noticed (open approval-required PRs awaiting review, broken CI on main, etc.)
 
 ## Hard nos

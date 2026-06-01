@@ -2,7 +2,7 @@
 
 Once setup is done, this is the loop for every change. Three modes, in order of how much you want to be involved:
 
-- **Backlog mode** (most hands-off) — you drop items into [`BACKLOG.md`](BACKLOG.md); a scheduled routine runs 3×/weekday, ships PRs, auto-merges safe ones, stops on anything risky. See [Backlog and the routine](#backlog-and-the-routine).
+- **Backlog mode** (most hands-off) — you drop items into [`BACKLOG.md`](BACKLOG.md); a scheduled routine runs 3×/day every day, ships PRs, auto-merges safe ones, stops on anything risky. See [Backlog and the routine](#backlog-and-the-routine).
 - **Delegate mode** — you describe what you want in the moment; Claude Code does the rest. You verify in the browser at the end.
 - **Hands-on mode** (rarely needed) — you drive the git/CI steps yourself. Documented in the appendix.
 
@@ -83,12 +83,12 @@ Lives at [docs/briefs/\_TEMPLATE.md](briefs/_TEMPLATE.md). Copy it into Claude C
 
 ## Backlog and the routine
 
-The most hands-off way to ship work. You maintain a queue in [`BACKLOG.md`](BACKLOG.md); a scheduled remote agent processes it three times each weekday.
+The most hands-off way to ship work. You maintain a queue in [`BACKLOG.md`](BACKLOG.md); a scheduled remote agent processes it three times a day, every day.
 
 ### How it works
 
 1. **You add items to [`BACKLOG.md`](BACKLOG.md)** — one-liners for tiny fixes, or links to briefs in `docs/briefs/` for features. Top of the list = highest priority. (The routine also auto-adds safe candidates it discovers during its prep step — see [`ROUTINE.md`](ROUTINE.md) §2.)
-2. **The routine runs three times per weekday** (3:15 AM, 8:30 AM, 10 PM PT). Each cycle: prep the backlog (scan for new safe items, surface ambiguous ones), clean up in-flight PRs from previous cycles, then start at most one new item from the top of "Next up."
+2. **The routine runs three times a day, every day** (3:15 AM, 8:30 AM, 10 PM PT). Each cycle: prep the backlog (scan for new safe items, surface ambiguous ones), clean up in-flight PRs from previous cycles, then start at most one new item from the top of "Next up."
 3. **You see one of three outcomes per cycle:**
    - A PR was opened, CI went green, and the routine auto-merged it. You'll see a Vercel deploy. Click through if you want; revert with `git revert` if anything looks wrong.
    - A PR is open and the routine stopped, asking for your approval. The PR comment summarizes what changed in plain English, what surface it touched, and whether it's reversible. Click the Vercel preview, reply "approved" (or push back).
