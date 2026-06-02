@@ -25,7 +25,7 @@ From `docs/briefs/2026-05-28-fallback.md`:
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[fallback]** T19 step 3 — Build `scripts/fallback/import.ts` + composite parsers in `scripts/fallback/parsers/` + add `yaml`, `glob`, `tsx` devDeps + `import-fallback` script in `package.json`. _Tier: approval-required._ → branch `routine/fallback-importer`
+- **[fallback]** T19 step 3 — Build `scripts/fallback/import.ts` + composite parsers in `scripts/fallback/parsers/` + add `yaml`, `glob`, `tsx` devDeps + `import-fallback` script in `package.json`. _Tier: approval-required._ → [#32](https://github.com/FTC-23511/md-app/pull/32)
 
 ## Done
 
