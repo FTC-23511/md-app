@@ -19,16 +19,19 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 From `docs/briefs/2026-05-28-fallback.md`:
 
-- **[fallback]** T19 step 2 — Add `BodyMapping` exports to `entries/session-log.ts`, `entries/outreach-log.ts`, `entries/meeting-notes.ts` per `docs/phase1/05-fallback.md` §5.3 — header→field mappings the importer uses to route body sections. _Tier: auto-merge (`entries/` code, no auth or migration surface)._
+- **[fallback]** T19 step 4 — Smoke-test fixtures: three pre-filled fixture files in `docs/fallback/inbox/` (one of each template type) + PR body with copy-paste run instructions for the App Lead. App Lead runs `pnpm run import-fallback`, confirms three rows in `/list` with `created_via='fallback_form'`, then approves + merges. _Tier: approval-required._
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
+- **[fallback]** T19 step 3 — Build `scripts/fallback/import.ts` + composite parsers in `scripts/fallback/parsers/` + add `yaml`, `glob`, `tsx` devDeps + `import-fallback` script in `package.json`. _Tier: approval-required._ → branch `routine/fallback-importer`
+
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-06-02 — **[fallback]** T19 step 2 — `BodyMapping` exports already present in all three entry files when this item was queued (implemented as part of the T18 sprint). No PR needed; marking done.
 - 2026-06-01 — **[feature]** T18 — Fallback templates + workflow docs: `docs/fallback/templates/` (session-log, outreach-log, meeting-notes per `05-fallback.md` §4) + `docs/fallback/README.md` (contributor-facing) + `docs/fallback/inbox/.gitkeep`. Auto-merged in [#31](https://github.com/FTC-23511/md-app/pull/31).
 - 2026-06-01 — **[feature]** Manage-tags admin screen: `softDeleteOption` server action + `app/(authed)/admin/manage-tags/page.tsx` (grouped by category, delete buttons) + dashboard Admin section link. Auto-merged in [#30](https://github.com/FTC-23511/md-app/pull/30).
 - 2026-06-01 — **[config]** Add `.gitattributes` (LF default, CRLF for .bat) + fix Prettier format drift on ROUTINE.md + ROUTINE_RECOVERY.md. Auto-merged in [#29](https://github.com/FTC-23511/md-app/pull/29).
@@ -55,5 +58,5 @@ From `docs/briefs/2026-05-28-fallback.md`:
 - 2026-05-26 — **[config]** Untrack `.claude/settings.local.json` and `tsconfig.tsbuildinfo` (add to `.gitignore`). Auto-merged in [#6](https://github.com/FTC-23511/md-app/pull/6).
 - 2026-05-26 — **[docs]** Update `docs/phase1/00-plan.md` T05–T08 Deliverables to reference actual migration filenames. Auto-merged in [#4](https://github.com/FTC-23511/md-app/pull/4).
 - 2026-05-26 — **[docs]** Fix `docs/SETUP.md` Step 4 magic-link reference. Auto-merged in [#3](https://github.com/FTC-23511/md-app/pull/3).
-- 2026-05-26 — **[docs]** Fix `README.md` to use `pnpm` consistently. Auto-merged in [#2](https://github.com/FTC-23511/md-app/pull/2). (Also bundled a Windows-friendly Prettier `endOfLine: auto` config fix.)
+- 2026-05-26 — **[docs]** Fix `README.md` to use `pnpm` consistently. Auto-merged in [#2](https://github.com/FTC-23511/md-app/pull/2). (Also bundled a Windows-friendly Prettier `endOfLine` fix.)
 - 2026-05-26 — **[meta]** Repo-wide Prettier sweep + expand auto-merge tier rule to cover root-level `*.md` and pure formatting sweeps. Auto-merged in [#1](https://github.com/FTC-23511/md-app/pull/1). (Ad-hoc item; emerged when `pnpm verify` failed on pre-existing format drift.)
