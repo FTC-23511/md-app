@@ -444,18 +444,37 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const files: string[] = [];
+  const matched: string[] = [];
   for (const pattern of patterns) {
     const matches = await glob(pattern);
-    files.push(...matches);
+    matched.push(...matches);
   }
 
+  // Deduplicate and skip files this importer has already processed. A glob like
+  // `*.md` still matches the `*.imported.md` files we rename on success, so
+  // without this guard a second run would re-insert every already-imported
+  // file. Skipping them by name is what makes re-runs idempotent. We also skip
+  // the `*.errors.log` siblings if a broad glob happens to catch them.
+  const seen = new Set<string>();
+  const files = matched.filter((f) => {
+    if (seen.has(f)) return false;
+    seen.add(f);
+    return !/\.imported\.md$/i.test(f) && !/\.errors\.log$/i.test(f);
+  });
+  const skipped = matched.length - files.length;
+
   if (files.length === 0) {
-    console.log('No files matched the given patterns.');
+    console.log(
+      skipped > 0
+        ? `No new files to process (${skipped} already-imported file(s) skipped).`
+        : 'No files matched the given patterns.',
+    );
     process.exit(0);
   }
 
-  console.log(`Processing ${files.length} file(s)...\n`);
+  console.log(
+    `Processing ${files.length} file(s)${skipped > 0 ? ` (${skipped} already-imported skipped)` : ''}...\n`,
+  );
 
   let successCount = 0;
   let errorCount = 0;
