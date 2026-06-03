@@ -42,7 +42,7 @@ Do not read full files. Use grep + `view --view-range`. Jump to sections.
 
 ## Phase
 
-Phase 1. Capture MVP. Target end of May 2026. Definition of done in `00-plan.md`.
+Phase 1 (Capture MVP) is **shipped** — T01–T21 merged, capture MVP live on prod (see the `docs/BACKLOG.md` Done log; definition of done in `docs/phase1/00-plan.md`). Phase 2 planning is in progress in Claude Chat: Tier 2 entry forms (Decision / Hardware / Software / Test / Contact Log), triggered depth fields, Test Log auto-compute, media upload, entry detail pages, and the SCL AI integration (`docs/charters/MD_SCL_AI_Integration.md`). The Phase 2 plan and deep specs will live in `docs/phase2/`, mirroring the `docs/phase1/` layout. **Until that plan lands, the Phase 1 scope rules below stay in force for in-flight maintenance — do not start Phase 2 feature implementation before the Phase 2 plan exists.**
 
 ## Absolute rules
 
@@ -67,7 +67,7 @@ Rationale lives in `MD_App_Charter.md` §7. Don't read whole charter; grep "Phas
 
 ## Charter sync
 
-Charters in `docs/charters/` are mirrors. Source of truth lives in team's Claude project. Don't edit them here. If code contradicts a charter, flag in PR; team decides which side updates. Charter version on each file is the sync key.
+Charters in `docs/charters/` are the **source of truth** — the single home for MD's data semantics (`MD_Project_Charter.md`) and architecture decisions (`MD_App_Charter.md`, `MD_SCL_AI_Integration.md`). They are no longer mirrored in the team's Claude project; the project copies were removed in favor of this one location, so there is exactly one canonical version. Edit them here, via PR, like any other file. If code contradicts a charter, flag in PR; the team decides which side updates (charter or code). Claude Chat planning sessions read the charters by fetching the raw files from this public repo — so what Chat sees and what Code sees are always the same committed bytes, and drift is structurally impossible.
 
 ## Branches and PRs
 
