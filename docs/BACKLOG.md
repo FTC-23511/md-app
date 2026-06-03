@@ -17,20 +17,20 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-From `docs/briefs/2026-05-28-fallback.md`:
-
-- **[fallback]** T19 step 4 — Smoke-test fixtures: three pre-filled fixture files in `docs/fallback/inbox/` (one of each template type) + PR body with copy-paste run instructions for the App Lead. App Lead runs `pnpm run import-fallback`, confirms three rows in `/list` with `created_via='fallback_form'`, then approves + merges. _Tier: approval-required._
+_(empty — Phase 1 sprint tasks T01–T21 all shipped. Capture MVP is live on prod. Add maintenance items here or via `/prep-backlog`.)_
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[fallback]** T19 step 3 — Build `scripts/fallback/import.ts` + composite parsers in `scripts/fallback/parsers/` + add `yaml`, `glob`, `tsx` devDeps + `import-fallback` script in `package.json`. _Tier: approval-required._ → [#32](https://github.com/FTC-23511/md-app/pull/32)
+_(empty)_
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
 
+- 2026-06-02 — **[fallback]** T19 step 4 — Smoke test + three fixes it surfaced: three pre-filled fixtures in `docs/fallback/inbox/`, ran end-to-end against dev. Caught and fixed (1) missing `service_role` table grants — new migration `20260602000001_grants_for_service_role.sql`, **applied to dev AND prod**; (2) person-attribution parser not matching the template's `- **Name:**` form (silently dropped attendees); (3) non-idempotent re-runs (`*.md` glob re-matched `*.imported.md`) — importer now skips already-imported files. Verified: 3 rows insert with `created_via='fallback_form'`/`created_by=null`, options auto-create with `is_seed=false`, broken fixture → `.errors.log` (not inserted), second pass → 0 inserts. Approval-required, merged in [#33](https://github.com/FTC-23511/md-app/pull/33). **Fallback batch (T18–T19) complete — Phase 1 capture MVP done.**
+- 2026-06-02 — **[fallback]** T19 step 3 — `scripts/fallback/import.ts` + composite parsers in `scripts/fallback/parsers/` + `yaml`/`glob`/`tsx` devDeps + `import-fallback` script. Approval-required (service-role writes), merged in [#32](https://github.com/FTC-23511/md-app/pull/32).
 - 2026-06-02 — **[fallback]** T19 step 2 — `BodyMapping` exports already present in all three entry files when this item was queued (implemented as part of the T18 sprint). No PR needed; marking done.
 - 2026-06-01 — **[feature]** T18 — Fallback templates + workflow docs: `docs/fallback/templates/` (session-log, outreach-log, meeting-notes per `05-fallback.md` §4) + `docs/fallback/README.md` (contributor-facing) + `docs/fallback/inbox/.gitkeep`. Auto-merged in [#31](https://github.com/FTC-23511/md-app/pull/31).
 - 2026-06-01 — **[feature]** Manage-tags admin screen: `softDeleteOption` server action + `app/(authed)/admin/manage-tags/page.tsx` (grouped by category, delete buttons) + dashboard Admin section link. Auto-merged in [#30](https://github.com/FTC-23511/md-app/pull/30).
