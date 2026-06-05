@@ -10,11 +10,13 @@ import { ENTRY_LIST } from '@/entries/_registry';
 import { listSummary as sessionLogListSummary } from '@/entries/session-log';
 import { listSummary as outreachLogListSummary } from '@/entries/outreach-log';
 import { listSummary as meetingNotesListSummary } from '@/entries/meeting-notes';
+import { listSummary as contactLogListSummary } from '@/entries/contact-log';
 
 const LIST_SUMMARIES: Record<string, (row: Record<string, unknown>) => string> = {
   session_log: sessionLogListSummary,
   outreach_log: outreachLogListSummary,
   meeting_notes: meetingNotesListSummary,
+  contact_log: contactLogListSummary,
 };
 
 export type EntryListRow = {

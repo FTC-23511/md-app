@@ -11,7 +11,11 @@
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ENTRY_REGISTRY } from '@/entries/_registry';
+import { CONTACT_FIELD_NAMES } from '@/entries/contact-log';
 import type { EntryDefinition, FieldBlock } from '@/entries/_types';
+
+/** Contact Log field names whose values live on the joined `contacts` row. */
+const CONTACT_FIELDS = new Set<string>(CONTACT_FIELD_NAMES);
 
 export type EntryFlag = {
   id: string;
@@ -75,7 +79,32 @@ export async function loadEntryDetail(type: string, id: string): Promise<EntryDe
 
   if (error || !row) return null;
 
-  const rowRecord = row as Record<string, unknown>;
+  let rowRecord = row as Record<string, unknown>;
+
+  // Contact Log stores the person in a separate `contacts` row (SOP-09). Merge
+  // the referenced contact's fields onto the record so the definition's
+  // contact-side fields (name, role, relationship, etc.) render read-only here.
+  if (type === 'contact_log' && typeof rowRecord.contact_id === 'string') {
+    const { data: contact } = await supabase
+      .from('contacts')
+      .select('*')
+      .eq('id', rowRecord.contact_id)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (contact) {
+      const c = contact as Record<string, unknown>;
+      const cExtras = (c.extras ?? {}) as Record<string, unknown>;
+      const mergedExtras = { ...((rowRecord.extras ?? {}) as Record<string, unknown>) };
+      const merged: Record<string, unknown> = { ...rowRecord };
+      for (const field of definition.fields) {
+        if (!CONTACT_FIELDS.has(field.name)) continue;
+        if (field.storage === 'column') merged[field.name] = c[field.name];
+        else mergedExtras[field.name] = cExtras[field.name];
+      }
+      merged.extras = mergedExtras;
+      rowRecord = merged;
+    }
+  }
 
   // Resolve option labels in one query.
   const optionIds = collectOptionIds(definition, rowRecord);
