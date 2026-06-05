@@ -21,13 +21,15 @@ Build order + specs: `docs/phase2/00-plan.md`. One brief per batch (2A–2G).
 
 | Batch | Brief | Status |
 | ----- | ----- | ------ |
-| **2A — schema rebuild + detail page** | [2026-06-04-2a-schema-and-detail.md](2026-06-04-2a-schema-and-detail.md) | brief written — ready for `/prep-backlog` |
-| 2B — three quick forms (Contact/HW/SW) | owed | |
-| 2C — Test Log + auto-compute | owed | |
-| 2D — Competition Recap | owed | |
-| 2E — Decision Log + depth | owed | |
-| 2F — Media to Drive | owed | |
-| 2G — SCL AI integration | owed (own planning pass) | |
+| **2A — schema rebuild + detail page** | [2026-06-04-2a-schema-and-detail.md](2026-06-04-2a-schema-and-detail.md) | brief written — decomposed into BACKLOG (detail page + schema migration) |
+| 2B — three quick forms (Contact/HW/SW) | [2026-06-04-2b-quick-forms.md](2026-06-04-2b-quick-forms.md) | brief written — **blocked behind 2A** (writes into 2A tables) |
+| 2C — Test Log + auto-compute | [2026-06-04-2c-test-log.md](2026-06-04-2c-test-log.md) | brief written — **blocked behind 2A** |
+| 2D — Competition Recap | [2026-06-04-2d-comp-recap.md](2026-06-04-2d-comp-recap.md) | brief written — **blocked behind 2A + 2C** (companion view reads 2C `test_series`) |
+| 2E — Decision Log + depth | [2026-06-04-2e-decision-log.md](2026-06-04-2e-decision-log.md) | brief written — **blocked behind 2A** |
+| 2F — Media to Drive | owed | review media design first |
+| 2G — SCL AI integration | owed (own planning pass) | not before 2B SW baseline ships |
+
+> **Gating note for the routine:** 2B–2E briefs exist but must **not** be queued into `docs/BACKLOG.md` until the 2A schema migration is approved **and** deployed to prod (ROUTINE §9). Their forms write into the 2A tables — queuing them earlier ships code that can't run. Decompose each via `/prep-backlog` only after 2A is live on prod. Autonomous prep should **escalate** these (L effort / migration-touching), never auto-add them.
 
 ## How to write a brief
 
@@ -43,6 +45,10 @@ That's all you do. The next routine cycle (or an on-demand `/prep-backlog`) read
 ## Brief inventory
 
 - [`2026-06-04-2a-schema-and-detail.md`](2026-06-04-2a-schema-and-detail.md) — Phase 2 batch 2A: rebuild the Tier 2 tables + build the entry detail page. First Phase 2 brief.
+- [`2026-06-04-2b-quick-forms.md`](2026-06-04-2b-quick-forms.md) — Phase 2 batch 2B: the three cheap forms (Contact / Hardware / Software baseline). Blocked behind 2A.
+- [`2026-06-04-2c-test-log.md`](2026-06-04-2c-test-log.md) — Phase 2 batch 2C: Test Log (3 input modes) + code-first auto-compute (`lib/compute/test-stats.ts`, unit-tested) + `test_series` trends. Blocked behind 2A.
+- [`2026-06-04-2d-comp-recap.md`](2026-06-04-2d-comp-recap.md) — Phase 2 batch 2D: Competition Recap (last Tier 1 entry) + Test Log companion trend view. Blocked behind 2A + 2C.
+- [`2026-06-04-2e-decision-log.md`](2026-06-04-2e-decision-log.md) — Phase 2 batch 2E: Decision Log + triggered depth (matrix/FMEA auto-compute) + `updateEntry` outcome/fill-later flow. Hardest form. Blocked behind 2A.
 - [`2026-05-28-forms-rev2.md`](2026-05-28-forms-rev2.md) — Forms + entries batch (T13–T17), path B. Sprint C. 16 BACKLOG items, 3 approval-required (schema migrations) + 13 auto-merge. **Supersedes rev1.**
 - [`2026-05-28-forms.md`](2026-05-28-forms.md) — Forms + entries rev1. Sprint C. Superseded by rev2 after cycle 2 surfaced a schema-architecture mismatch with the auth-batch migrations.
 - [`2026-05-28-fallback.md`](2026-05-28-fallback.md) — Fallback batch (T18–T19). Sprint D. ✅ Shipped across [#31](https://github.com/FTC-23511/md-app/pull/31) (templates), [#32](https://github.com/FTC-23511/md-app/pull/32) (importer), [#33](https://github.com/FTC-23511/md-app/pull/33) (smoke test + fixes).
