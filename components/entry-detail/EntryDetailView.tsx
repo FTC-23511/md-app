@@ -189,6 +189,49 @@ function FieldValue({
         </ul>
       );
     }
+
+    case 'repeating-rows': {
+      const rows = value as Array<Record<string, string>>;
+      const columns = block.columns;
+      const soleColumn = columns.length === 1 ? columns[0] : undefined;
+      if (soleColumn) {
+        return (
+          <ul className="flex flex-col gap-1">
+            {rows.map((r, i) => (
+              <li key={i} className="text-sm">
+                {r[soleColumn.name]}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border text-left text-xs text-muted-foreground">
+                {columns.map((col) => (
+                  <th key={col.name} className="py-1 pr-4 font-medium">
+                    {col.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={i} className="border-b border-border/50">
+                  {columns.map((col) => (
+                    <td key={col.name} className="py-1 pr-4 align-top">
+                      {r[col.name] ? r[col.name] : <Dash />}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
   }
 }
 

@@ -13,6 +13,7 @@
  *   - SpecialtyTriggers: name__checked (one per checked target_type value) +
  *                        name__owner__<target_type> + name__subject__<target_type>
  *   - MultiSelect:       name (repeated UUIDs) + optional name__note
+ *   - RepeatingRows:     name__<col> (repeated, one parallel array per column)
  */
 
 import { z, type ZodTypeAny } from 'zod';
@@ -130,6 +131,24 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         out[field.name] = triggers;
         break;
       }
+      case 'repeating-rows': {
+        const cols = field.columns;
+        const colValues = cols.map((c) => getAll(fd, `${field.name}__${c.name}`));
+        const rowCount = colValues.reduce((max, arr) => Math.max(max, arr.length), 0);
+        const rows: Array<Record<string, string>> = [];
+        for (let i = 0; i < rowCount; i++) {
+          const row: Record<string, string> = {};
+          let anyFilled = false;
+          cols.forEach((c, ci) => {
+            const v = (colValues[ci]?.[i] ?? '').trim();
+            row[c.name] = v;
+            if (v.length > 0) anyFilled = true;
+          });
+          if (anyFilled) rows.push(row);
+        }
+        out[field.name] = rows;
+        break;
+      }
     }
   }
 
@@ -245,6 +264,16 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
           subject: z.string().min(1, 'Subject required when checked'),
         }),
       );
+    }
+    case 'repeating-rows': {
+      const rowShape: Record<string, ZodTypeAny> = {};
+      for (const col of block.columns) rowShape[col.name] = z.string().optional();
+      let s = z.array(z.object(rowShape));
+      const min = block.minRows ?? 0;
+      const max = block.maxRows ?? 50;
+      if (min > 0) s = s.min(min, `At least ${min} required`);
+      s = s.max(max, `At most ${max} allowed`);
+      return s;
     }
   }
 }

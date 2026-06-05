@@ -144,6 +144,36 @@ export type SpecialtyTriggersBlock = BlockBase & {
   type: 'specialty-triggers';
 };
 
+/** One column of a RepeatingRowsBlock. */
+export type RepeatingRowsColumn = {
+  /** Object key under each stored row, and the form-wire suffix (name__<key>). */
+  name: string;
+  /** Column header / input placeholder. */
+  label: string;
+  /** Input kind. 'number' renders a number input; values are stored as trimmed strings either way. */
+  kind?: 'text' | 'number';
+};
+
+/**
+ * Minimal generic repeating-row block: a small table of free-text columns the
+ * filer adds/removes rows to. Stored as `Array<{ [columnName]: string }>` in
+ * `extras`. Introduced for the Hardware Change Log `deltas` field
+ * (`{metric, was, now}`); reused by the Software Change Log `files_changed`
+ * field (single column). Heavier structured tables (matrix / FMEA / raw-data)
+ * are their own block types in later batches.
+ */
+export type RepeatingRowsBlock = BlockBase & {
+  type: 'repeating-rows';
+  /** Ordered columns; each becomes a key in every stored row object. */
+  columns: RepeatingRowsColumn[];
+  /** Minimum number of rows. Default: 0. */
+  minRows?: number;
+  /** Maximum number of rows. Default: 50. */
+  maxRows?: number;
+  /** Add-button label, e.g. 'Add delta'. Default: 'Add row'. */
+  addLabel?: string;
+};
+
 // ---- Discriminated union --------------------------------------------------
 
 export type FieldBlock =
@@ -156,7 +186,8 @@ export type FieldBlock =
   | PersonAttributionBlock
   | StoryBlock
   | ActionItemsBlock
-  | SpecialtyTriggersBlock;
+  | SpecialtyTriggersBlock
+  | RepeatingRowsBlock;
 
 // ---- Entry definition -----------------------------------------------------
 

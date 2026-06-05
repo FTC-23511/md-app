@@ -68,6 +68,12 @@ export default async function DashboardPage() {
             New Contact Log
           </Link>
           <Link
+            href={'/entries/hardware/new' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            New Hardware Change Log
+          </Link>
+          <Link
             href={'/entries/list' as never}
             className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
           >
