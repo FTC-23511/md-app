@@ -30,10 +30,33 @@ new candidates from these sources:
 - **Open issues** on the repo (`gh issue list --state open`) that aren't already linked from BACKLOG.
 - **Recently merged PRs** (`git log --merges --since="3 days ago"`) for follow-ups noted in commit messages or PR descriptions ("see also," "fix later," "TODO in a follow-up").
 - **Stale PR comments** on open PRs (questions or asks that didn't get resolved).
-- **Briefs in `docs/briefs/`** that aren't in BACKLOG yet.
+- **Briefs in `docs/briefs/`** that aren't in BACKLOG yet — see "Brief decomposition" below.
 - **Pre-existing CI red on `main`** — if main is red, queue a "fix CI red" item at the top.
 
 For each candidate, classify against §4 tier rules:
+
+### Brief decomposition (autonomous)
+
+The routine may decompose a brief into BACKLOG items itself — the same
+work `/prep-backlog` does interactively, run autonomously. Do this when:
+
+- The brief's batch **dependencies are live** (e.g. a brief that writes
+  into tables from another batch only decomposes once that batch's
+  migration is on **prod**, per §9 — check the brief's "blocked behind"
+  note and `docs/briefs/INDEX.md`).
+- The brief leaves **no decision unmade** — every open question in it is
+  answered. If a decision is still open, do **not** decompose; escalate
+  the brief under "Suggested for backlog (needs human OK)" instead (§6).
+
+When decomposing: split into the small (S/M) items the brief implies —
+typically 4–8 — and add them to "Next up" in build order, one commit to
+`main` (`BACKLOG: decompose <brief> (N items)`). **Queuing is not
+merging.** Approval-required sub-items (anything touching a migration or
+other approval-required path per §4) get queued and **tagged
+approval-required** — they still STOP for human merge approval at run
+time (§3/§4). The autonomy added here is _queuing the work_, never
+auto-merging a migration. One brief per cycle is plenty; don't decompose
+several at once.
 
 ### Auto-add rules — add to BACKLOG without asking
 
@@ -54,10 +77,16 @@ For everything else, list the candidate under
 
 - Title (action-oriented, one line)
 - Tier (auto-merge or approval-required, per §4)
-- Why it can't auto-add (ambiguous spec / touches approval-required paths / L effort / unclear reversibility)
+- Why it can't auto-add (ambiguous spec / unclear reversibility / a brief with an unanswered decision)
 
 Do not write these to BACKLOG.md. The user adds them via `/prep-backlog`
 if they agree, or ignores them.
+
+> Note: touching an approval-required path is **not** by itself a reason
+> to escalate. Such items may be **queued** (auto-added or decomposed from
+> a brief) and tagged approval-required; they stop for human merge approval
+> at run time (§3/§4), not at queue time. Escalate only when the spec is
+> ambiguous or a brief leaves a decision unmade.
 
 ### Idempotence
 
@@ -253,6 +282,11 @@ proposes candidates and asks for human confirmation before each item
 lands in `BACKLOG.md`. Use it when you want to queue work without
 shipping (e.g., you noticed three TODOs while reading code and want them
 captured but don't want a cycle to start).
+
+The routine can now run this same prep autonomously, including brief
+decomposition (see §2 "Brief decomposition"). So `/prep-backlog` is no
+longer the _only_ path briefs reach BACKLOG — it's the interactive one
+for when you want item-by-item control.
 
 The classification rules (auto-add vs escalate) are not relevant to the
 interactive flow — the human decides item by item.
