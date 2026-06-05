@@ -11,6 +11,7 @@ import { PersonAttributionBlock } from './blocks/PersonAttributionBlock';
 import { ActionItemsBlock } from './blocks/ActionItemsBlock';
 import { StoryBlock } from './blocks/StoryBlock';
 import { SpecialtyTriggersBlock } from './blocks/SpecialtyTriggersBlock';
+import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
 
 export function FieldRenderer({
   block,
@@ -54,5 +55,7 @@ export function FieldRenderer({
       return <StoryBlock block={block} error={error} />;
     case 'specialty-triggers':
       return <SpecialtyTriggersBlock block={block} error={error} />;
+    case 'repeating-rows':
+      return <RepeatingRowsBlock block={block} error={error} />;
   }
 }
