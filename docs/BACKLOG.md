@@ -17,17 +17,19 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-_(empty — 2B–2G stay gated until 2A is live on **prod**; see [`briefs/INDEX.md`](briefs/INDEX.md) gating note)_
+_(empty — 2B–2E briefs exist and are now **unblocked** (2A live on prod). Next routine prep cycle can decompose them via `/prep-backlog`. 2F/2G await briefs from the owner.)_
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[2A · schema + detail page]** _(approval-required — migrations)_ — Shipped as one PR [#34](https://github.com/FTC-23511/md-app/pull/34). Two migrations (`20260604000001_phase2_tables.sql` — 8 Tier 2 tables per `01-schema.md` §§1–7; `20260604000002_grants_for_phase2_tables.sql`) **applied to dev**. Detail page `/entries/[type]/[id]` (`lib/entry-detail.ts` + `components/entry-detail/EntryDetailView.tsx` + page rewrite) renders existing Tier 1 entries read-only. All 4 CI checks green; Vercel preview live. **Awaiting owner approval + prod migration push** (ROUTINE §9). Unblocks all of 2B–2G once on prod. Brief: [`2026-06-04-2a-schema-and-detail.md`](briefs/2026-06-04-2a-schema-and-detail.md).
+_(empty)_
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
+
+- 2026-06-05 — **[2A]** Schema rebuild + entry detail page. Two migrations (`20260604000001_phase2_tables.sql` — 8 Tier 2 tables `contacts`/`contact_logs`/`hw_change_logs`/`sw_change_logs`/`test_logs`/`decision_logs`/`comp_recaps`/`media_links` per `01-schema.md` §§1–7; `20260604000002_grants_for_phase2_tables.sql`) **applied to dev AND prod**. Detail page `/entries/[type]/[id]` (`lib/entry-detail.ts` + `components/entry-detail/EntryDetailView.tsx`) renders existing Tier 1 entries read-only — owner verified on Vercel preview. Approval-required, squash-merged in [#34](https://github.com/FTC-23511/md-app/pull/34). **Unblocks 2B–2G.** Also greened pre-existing CI-red on main (doc format drift, [86b359b](https://github.com/FTC-23511/md-app/commit/86b359b)).
 
 - 2026-06-02 — **[fallback]** T19 step 4 — Smoke test + three fixes it surfaced: three pre-filled fixtures in `docs/fallback/inbox/`, ran end-to-end against dev. Caught and fixed (1) missing `service_role` table grants — new migration `20260602000001_grants_for_service_role.sql`, **applied to dev AND prod**; (2) person-attribution parser not matching the template's `- **Name:**` form (silently dropped attendees); (3) non-idempotent re-runs (`*.md` glob re-matched `*.imported.md`) — importer now skips already-imported files. Verified: 3 rows insert with `created_via='fallback_form'`/`created_by=null`, options auto-create with `is_seed=false`, broken fixture → `.errors.log` (not inserted), second pass → 0 inserts. Approval-required, merged in [#33](https://github.com/FTC-23511/md-app/pull/33). **Fallback batch (T18–T19) complete — Phase 1 capture MVP done.**
 - 2026-06-02 — **[fallback]** T19 step 3 — `scripts/fallback/import.ts` + composite parsers in `scripts/fallback/parsers/` + `yaml`/`glob`/`tsx` devDeps + `import-fallback` script. Approval-required (service-role writes), merged in [#32](https://github.com/FTC-23511/md-app/pull/32).

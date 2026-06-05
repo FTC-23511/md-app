@@ -21,15 +21,15 @@ Build order + specs: `docs/phase2/00-plan.md`. One brief per batch (2A–2G).
 
 | Batch                                  | Brief                                                                    | Status                                                                             |
 | -------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| **2A — schema rebuild + detail page**  | [2026-06-04-2a-schema-and-detail.md](2026-06-04-2a-schema-and-detail.md) | brief written — decomposed into BACKLOG (detail page + schema migration)           |
-| 2B — three quick forms (Contact/HW/SW) | [2026-06-04-2b-quick-forms.md](2026-06-04-2b-quick-forms.md)             | brief written — **blocked behind 2A** (writes into 2A tables)                      |
-| 2C — Test Log + auto-compute           | [2026-06-04-2c-test-log.md](2026-06-04-2c-test-log.md)                   | brief written — **blocked behind 2A**                                              |
-| 2D — Competition Recap                 | [2026-06-04-2d-comp-recap.md](2026-06-04-2d-comp-recap.md)               | brief written — **blocked behind 2A + 2C** (companion view reads 2C `test_series`) |
-| 2E — Decision Log + depth              | [2026-06-04-2e-decision-log.md](2026-06-04-2e-decision-log.md)           | brief written — **blocked behind 2A**                                              |
+| **2A — schema rebuild + detail page**  | [2026-06-04-2a-schema-and-detail.md](2026-06-04-2a-schema-and-detail.md) | ✅ shipped — [#34](https://github.com/FTC-23511/md-app/pull/34), migrations live on **dev + prod**, detail page live |
+| 2B — three quick forms (Contact/HW/SW) | [2026-06-04-2b-quick-forms.md](2026-06-04-2b-quick-forms.md)             | brief written — **unblocked** (2A live); ready for `/prep-backlog`                 |
+| 2C — Test Log + auto-compute           | [2026-06-04-2c-test-log.md](2026-06-04-2c-test-log.md)                   | brief written — **unblocked** (2A live); ready for `/prep-backlog`                 |
+| 2D — Competition Recap                 | [2026-06-04-2d-comp-recap.md](2026-06-04-2d-comp-recap.md)               | brief written — **blocked behind 2C** (companion view reads 2C `test_series`)      |
+| 2E — Decision Log + depth              | [2026-06-04-2e-decision-log.md](2026-06-04-2e-decision-log.md)           | brief written — **unblocked** (2A live); ready for `/prep-backlog`                 |
 | 2F — Media to Drive                    | owed                                                                     | review media design first                                                          |
 | 2G — SCL AI integration                | owed (own planning pass)                                                 | not before 2B SW baseline ships                                                    |
 
-> **Gating note for the routine:** 2B–2E briefs exist but must **not** be queued into `docs/BACKLOG.md` until the 2A schema migration is approved **and** deployed to prod (ROUTINE §9). Their forms write into the 2A tables — queuing them earlier ships code that can't run. Decompose each via `/prep-backlog` only after 2A is live on prod. Autonomous prep should **escalate** these (L effort / migration-touching), never auto-add them.
+> **Gating note for the routine:** 2A is live on prod (2026-06-05), so 2B/2C/2E are now **clear to decompose** into `docs/BACKLOG.md` via `/prep-backlog`. 2D still waits on 2C (`test_series`). These are L-effort / multi-item briefs — autonomous prep should **escalate** them in the cycle summary for owner review rather than silently auto-adding a large batch.
 
 ## How to write a brief
 
