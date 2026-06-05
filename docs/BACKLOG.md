@@ -17,16 +17,15 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-Decomposed from [`docs/briefs/2026-06-04-2b-quick-forms.md`](briefs/2026-06-04-2b-quick-forms.md) (2A live on prod — unblocked). Three self-contained forms, one PR each (Q3 default); each ships its own nav button + list pill so it's independently verifiable. All auto-merge tier (no migration — 2A created the tables). Build order below: SW reuses HW's repeating block. **Contact Log shipped (#35); HW + SW remain.**
+Decomposed from [`docs/briefs/2026-06-04-2b-quick-forms.md`](briefs/2026-06-04-2b-quick-forms.md) (2A live on prod — unblocked). Three self-contained forms, one PR each (Q3 default); each ships its own nav button + list pill so it's independently verifiable. All auto-merge tier (no migration — 2A created the tables). Build order below: SW reuses HW's repeating block. **Contact Log shipped (#35); HW in progress; SW remains.**
 
-1. **[2B] Hardware Change Log** — `entries/hardware-change-log.ts` + registry + route `app/(authed)/entries/hardware/new/page.tsx` + nav + pill. Typed `subsystem_option_id` (reuse `subsystem`), `change_date`, `version`, `replaces_version`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `deltas` (array of `{metric, was, now}`), `tradeoffs`. Adds one minimal repeating block for `deltas` (per brief Q2 — new block touches `_types.ts` union + `FieldRenderer` + `validate-entry` + `EntryDetailView`). Saves to `hw_change_logs`. Auto-merge.
-2. **[2B] Software Change Log (baseline)** — `entries/software-change-log.ts` + registry + route `app/(authed)/entries/software/new/page.tsx` (`defaultEntryState: 'draft'`) + nav + pill. Typed `change_type_option_id` (reuse `change_type`), `change_date`, `commit_hash`, `branch`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `hardware_sensors`, `game_challenge`, `before_behavior`, `after_behavior`, `failure_modes`, `verification`, `files_changed` (array — reuse the repeating block from item 1). AI deep-dive OUT (2G). Saves to `sw_change_logs` with `entry_state='draft'`. Auto-merge.
+1. **[2B] Software Change Log (baseline)** — `entries/software-change-log.ts` + registry + route `app/(authed)/entries/software/new/page.tsx` (`defaultEntryState: 'draft'`) + nav + pill. Typed `change_type_option_id` (reuse `change_type`), `change_date`, `commit_hash`, `branch`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `hardware_sensors`, `game_challenge`, `before_behavior`, `after_behavior`, `failure_modes`, `verification`, `files_changed` (array — reuse the repeating block from the HW Change Log item). AI deep-dive OUT (2G). Saves to `sw_change_logs` with `entry_state='draft'`. Auto-merge.
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[2B] Hardware Change Log** (branch `routine/2b-hw-change-log`) — `entries/hardware-change-log.ts` + registry + route `app/(authed)/entries/hardware/new/page.tsx` + nav + pill. Typed `subsystem_option_id` (reuse `subsystem`), `change_date`, `version`, `replaces_version`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `deltas` (array of `{metric, was, now}`), `tradeoffs`. Adds one minimal repeating block for `deltas` (per brief Q2 — new block touches `_types.ts` union + `FieldRenderer` + `validate-entry` + `EntryDetailView`). Saves to `hw_change_logs`. Auto-merge.
 
 ## Done
 
