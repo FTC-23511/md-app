@@ -1,0 +1,237 @@
+import type { FieldBlock } from '@/entries/_types';
+import { readFieldValue, type EntryDetail } from '@/lib/entry-detail';
+
+/** A field whose stored value is empty / absent — rendered as a muted dash. */
+function isEmpty(value: unknown): boolean {
+  if (value == null) return true;
+  if (typeof value === 'string') return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value as object).length === 0;
+  return false;
+}
+
+function Dash() {
+  return <span className="text-muted-foreground">—</span>;
+}
+
+const PERMISSION_LABEL: Record<string, string> = {
+  yes: 'Permission: yes',
+  no: 'Permission: no',
+  pending: 'Permission: pending',
+};
+
+const TARGET_TYPE_LABEL: Record<string, string> = {
+  decision_log: 'Decision Log',
+  hw_change_log: 'Hardware Change Log',
+  sw_change_log: 'Software Change Log',
+  test_log: 'Test Log',
+  contact_log: 'Contact Log',
+};
+
+function FieldValue({
+  block,
+  value,
+  optionLabels,
+}: {
+  block: FieldBlock;
+  value: unknown;
+  optionLabels: Record<string, string>;
+}) {
+  if (isEmpty(value)) return <Dash />;
+
+  switch (block.type) {
+    case 'text':
+    case 'date':
+      return <span>{String(value)}</span>;
+
+    case 'long-text':
+      return <p className="whitespace-pre-wrap">{String(value)}</p>;
+
+    case 'number': {
+      const unit = 'unit' in block && block.unit ? ` ${block.unit}` : '';
+      return (
+        <span>
+          {String(value)}
+          {unit}
+        </span>
+      );
+    }
+
+    case 'single-select': {
+      const id = String(value);
+      return <span>{optionLabels[id] ?? id}</span>;
+    }
+
+    case 'multi-select': {
+      const withNote = value && typeof value === 'object' && !Array.isArray(value);
+      const ids = (
+        withNote ? ((value as { ids?: unknown[] }).ids ?? []) : (value as unknown[])
+      ) as unknown[];
+      const note = withNote ? String((value as { note?: unknown }).note ?? '') : '';
+      const labels = ids
+        .filter((id): id is string => typeof id === 'string')
+        .map((id) => optionLabels[id] ?? id);
+      return (
+        <div className="flex flex-col gap-1">
+          {labels.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {labels.map((label, i) => (
+                <span
+                  key={i}
+                  className="inline-flex rounded-full bg-muted px-2 py-0.5 text-xs font-medium"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+          ) : null}
+          {note.trim().length > 0 ? <p className="text-sm text-muted-foreground">{note}</p> : null}
+        </div>
+      );
+    }
+
+    case 'person-attribution': {
+      const rows = value as Array<{ name?: string; contribution?: string }>;
+      return (
+        <ul className="flex flex-col gap-1">
+          {rows.map((r, i) => (
+            <li key={i} className="text-sm">
+              <span className="font-medium">{r.name}</span>
+              {r.contribution ? (
+                <span className="text-muted-foreground"> — {r.contribution}</span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    case 'action-items': {
+      const rows = value as Array<{ owner?: string; action?: string; due_date?: string }>;
+      return (
+        <ul className="flex flex-col gap-1">
+          {rows.map((r, i) => (
+            <li key={i} className="text-sm">
+              <span className="font-medium">{r.owner}</span>
+              {r.action ? <span> — {r.action}</span> : null}
+              {r.due_date ? (
+                <span className="text-muted-foreground"> (due {r.due_date})</span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    case 'story-block': {
+      const rows = value as Array<{
+        person_name?: string;
+        person_role_age?: string;
+        what_happened?: string;
+        direct_quote?: string;
+        permission?: string;
+        photo_url?: string;
+      }>;
+      return (
+        <ul className="flex flex-col gap-3">
+          {rows.map((r, i) => (
+            <li key={i} className="rounded-md border border-border p-3 text-sm">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-medium">{r.person_name}</span>
+                {r.person_role_age ? (
+                  <span className="text-xs text-muted-foreground">{r.person_role_age}</span>
+                ) : null}
+                {r.permission ? (
+                  <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-xs">
+                    {PERMISSION_LABEL[r.permission] ?? r.permission}
+                  </span>
+                ) : null}
+              </div>
+              {r.what_happened ? (
+                <p className="mt-1 whitespace-pre-wrap">{r.what_happened}</p>
+              ) : null}
+              {r.direct_quote ? (
+                <p className="mt-1 border-l-2 border-border pl-2 italic text-muted-foreground">
+                  “{r.direct_quote}”
+                </p>
+              ) : null}
+              {r.photo_url ? (
+                <a
+                  href={r.photo_url}
+                  className="mt-1 inline-block text-xs text-primary underline-offset-4 hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Photo
+                </a>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    case 'specialty-triggers': {
+      const rows = value as Array<{ target_type?: string; owner_text?: string; subject?: string }>;
+      return (
+        <ul className="flex flex-col gap-1">
+          {rows.map((r, i) => (
+            <li key={i} className="text-sm">
+              <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+                {TARGET_TYPE_LABEL[r.target_type ?? ''] ?? r.target_type}
+              </span>
+              {r.subject ? <span className="ml-2">{r.subject}</span> : null}
+              {r.owner_text ? (
+                <span className="text-muted-foreground"> — owner: {r.owner_text}</span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+  }
+}
+
+export function EntryDetailView({ detail }: { detail: EntryDetail }) {
+  const { definition, row, optionLabels, flags } = detail;
+  const createdAt = row.created_at ? String(row.created_at).slice(0, 10) : '';
+
+  return (
+    <article className="mt-6 flex flex-col gap-6">
+      {definition.fields.map((block) => {
+        const value = readFieldValue(block, row);
+        return (
+          <section key={block.name} className="grid gap-1">
+            <h2 className="text-sm font-medium text-muted-foreground">{block.label}</h2>
+            <div className="text-sm">
+              <FieldValue block={block} value={value} optionLabels={optionLabels} />
+            </div>
+          </section>
+        );
+      })}
+
+      {flags.length > 0 ? (
+        <section className="grid gap-2 border-t border-border pt-4">
+          <h2 className="text-sm font-medium">Flags raised from this entry</h2>
+          <ul className="flex flex-col gap-1">
+            {flags.map((f) => (
+              <li key={f.id} className="text-sm">
+                <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+                  {TARGET_TYPE_LABEL[f.target_entry_type] ?? f.target_entry_type}
+                </span>
+                <span className="ml-2">{f.subject}</span>
+                <span className="text-muted-foreground"> ({f.status})</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {createdAt ? (
+        <footer className="border-t border-border pt-4 text-xs text-muted-foreground">
+          Filed {createdAt}
+        </footer>
+      ) : null}
+    </article>
+  );
+}
