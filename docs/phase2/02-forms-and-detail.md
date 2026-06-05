@@ -6,16 +6,16 @@ Extends the Phase 1 form engine (`entries/_types.ts`, `components/entry-form/`, 
 
 Add each to the `FieldBlock` discriminated union in `entries/_types.ts`, a renderer in `components/entry-form/blocks/`, a parse case in `parseFormDataWithDefinition`, and a `schemaForBlock` case in `validate-entry.ts`. Follow the existing composite-block wire convention (`name__subkey`).
 
-| Block `type` | Used by | What it does |
-|---|---|---|
-| `checkbox` | Decision Log depth triggers | A single boolean. The filer asserts a depth trigger fired. Gates a section via `visibleWhen: {field, truthy: true}` (the visibility engine already supports `truthy`). |
-| `section-header` | grouping | Presentational only; renders a heading + optional helper. Honors `visibleWhen` so a whole depth section can hide/show. No stored value. |
-| `alternatives` | Decision Log | Repeating rows of `{label, pros, cons, predicted}`, min 3. Same shape family as `story-block`. Stored in `extras.alternatives`. |
-| `matrix` | Decision Log | Weighted trade-off matrix: criteria rows `{name, weight}` (weights sum to 1.0) × option columns, score 1–5 per cell. **Weighted totals + winner auto-computed** via `lib/compute/` (not user-typed). |
-| `fmea` | Decision Log | Rows of `{failure_mode, effect, severity, likelihood, detectability, mitigation}`; **RPN = S×L×D auto-computed** per row. |
-| `raw-data-table` | Test Log | User-defined columns + pasted rows. See `docs/phase2/03-test-log.md`. |
-| `computed-readonly` | Test Log, matrix, FMEA | Displays values produced by `lib/compute/`. Never accepts typed input; excluded from the submit payload (recomputed server-side). |
-| `media-links` | all entries with visual evidence | Paste-a-URL list. See `docs/phase2/04-media.md`. |
+| Block `type`        | Used by                          | What it does                                                                                                                                                                                         |
+| ------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `checkbox`          | Decision Log depth triggers      | A single boolean. The filer asserts a depth trigger fired. Gates a section via `visibleWhen: {field, truthy: true}` (the visibility engine already supports `truthy`).                               |
+| `section-header`    | grouping                         | Presentational only; renders a heading + optional helper. Honors `visibleWhen` so a whole depth section can hide/show. No stored value.                                                              |
+| `alternatives`      | Decision Log                     | Repeating rows of `{label, pros, cons, predicted}`, min 3. Same shape family as `story-block`. Stored in `extras.alternatives`.                                                                      |
+| `matrix`            | Decision Log                     | Weighted trade-off matrix: criteria rows `{name, weight}` (weights sum to 1.0) × option columns, score 1–5 per cell. **Weighted totals + winner auto-computed** via `lib/compute/` (not user-typed). |
+| `fmea`              | Decision Log                     | Rows of `{failure_mode, effect, severity, likelihood, detectability, mitigation}`; **RPN = S×L×D auto-computed** per row.                                                                            |
+| `raw-data-table`    | Test Log                         | User-defined columns + pasted rows. See `docs/phase2/03-test-log.md`.                                                                                                                                |
+| `computed-readonly` | Test Log, matrix, FMEA           | Displays values produced by `lib/compute/`. Never accepts typed input; excluded from the submit payload (recomputed server-side).                                                                    |
+| `media-links`       | all entries with visual evidence | Paste-a-URL list. See `docs/phase2/04-media.md`.                                                                                                                                                     |
 
 Keep blocks **serializable and declarative** like the existing ten — no function-valued config (the visibility engine and the importer both rely on this).
 

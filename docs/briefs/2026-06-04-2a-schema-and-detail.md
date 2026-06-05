@@ -52,7 +52,7 @@ Per `docs/phase2/00-plan.md` build order and `02-forms-and-detail.md`.
 - **Test Log auto-compute, Decision Log depth triggers, AI analysis** — later batches.
 - **`subsystem_handoffs`** — Phase 4.
 - **Tests** beyond the manual smoke check (no compute logic in this batch).
-- **Any change to `middleware.ts`, `app/auth/**`, `lib/supabase/`** — not needed here.
+- **Any change to `middleware.ts`, `app/auth/**`, `lib/supabase/`\*\* — not needed here.
 
 ## Open questions
 

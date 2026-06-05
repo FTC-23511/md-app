@@ -1,15 +1,15 @@
 # Application Charter: MD-App
 
-| Field | Value |
-|---|---|
-| Project name | MD-App |
-| Project type | Internal team infrastructure — implementation of the MD data layer |
-| Parent project | Maximum Documentation (MD) — see `MD_Project_Charter.md` |
-| Project sponsor | Head Coach / Team Captain |
-| Project lead | App Lead *(to be appointed; distinct from Documentation Captain)* |
-| Version | 1.0 — initial architectural decisions |
-| Operating model | Phased build, May–September 2026; ongoing maintenance thereafter |
-| Reviewed by | *[mentor sign-off]* |
+| Field           | Value                                                              |
+| --------------- | ------------------------------------------------------------------ |
+| Project name    | MD-App                                                             |
+| Project type    | Internal team infrastructure — implementation of the MD data layer |
+| Parent project  | Maximum Documentation (MD) — see `MD_Project_Charter.md`           |
+| Project sponsor | Head Coach / Team Captain                                          |
+| Project lead    | App Lead _(to be appointed; distinct from Documentation Captain)_  |
+| Version         | 1.0 — initial architectural decisions                              |
+| Operating model | Phased build, May–September 2026; ongoing maintenance thereafter   |
+| Reviewed by     | _[mentor sign-off]_                                                |
 
 ---
 
@@ -17,9 +17,9 @@
 
 This is the architectural decision record for the web application that implements the MD data layer. It is the **companion** to `MD_Project_Charter.md` and is read alongside it.
 
-`MD_Project_Charter.md` defines *what* the system captures — entry types, fields, triggers, time budgets, quality bars, operating rhythms. `MD_App_Charter.md` (this document) defines *how* the system captures it — the user interface, storage layer, computation, permissions, deployment.
+`MD_Project_Charter.md` defines _what_ the system captures — entry types, fields, triggers, time budgets, quality bars, operating rhythms. `MD_App_Charter.md` (this document) defines _how_ the system captures it — the user interface, storage layer, computation, permissions, deployment.
 
-The split exists because the *what* is durable and the *how* is replaceable. We could in principle move from this app to a different implementation without changing MD's entry taxonomy or rules. The reverse is not true — if MD's entry taxonomy changes, the app must change to match.
+The split exists because the _what_ is durable and the _how_ is replaceable. We could in principle move from this app to a different implementation without changing MD's entry taxonomy or rules. The reverse is not true — if MD's entry taxonomy changes, the app must change to match.
 
 ## 2. Relationship to the MD charter
 
@@ -27,8 +27,8 @@ The contract between the two documents:
 
 - **MD is authoritative on data semantics.** Field names, triggers, time budgets, quality bars, and the entry taxonomy live in `MD_Project_Charter.md`. The app implements them; it does not redefine them.
 - **The app is authoritative on implementation details.** Database schema, UI flows, auth model, hosting choices, and dependency versions live here. MD doesn't dictate them.
-- **Bidirectional iteration is allowed but tracked.** If MD changes (e.g., a new field is added to Decision Log), the app charter changelog records the responsive change. If an app limitation forces an MD change (e.g., "we discovered photo uploads can't exceed 25MB so MD's Outreach Log template must note this"), the MD charter is updated *first*, and this charter records the trigger.
-- **Single source of truth per concern.** MD never duplicates implementation details; this charter never duplicates field-level data definitions. When in doubt, MD wins on *what* and this document wins on *how*.
+- **Bidirectional iteration is allowed but tracked.** If MD changes (e.g., a new field is added to Decision Log), the app charter changelog records the responsive change. If an app limitation forces an MD change (e.g., "we discovered photo uploads can't exceed 25MB so MD's Outreach Log template must note this"), the MD charter is updated _first_, and this charter records the trigger.
+- **Single source of truth per concern.** MD never duplicates implementation details; this charter never duplicates field-level data definitions. When in doubt, MD wins on _what_ and this document wins on _how_.
 
 ## 3. Toolchain decision
 
@@ -54,17 +54,17 @@ Alternatives considered:
 
 ## 4. Tech stack
 
-| Layer | Choice | Why |
-|---|---|---|
-| Frontend framework | Next.js (latest stable, App Router) | React-based, server components reduce client JS, file-based routing is teachable to incoming devs, very well documented |
-| UI / styling | Tailwind CSS | Utility-first, no separate CSS files, fast iteration, well documented |
-| Component library | shadcn/ui | Copy-paste components built on Radix primitives; we own the code rather than depending on a versioned library |
-| Backend / database | Supabase (PostgreSQL) | Relational schema fits MD's entry taxonomy directly; row-level security is the access model we need; free tier sufficient |
-| Auth | Supabase Auth | Email/password + magic link; integrates with row-level security |
-| File storage | Supabase Storage | Photos, videos, attached PDFs/CAD; integrates with database |
-| Hosting | Vercel | First-party Next.js host; free tier sufficient; preview deployments per branch are useful for iteration |
-| AI integration | Claude API (via server-side calls) | Weekly classification pass, gap analysis, handoff drafts |
-| Source control | GitHub (private team org repo) | Standard; mentor code review happens via pull requests |
+| Layer              | Choice                              | Why                                                                                                                       |
+| ------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Frontend framework | Next.js (latest stable, App Router) | React-based, server components reduce client JS, file-based routing is teachable to incoming devs, very well documented   |
+| UI / styling       | Tailwind CSS                        | Utility-first, no separate CSS files, fast iteration, well documented                                                     |
+| Component library  | shadcn/ui                           | Copy-paste components built on Radix primitives; we own the code rather than depending on a versioned library             |
+| Backend / database | Supabase (PostgreSQL)               | Relational schema fits MD's entry taxonomy directly; row-level security is the access model we need; free tier sufficient |
+| Auth               | Supabase Auth                       | Email/password + magic link; integrates with row-level security                                                           |
+| File storage       | Supabase Storage                    | Photos, videos, attached PDFs/CAD; integrates with database                                                               |
+| Hosting            | Vercel                              | First-party Next.js host; free tier sufficient; preview deployments per branch are useful for iteration                   |
+| AI integration     | Claude API (via server-side calls)  | Weekly classification pass, gap analysis, handoff drafts                                                                  |
+| Source control     | GitHub (private team org repo)      | Standard; mentor code review happens via pull requests                                                                    |
 
 Free-tier sizing check: Supabase free tier provides 500 MB database, 1 GB file storage, 50K monthly active users. One FTC team produces an estimated ≤50 MB/year of entries plus ~2–5 GB/year of photos. **Photos will exceed Supabase free storage**; mitigation is to store photos in Google Drive (which the team already has) and store URLs in Supabase. Database stays well under the 500 MB limit.
 
@@ -116,14 +116,14 @@ Free-tier sizing check: Supabase free tier provides 500 MB database, 1 GB file s
 
 Every authenticated user has exactly one role. Row-level security policies in Supabase enforce the permissions.
 
-| Role | Read | Write | Notes |
-|---|---|---|---|
-| **Documentation Captain** | All entries | All entries; classifications; flags; member roles | Admin equivalent |
-| **Deputy Documentation Captain** | All entries | All entries; flags | Same as Captain except cannot modify member roles |
-| **Subsystem Documentation Lead** | All entries | All entries for their subsystem; comments on any entry | Owns quality for their subsystem |
-| **General team member** | All entries | Create any entry; edit own entries within 24h; read-only after 24h | Default role for students |
-| **Mentor** | All entries | None | Read-only oversight |
-| **Outreach Reporter** *(per-event role, additive)* | All entries | The Outreach Log they own, indefinitely | Layered on top of base role |
+| Role                                               | Read        | Write                                                              | Notes                                             |
+| -------------------------------------------------- | ----------- | ------------------------------------------------------------------ | ------------------------------------------------- |
+| **Documentation Captain**                          | All entries | All entries; classifications; flags; member roles                  | Admin equivalent                                  |
+| **Deputy Documentation Captain**                   | All entries | All entries; flags                                                 | Same as Captain except cannot modify member roles |
+| **Subsystem Documentation Lead**                   | All entries | All entries for their subsystem; comments on any entry             | Owns quality for their subsystem                  |
+| **General team member**                            | All entries | Create any entry; edit own entries within 24h; read-only after 24h | Default role for students                         |
+| **Mentor**                                         | All entries | None                                                               | Read-only oversight                               |
+| **Outreach Reporter** _(per-event role, additive)_ | All entries | The Outreach Log they own, indefinitely                            | Layered on top of base role                       |
 
 The 24-hour edit window on own entries is a deliberate design: it allows correction-of-fact in the immediate aftermath but freezes the contemporaneous record before memory erodes the original capture. Captain or Deputy can edit any entry at any time (with an `edit_reason` field required for entries older than 24h, creating an audit trail).
 
@@ -131,29 +131,29 @@ The 24-hour edit window on own entries is a deliberate design: it allows correct
 
 The build is phased to deliver operational capability incrementally rather than as a single big-bang launch.
 
-| Phase | Target date | Deliverable | "Operational" definition |
-|---|---|---|---|
-| 1 — Capture MVP | End of June 2026 | Schema for all 10 entry types; capture forms for Tier 1 entries (Session, Outreach, Meeting Notes); basic list view; single-user auth | Team can file Tier 1 entries on summer activities |
-| 2 — Tier 2 + auto-compute | End of July 2026 | Decision Log, HW/SW Change Log, Test Log, Contact Log forms; trigger logic; auto-compute on Test Log statistics; photo upload | Full capture coverage |
-| 3 — Roles, flags, dashboard | End of August 2026 | RLS policies; flag tracking with overdue alerts; Captain dashboard; KPI rollups; Subsystem Handoff template | System health visible; multi-user discipline enforced |
-| 4 — Classification + export | Mid-September 2026 | Weekly Classification Pass integration; classification index view; export/query endpoints for downstream artifact teams; mobile responsiveness | Ready for kickoff |
-| 5 — In-season iteration | Ongoing | Reverse-audit-driven changes; game-year overlay fields; bug fixes; mentor code reviews | Continuous |
+| Phase                       | Target date        | Deliverable                                                                                                                                    | "Operational" definition                              |
+| --------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| 1 — Capture MVP             | End of June 2026   | Schema for all 10 entry types; capture forms for Tier 1 entries (Session, Outreach, Meeting Notes); basic list view; single-user auth          | Team can file Tier 1 entries on summer activities     |
+| 2 — Tier 2 + auto-compute   | End of July 2026   | Decision Log, HW/SW Change Log, Test Log, Contact Log forms; trigger logic; auto-compute on Test Log statistics; photo upload                  | Full capture coverage                                 |
+| 3 — Roles, flags, dashboard | End of August 2026 | RLS policies; flag tracking with overdue alerts; Captain dashboard; KPI rollups; Subsystem Handoff template                                    | System health visible; multi-user discipline enforced |
+| 4 — Classification + export | Mid-September 2026 | Weekly Classification Pass integration; classification index view; export/query endpoints for downstream artifact teams; mobile responsiveness | Ready for kickoff                                     |
+| 5 — In-season iteration     | Ongoing            | Reverse-audit-driven changes; game-year overlay fields; bug fixes; mentor code reviews                                                         | Continuous                                            |
 
 A **fallback path exists at every phase**: a single Google Form writing to a Supabase table provides emergency capture if the main UI breaks. This is a Phase 1 deliverable. The data lands in the same storage layer regardless of capture surface.
 
 ## 8. Risk register
 
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| Mid-season bug breaks capture during build crunch | Medium | High | Fallback Google Form writing to same Supabase tables (Phase 1 deliverable); bug-fix turnaround target of 24h during in-season; rollback to last known good deployment via Vercel |
-| Original developer graduates, next captain can't maintain | High (over multi-year horizon) | Medium | Subsystem Handoff for the app itself; boring well-documented tech stack; mentor partnership on code review; mandatory code comments on non-obvious logic |
-| Hosting costs spiral | Low | Medium | Vercel + Supabase free tiers sufficient for one team; billing alerts at $5/month threshold |
-| Build delay pushes operational date past kickoff | Medium | High | Phased plan with operational milestones at each phase; Phase 1 is enough to start the system; can fall back to Notion if Phase 1 slips past July |
-| App becomes a distraction from robot work | Medium | High | Hard cap of 4 hr/week per contributing student; mentor monitors against this; falling back to Notion is the explicit escape valve |
-| Schema migration after a season is painful | Medium | Medium | Supabase migrations checked into git; game-year overlay fields added as optional columns rather than schema-breaking changes; quarterly retro reviews any required migrations |
-| Photo storage exceeds free tier | High over years | Low | Photos in Drive with URLs in DB; only thumbnails (compressed) in Supabase Storage |
-| Auth/security incident exposes team data | Low | High | Supabase Auth is mature; no PII beyond names and team roles; mentor and Captain hold admin keys, not students broadly |
-| Vendor lock-in to Supabase | Low | Low | PostgreSQL is portable; export to any other Postgres host requires no schema rewrite; Supabase is open-source and self-hostable as last resort |
+| Risk                                                      | Likelihood                     | Impact | Mitigation                                                                                                                                                                       |
+| --------------------------------------------------------- | ------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mid-season bug breaks capture during build crunch         | Medium                         | High   | Fallback Google Form writing to same Supabase tables (Phase 1 deliverable); bug-fix turnaround target of 24h during in-season; rollback to last known good deployment via Vercel |
+| Original developer graduates, next captain can't maintain | High (over multi-year horizon) | Medium | Subsystem Handoff for the app itself; boring well-documented tech stack; mentor partnership on code review; mandatory code comments on non-obvious logic                         |
+| Hosting costs spiral                                      | Low                            | Medium | Vercel + Supabase free tiers sufficient for one team; billing alerts at $5/month threshold                                                                                       |
+| Build delay pushes operational date past kickoff          | Medium                         | High   | Phased plan with operational milestones at each phase; Phase 1 is enough to start the system; can fall back to Notion if Phase 1 slips past July                                 |
+| App becomes a distraction from robot work                 | Medium                         | High   | Hard cap of 4 hr/week per contributing student; mentor monitors against this; falling back to Notion is the explicit escape valve                                                |
+| Schema migration after a season is painful                | Medium                         | Medium | Supabase migrations checked into git; game-year overlay fields added as optional columns rather than schema-breaking changes; quarterly retro reviews any required migrations    |
+| Photo storage exceeds free tier                           | High over years                | Low    | Photos in Drive with URLs in DB; only thumbnails (compressed) in Supabase Storage                                                                                                |
+| Auth/security incident exposes team data                  | Low                            | High   | Supabase Auth is mature; no PII beyond names and team roles; mentor and Captain hold admin keys, not students broadly                                                            |
+| Vendor lock-in to Supabase                                | Low                            | Low    | PostgreSQL is portable; export to any other Postgres host requires no schema rewrite; Supabase is open-source and self-hostable as last resort                                   |
 
 ## 9. Interface contracts
 
@@ -198,6 +198,6 @@ These are the technical specifics that will be worked out in the dedicated app-b
 
 ## Charter changelog
 
-| Version | Date | Changes | Author |
-|---|---|---|---|
-| 1.0 | *[initial date]* | Initial app charter — toolchain decision (Option D, Next.js + Supabase + Vercel), architecture sketch, role-and-permission model, phased build plan, risk register, interface contracts | *[App Lead]* |
+| Version | Date             | Changes                                                                                                                                                                                 | Author       |
+| ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| 1.0     | _[initial date]_ | Initial app charter — toolchain decision (Option D, Next.js + Supabase + Vercel), architecture sketch, role-and-permission model, phased build plan, risk register, interface contracts | _[App Lead]_ |

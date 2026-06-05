@@ -28,22 +28,22 @@ Schema reality: the live schema is **standalone tables per entry type** (each ca
 
 Do not read full files. Use grep + `view --view-range`. Jump to sections.
 
-| Need                                                        | File                                     | Section                                                                   |
-| ----------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------- |
-| Pick a task / track progress                                | `docs/phase1/00-plan.md`                 | task list; sprint plan                                                    |
-| Code patterns (folder, naming, server actions, Zod, errors) | `docs/phase1/01-conventions.md`          | §1–§4 universal; §5 field blocks; §11 workflows; §13 ask-don't-guess list |
-| Schema, migrations, column-vs-JSONB rule                    | `docs/phase1/02-schema.md`               | §2 conventions; §3–§6 per migration; §8 column rule; §9 workflows         |
-| Field block types, entry definitions, renderer              | `docs/phase1/03-forms.md`                | §1–§2 types; §3–§12 block library; §13–§15 entries                        |
-| Auth (email/password, allowlist, forgot-password)           | `docs/phase1/04-auth.md`                 | §3 dashboard config; §4 middleware; §5 login; §6 reset                    |
-| Text-file fallback templates + importer                     | `docs/phase1/05-fallback.md`             | §3 format; §5 importer                                                    |
-| What MD captures (data semantics)                           | `docs/charters/MD_Project_Charter.md`    | **NEVER read whole. Grep for entry name (e.g. SOP-05) or topic.**         |
-| Architectural decisions, phased build                       | `docs/charters/MD_App_Charter.md`        | **NEVER read whole. Grep for topic.**                                     |
+| Need                                                        | File                                     | Section                                                                          |
+| ----------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------- |
+| Pick a task / track progress                                | `docs/phase1/00-plan.md`                 | task list; sprint plan                                                           |
+| Code patterns (folder, naming, server actions, Zod, errors) | `docs/phase1/01-conventions.md`          | §1–§4 universal; §5 field blocks; §11 workflows; §13 ask-don't-guess list        |
+| Schema, migrations, column-vs-JSONB rule                    | `docs/phase1/02-schema.md`               | §2 conventions; §3–§6 per migration; §8 column rule; §9 workflows                |
+| Field block types, entry definitions, renderer              | `docs/phase1/03-forms.md`                | §1–§2 types; §3–§12 block library; §13–§15 entries                               |
+| Auth (email/password, allowlist, forgot-password)           | `docs/phase1/04-auth.md`                 | §3 dashboard config; §4 middleware; §5 login; §6 reset                           |
+| Text-file fallback templates + importer                     | `docs/phase1/05-fallback.md`             | §3 format; §5 importer                                                           |
+| What MD captures (data semantics)                           | `docs/charters/MD_Project_Charter.md`    | **NEVER read whole. Grep for entry name (e.g. SOP-05) or topic.**                |
+| Architectural decisions, phased build                       | `docs/charters/MD_App_Charter.md`        | **NEVER read whole. Grep for topic.**                                            |
 | SCL AI integration (Phase 2 step 2G)                        | `docs/charters/MD_SCL_AI_Integration.md` | **NEVER read whole. Deferred to its own pass — see `docs/phase2/05-scl-ai.md`.** |
-| Phase 2 build order, scope, decisions                       | `docs/phase2/00-plan.md`                 | build order 2A–2G; §3 architecture decisions                              |
-| Phase 2 Tier 2 tables, media table                          | `docs/phase2/01-schema.md`               | per-table specs; §8 migration plan                                        |
-| Phase 2 new field blocks, detail page, update flow          | `docs/phase2/02-forms-and-detail.md`     | §1 new blocks; §3 detail page; §4 updateEntry                             |
-| Test Log flexible data + auto-compute                       | `docs/phase2/03-test-log.md`             | §2 input modes; §3 compute; §5 AI fallback                                |
-| Media → Google Drive ingest                                 | `docs/phase2/04-media.md`                | §2 paths; §3 pipeline; §4 auth + setup                                    |
+| Phase 2 build order, scope, decisions                       | `docs/phase2/00-plan.md`                 | build order 2A–2G; §3 architecture decisions                                     |
+| Phase 2 Tier 2 tables, media table                          | `docs/phase2/01-schema.md`               | per-table specs; §8 migration plan                                               |
+| Phase 2 new field blocks, detail page, update flow          | `docs/phase2/02-forms-and-detail.md`     | §1 new blocks; §3 detail page; §4 updateEntry                                    |
+| Test Log flexible data + auto-compute                       | `docs/phase2/03-test-log.md`             | §2 input modes; §3 compute; §5 AI fallback                                       |
+| Media → Google Drive ingest                                 | `docs/phase2/04-media.md`                | §2 paths; §3 pipeline; §4 auth + setup                                           |
 
 ## Phase
 

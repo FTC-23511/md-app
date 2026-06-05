@@ -4,20 +4,21 @@
 
 Two concerns: database storage (Supabase free tier is ~1 GB; photos/videos blow past it — `MD_App_Charter.md` §4 flags it) and ease of capture. The answer: **Google Drive is the permanent home for team-owned media, and the app puts media there automatically.** The database stores only a Drive link (plus maybe a tiny thumbnail). This is the charter's original intent (photos in Drive, links in the DB) with automatic ingestion added, so the user never has to upload to Drive by hand.
 
-The team uses **Workspace Google with Shared Drives**, which is the durable case: ingested files are owned by the *Shared Drive (the team)*, not by a student's personal account, so media survives student turnover — a direct Sustain-Award benefit.
+The team uses **Workspace Google with Shared Drives**, which is the durable case: ingested files are owned by the _Shared Drive (the team)_, not by a student's personal account, so media survives student turnover — a direct Sustain-Award benefit.
 
 ## 2. Two paths: ingest vs passthrough
 
-| Media | Path | Why |
-|---|---|---|
-| Phone/file upload, Discord attachment, Imgur, loose direct image/video link | **Ingest to Drive** | Team-owned or fragile. App downloads the bytes and re-homes them in Drive. |
-| YouTube, Vimeo | **Passthrough (stay native)** | Already permanent, free, and built to stream. Re-hosting wastes space and violates their terms. Big match video belongs here anyway — keeps it off Drive quota. |
+| Media                                                                       | Path                          | Why                                                                                                                                                             |
+| --------------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phone/file upload, Discord attachment, Imgur, loose direct image/video link | **Ingest to Drive**           | Team-owned or fragile. App downloads the bytes and re-homes them in Drive.                                                                                      |
+| YouTube, Vimeo                                                              | **Passthrough (stay native)** | Already permanent, free, and built to stream. Re-hosting wastes space and violates their terms. Big match video belongs here anyway — keeps it off Drive quota. |
 
 So: photos and the team's own video files end up in Drive; platform videos stay as their own links. Everything the team owns is in one place.
 
 ## 3. Ingest pipeline
 
 On add of an ingestable item:
+
 1. App fetches the source bytes server-side (for Discord, promptly — before the signed URL expires).
 2. Uploads to a designated folder in the team Shared Drive (organize by entry type, e.g. `MD-media/<entry_type>/`).
 3. Sets the file's link sharing to "anyone with the link can view" via the Drive API — so previews/embeds work, automatically (no manual sharing step, which kills the old Drive gotcha).
@@ -29,9 +30,10 @@ Status is tracked (`ingest_status`: pending → done / failed) so the form can s
 
 - A **Google service account** is a Member (Content manager) of the team Shared Drive. The app authenticates as it to upload. Files are owned by the Shared Drive, not the service account or a person.
 - The service-account key (JSON) and the target Shared Drive / folder ID are stored as **server secrets** (Vercel env vars; `.env.local` for dev) — never in the repo.
-- A pasted *pre-existing* Drive link (someone shares a Drive file directly) is stored as-is; if it isn't link-viewable the preview fails, so warn the user to fix sharing (the only case the old gotcha still applies).
+- A pasted _pre-existing_ Drive link (someone shares a Drive file directly) is stored as-is; if it isn't link-viewable the preview fails, so warn the user to fix sharing (the only case the old gotcha still applies).
 
 ### One-time setup (coach/admin)
+
 1. Pick/create a Shared Drive folder for MD media.
 2. Google Cloud project → enable Drive API → create a service account → download its key JSON.
 3. Add the service account as a Content manager on the Shared Drive.

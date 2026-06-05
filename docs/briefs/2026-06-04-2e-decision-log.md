@@ -13,6 +13,7 @@ Status: brief complete; blocked behind 2A.
 The Decision Log — the most complex Tier 2 entry. A fast 5-minute initial entry (always-required fields only) that can grow **depth sections** the filer opts into via trigger checkboxes, plus an **outcome** that gets filled in later once the decision plays out.
 
 Depth sections (each gated by its own self-applied trigger checkbox, SOP-05):
+
 - **Weighted trade-off matrix** — criteria × options, scores 1–5; **weighted totals + winner auto-computed**.
 - **FMEA** — failure modes with severity/likelihood/detectability; **RPN = S×L×D auto-computed per row**.
 - **First-principles math** and **sensitivity** depth fields.

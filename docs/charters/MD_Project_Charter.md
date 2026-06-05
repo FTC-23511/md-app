@@ -1,15 +1,15 @@
 # Project Charter & System Design: Maximum Documentation (MD)
 
-| Field | Value |
-|---|---|
-| Project name | Maximum Documentation (MD) |
-| Project type | Internal team infrastructure — evergreen operating system |
-| Project sponsor | Head Coach / Team Captain |
-| Project lead | Documentation Captain *(to be appointed; rotating annually)* |
-| Version | 2.3 — Depth-of-thinking consolidation: Decision Log, Test Log, Software Change Log, Competition Recap, and Subsystem Handoff all updated with new trigger logic, depth fields, AI integration, and process discipline |
-| Operating model | Event-driven; runs continuously across offseason and in-season |
-| Companion document | `MD_App_Charter.md` — architectural decisions for the web application that implements this data layer |
-| Reviewed by | *[mentor sign-off]* |
+| Field              | Value                                                                                                                                                                                                                 |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Project name       | Maximum Documentation (MD)                                                                                                                                                                                            |
+| Project type       | Internal team infrastructure — evergreen operating system                                                                                                                                                             |
+| Project sponsor    | Head Coach / Team Captain                                                                                                                                                                                             |
+| Project lead       | Documentation Captain _(to be appointed; rotating annually)_                                                                                                                                                          |
+| Version            | 2.3 — Depth-of-thinking consolidation: Decision Log, Test Log, Software Change Log, Competition Recap, and Subsystem Handoff all updated with new trigger logic, depth fields, AI integration, and process discipline |
+| Operating model    | Event-driven; runs continuously across offseason and in-season                                                                                                                                                        |
+| Companion document | `MD_App_Charter.md` — architectural decisions for the web application that implements this data layer                                                                                                                 |
+| Reviewed by        | _[mentor sign-off]_                                                                                                                                                                                                   |
 
 ---
 
@@ -19,11 +19,11 @@ We placed Inspire 2 at Worlds with documentation that was strong but high-effort
 
 Maximum Documentation (MD) is not a project with a deadline. It is a **standing operating system** for the team — a small set of entry types, each with a defined trigger, owner, template, time budget, and storage location. The same system runs in the offseason when activity is light and during build season when activity is heavy; it simply fires more frequently in the latter.
 
-MD's scope is deliberately bounded to the **data layer**. Story arc construction, portfolio narrative composition, pit display design, formal presentation slide layout, and judging interview prep are *separate downstream projects* that consume MD's outputs. They are not in scope here. However, MD's entry categories are reverse-engineered from what those downstream artifacts will need: every piece of content a judge-facing artifact requires must trace back to a captured data point in MD. The reverse-audit principle (Section 17) is how we keep that contract honest.
+MD's scope is deliberately bounded to the **data layer**. Story arc construction, portfolio narrative composition, pit display design, formal presentation slide layout, and judging interview prep are _separate downstream projects_ that consume MD's outputs. They are not in scope here. However, MD's entry categories are reverse-engineered from what those downstream artifacts will need: every piece of content a judge-facing artifact requires must trace back to a captured data point in MD. The reverse-audit principle (Section 17) is how we keep that contract honest.
 
 The goal is **Inspire 1 at Worlds**, sustained year over year, with documentation that is the strongest single argument we make to the judges.
 
-The implementation of MD's data layer is captured in a companion document, `MD_App_Charter.md`. The split keeps *what we capture* (this charter) durable and *how we capture it* (the app charter) replaceable.
+The implementation of MD's data layer is captured in a companion document, `MD_App_Charter.md`. The split keeps _what we capture_ (this charter) durable and _how we capture it_ (the app charter) replaceable.
 
 ---
 
@@ -57,18 +57,18 @@ The vision is explicitly steady-state, not milestone-based. We are not building 
 
 These are the system's continuous performance metrics — the equivalent of "uptime" and "latency" for a documentation system. They are not deadlines; they are SLAs the system must hold once operational.
 
-| # | Objective | Measure | Target |
-|---|---|---|---|
-| O1 | Capture latency | Median hours between event and entry | <24h |
-| O2 | Capture compliance | % of triggering events that produce an entry | ≥90% |
-| O3 | Time-budget compliance | % of entries filed within their per-person time budget | ≥95% |
-| O4 | Flagging integrity | % of Tier 2 entries flagged from their parent Tier 1 entry | ≥90% |
-| O5 | Outreach data integrity | % of outreach events with full impact card incl. ≥3 stories | 100% |
-| O6 | Decision provenance | % of major design decisions with ≥3 documented alternatives | ≥95% |
-| O7 | KPI freshness | Days between last KPI update and current date | ≤7 |
-| O8 | Per-person contribution coverage | % of active members with attributed contributions in rolling 4-week window | ≥90% |
-| O9 | Award classification freshness | Days since last classification pass | ≤14 |
-| O10 | Knowledge transfer coverage | % of subsystems with current handoff doc | 100% |
+| #   | Objective                        | Measure                                                                    | Target |
+| --- | -------------------------------- | -------------------------------------------------------------------------- | ------ |
+| O1  | Capture latency                  | Median hours between event and entry                                       | <24h   |
+| O2  | Capture compliance               | % of triggering events that produce an entry                               | ≥90%   |
+| O3  | Time-budget compliance           | % of entries filed within their per-person time budget                     | ≥95%   |
+| O4  | Flagging integrity               | % of Tier 2 entries flagged from their parent Tier 1 entry                 | ≥90%   |
+| O5  | Outreach data integrity          | % of outreach events with full impact card incl. ≥3 stories                | 100%   |
+| O6  | Decision provenance              | % of major design decisions with ≥3 documented alternatives                | ≥95%   |
+| O7  | KPI freshness                    | Days between last KPI update and current date                              | ≤7     |
+| O8  | Per-person contribution coverage | % of active members with attributed contributions in rolling 4-week window | ≥90%   |
+| O9  | Award classification freshness   | Days since last classification pass                                        | ≤14    |
+| O10 | Knowledge transfer coverage      | % of subsystems with current handoff doc                                   | 100%   |
 
 ## 4. Success criteria
 
@@ -85,6 +85,7 @@ The system is operating correctly when all of the following are true at any rand
 ## 5. Scope
 
 ### In scope
+
 - The capture, storage, and aggregation of all team activity data
 - Engineering documentation: design decisions, hardware iterations, software changes, test results
 - Outreach documentation: event impact data, individual stories, FIRST conversion metrics, follow-up tracking
@@ -97,6 +98,7 @@ The system is operating correctly when all of the following are true at any rand
 - The reverse-audit process that keeps MD's data categories aligned with downstream artifact needs
 
 ### Out of scope (this project)
+
 - **Portfolio narrative composition.** MD produces the evidence; portfolio assembly is a downstream project.
 - **Pit display design** (monitors, banners, posters, layout, branding decisions).
 - **Formal presentation production** (slide design, speaker scripts, B-roll editing).
@@ -110,20 +112,21 @@ The boundary is enforced this way: MD captures structured data; everything outsi
 
 ## 6. Stakeholders
 
-| Stakeholder | Relationship | Primary need from the system |
-|---|---|---|
-| Students | Capture producers and consumers | Frictionless capture; clear ownership of each entry type; predictable time budget |
-| Subsystem leads | Quality enforcers | Confidence their team is documenting properly |
-| Mentors | Oversight | Periodic dashboards proving the system is working |
-| Head coach | Sponsor | Award-ready evidence on demand |
-| Judges (downstream) | Ultimate consumer | Coherent, quantified, dated, attributed evidence trail |
-| Future team members | Inheritors | Searchable, structured handoff content |
-| Sponsors | Occasional consumer | Reports and impact data tied to their investment |
-| Downstream artifact producers (portfolio team, pit team, presentation team) | Consumers | Clean, queryable, complete data they can pull from |
+| Stakeholder                                                                 | Relationship                    | Primary need from the system                                                      |
+| --------------------------------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------- |
+| Students                                                                    | Capture producers and consumers | Frictionless capture; clear ownership of each entry type; predictable time budget |
+| Subsystem leads                                                             | Quality enforcers               | Confidence their team is documenting properly                                     |
+| Mentors                                                                     | Oversight                       | Periodic dashboards proving the system is working                                 |
+| Head coach                                                                  | Sponsor                         | Award-ready evidence on demand                                                    |
+| Judges (downstream)                                                         | Ultimate consumer               | Coherent, quantified, dated, attributed evidence trail                            |
+| Future team members                                                         | Inheritors                      | Searchable, structured handoff content                                            |
+| Sponsors                                                                    | Occasional consumer             | Reports and impact data tied to their investment                                  |
+| Downstream artifact producers (portfolio team, pit team, presentation team) | Consumers                       | Clean, queryable, complete data they can pull from                                |
 
 ## 7. Constraints and assumptions
 
 **Constraints**
+
 - Per-person time budget: ≤5 minutes immediate filing after any session or event; ≤5 minutes per Tier 2 specialty entry; ≤30 min/week total for non-leads; ≤3 hr/week for the Documentation Captain
 - Hard rule: every entry must be filed within 24 hours of its triggering event. No exceptions.
 - Tool budget: prefer free/existing tools; no hard requirement for paid SaaS
@@ -131,6 +134,7 @@ The boundary is enforced this way: MD captures structured data; everything outsi
 - Manual compliance: per the current FTC Competition Manual, AI assistance is permitted but must be footnoted in produced artifacts; MD itself is an internal data layer and is not subject to portfolio content restrictions
 
 **Assumptions**
+
 - Every team member carries a phone capable of voice memos and photos
 - The team has at least one shared cloud storage location (Notion, Google, or equivalent)
 - Mentors will support enforcement during the first 4 weeks of rollout
@@ -139,18 +143,18 @@ The boundary is enforced this way: MD captures structured data; everything outsi
 
 ## 8. Risk register
 
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| Capture becomes a chore; compliance decays | High | High | 5/24h rule strictly enforced; tier model puts almost all immediate burden on rotating leads; public dashboard creates social accountability |
-| Single point of failure on Documentation Captain | Medium | High | Deputy Captain role; all SOPs written and stored; annual rotation |
-| Specialty entries get flagged but never filed | Medium | High | Doc Captain owns the flag queue; Friday 15 includes overdue-flag review; flags >48h overdue escalate to subsystem lead |
-| Data silos persist (photos on phone, notes in head) | High | Medium | Single capture surface is the only legitimate entry point; phone auto-sync to shared cloud |
-| Privacy violations from minor outreach photos | Low | Critical | Permission integrated into Outreach Log template; default to anonymized until permission confirmed |
-| Tooling complexity blocks adoption | Medium | High | Pilot with one subsystem first; expand only after proven; SOPs include the literal click-path |
-| Offseason atrophy — system goes dormant | High | Medium | Same entry types and rhythms apply year-round; Friday 15 continues even when activity is low |
-| AI-generated content sounds artificial in downstream artifacts | Medium | Medium | Claude is a classifier and formatter, not an author; raw human input always required; downstream artifact production handles final voice |
-| Per-person attribution becomes blame-tracking | Low | Medium | Contribution fields capture what each person did, not what they failed to do; retros focus on system, not people |
-| Award classification drifts from what judges actually weight | Medium | Medium | Reverse audit runs quarterly using current FTC manual and recent top portfolios as references |
+| Risk                                                           | Likelihood | Impact   | Mitigation                                                                                                                                  |
+| -------------------------------------------------------------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Capture becomes a chore; compliance decays                     | High       | High     | 5/24h rule strictly enforced; tier model puts almost all immediate burden on rotating leads; public dashboard creates social accountability |
+| Single point of failure on Documentation Captain               | Medium     | High     | Deputy Captain role; all SOPs written and stored; annual rotation                                                                           |
+| Specialty entries get flagged but never filed                  | Medium     | High     | Doc Captain owns the flag queue; Friday 15 includes overdue-flag review; flags >48h overdue escalate to subsystem lead                      |
+| Data silos persist (photos on phone, notes in head)            | High       | Medium   | Single capture surface is the only legitimate entry point; phone auto-sync to shared cloud                                                  |
+| Privacy violations from minor outreach photos                  | Low        | Critical | Permission integrated into Outreach Log template; default to anonymized until permission confirmed                                          |
+| Tooling complexity blocks adoption                             | Medium     | High     | Pilot with one subsystem first; expand only after proven; SOPs include the literal click-path                                               |
+| Offseason atrophy — system goes dormant                        | High       | Medium   | Same entry types and rhythms apply year-round; Friday 15 continues even when activity is low                                                |
+| AI-generated content sounds artificial in downstream artifacts | Medium     | Medium   | Claude is a classifier and formatter, not an author; raw human input always required; downstream artifact production handles final voice    |
+| Per-person attribution becomes blame-tracking                  | Low        | Medium   | Contribution fields capture what each person did, not what they failed to do; retros focus on system, not people                            |
+| Award classification drifts from what judges actually weight   | Medium     | Medium   | Reverse audit runs quarterly using current FTC manual and recent top portfolios as references                                               |
 
 ---
 
@@ -177,29 +181,29 @@ The system defines a fixed set of ten entry types organized into three tiers. Ev
 
 Anyone in a triggering situation can be the filer. These are the entries everyone learns first.
 
-| Entry | Trigger | Owner | Immediate time budget | Hard deadline |
-|---|---|---|---|---|
-| **Session Log** | End of any working session — build, code, design, planning, training, summer activity | Session lead (rotates) | ≤5 min | 24h |
-| **Outreach Log** | Every external outreach event — demo, classroom visit, FLL coaching, fair, community appearance | Outreach Reporter (assigned ahead of time) | ≤5 min on-site capture; finalize within 24h | 24h |
-| **Meeting Notes** | Every formal team meeting — kickoff, all-hands, strategy, retro, planning | Designated scribe (rotates) | During the meeting | 24h |
-| **Competition Recap** | Every competition (qualifier, scrimmage, league meet, regional, super-regional, worlds, off-season) | Documentation Captain facilitates; full team participates | 60-min team meeting at T+48h | 7 days for full draft |
+| Entry                 | Trigger                                                                                             | Owner                                                     | Immediate time budget                       | Hard deadline         |
+| --------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------- | --------------------- |
+| **Session Log**       | End of any working session — build, code, design, planning, training, summer activity               | Session lead (rotates)                                    | ≤5 min                                      | 24h                   |
+| **Outreach Log**      | Every external outreach event — demo, classroom visit, FLL coaching, fair, community appearance     | Outreach Reporter (assigned ahead of time)                | ≤5 min on-site capture; finalize within 24h | 24h                   |
+| **Meeting Notes**     | Every formal team meeting — kickoff, all-hands, strategy, retro, planning                           | Designated scribe (rotates)                               | During the meeting                          | 24h                   |
+| **Competition Recap** | Every competition (qualifier, scrimmage, league meet, regional, super-regional, worlds, off-season) | Documentation Captain facilitates; full team participates | 60-min team meeting at T+48h                | 7 days for full draft |
 
 ### Tier 2 — Specialty capture (specific owners, deeper content, time-shifted)
 
 Triggered when something substantive happens that needs richer treatment than a Tier 1 entry. Almost always flagged from the parent Tier 1 entry.
 
-| Entry | Trigger | Owner | Time budget | Hard deadline |
-|---|---|---|---|---|
-| **Decision Log** | Any design or strategy choice with ≥2 alternatives, including software architecture decisions | Whoever proposed the chosen alternative | ≤5 min initial entry; +2 min for outcome update later | 24h initial; outcome filled when tested |
-| **Hardware Change Log** | Any physical version change of a mechanism — even small ones (new bracket, revised gear ratio, 3D print revision) | Subsystem lead | ≤5 min | 24h |
-| **Software Change Log** | Any code commit that changes robot behavior (pure refactors and formatting commits exempt) | Committing programmer | ≤5 min; ideally written at commit time | 24h |
-| **Test Log** | Any quantitative test with a measured result (cycle time, accuracy, reliability over N attempts) | Whoever ran the test | ≤5 min | 24h |
-| **Contact Log** | Any substantive contact with an external person — mentor, sponsor, university contact, alumni, industry engineer, prospective partner | Point of contact | ≤5 min | 24h |
+| Entry                   | Trigger                                                                                                                               | Owner                                   | Time budget                                           | Hard deadline                           |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------------------------------- | --------------------------------------- |
+| **Decision Log**        | Any design or strategy choice with ≥2 alternatives, including software architecture decisions                                         | Whoever proposed the chosen alternative | ≤5 min initial entry; +2 min for outcome update later | 24h initial; outcome filled when tested |
+| **Hardware Change Log** | Any physical version change of a mechanism — even small ones (new bracket, revised gear ratio, 3D print revision)                     | Subsystem lead                          | ≤5 min                                                | 24h                                     |
+| **Software Change Log** | Any code commit that changes robot behavior (pure refactors and formatting commits exempt)                                            | Committing programmer                   | ≤5 min; ideally written at commit time                | 24h                                     |
+| **Test Log**            | Any quantitative test with a measured result (cycle time, accuracy, reliability over N attempts)                                      | Whoever ran the test                    | ≤5 min                                                | 24h                                     |
+| **Contact Log**         | Any substantive contact with an external person — mentor, sponsor, university contact, alumni, industry engineer, prospective partner | Point of contact                        | ≤5 min                                                | 24h                                     |
 
 ### Tier 3 — Annual artifact (curated from Tier 1+2 data, not directly captured)
 
-| Entry | Trigger | Owner | Time budget | Hard deadline |
-|---|---|---|---|---|
+| Entry                 | Trigger                                                            | Owner                   | Time budget                                                                                                                                                          | Hard deadline                 |
+| --------------------- | ------------------------------------------------------------------ | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
 | **Subsystem Handoff** | Beginning of each new season, or whenever a subsystem lead changes | Outgoing subsystem lead | ~2 hours, once per year per subsystem; generated by reviewing the subsystem's year of Decision Logs, Hardware/Software Change Logs, and Test Logs, then human-edited | 2 weeks after role transition |
 
 Plain names are used everywhere in everyday team operation. Type codes (SL, OL, MN, CR, DL, HCL, SCL, TL, CL, SH) exist only for queries and database tagging.
@@ -250,7 +254,7 @@ If an event meets multiple triggers (e.g., a build session that produced a desig
 
 ### Draft → Complete model
 
-Some entries — Decision Log, Test Log, and Software Change Log — have **depth fields** that take longer than 5 minutes to fill in well (weighted trade-off matrix, FMEA, first-principles math, structured Q&A with the AI, etc.). The 5/24 rule still applies, but to the *initial entry*, not the *complete entry*.
+Some entries — Decision Log, Test Log, and Software Change Log — have **depth fields** that take longer than 5 minutes to fill in well (weighted trade-off matrix, FMEA, first-principles math, structured Q&A with the AI, etc.). The 5/24 rule still applies, but to the _initial entry_, not the _complete entry_.
 
 These entries flow through two states:
 
@@ -284,18 +288,19 @@ The team picks **one** stack from the toolchain options in Section 15. The princ
 
 ## 13. Role model
 
-| Role | Term | Time commitment | Responsibilities |
-|---|---|---|---|
-| Documentation Captain | 1 season | ~3 hr/week | Owns the system; runs Friday 15; manages flag queue; weekly award classification pass; quarterly reverse audit; portfolio handoff to downstream artifact teams |
-| Deputy Documentation Captain | 1 season | ~1 hr/week | Backup for Captain; trained to assume role if Captain unavailable |
-| Subsystem Documentation Lead | 1 season per subsystem | ~1 hr/week | Owns Decision Log and Hardware Change Log quality for their subsystem; signs off on Subsystem Handoff |
-| Outreach Reporter | Per event (rotating) | Event duration + finalize within 24h | Owns Outreach Log for the event including story capture |
-| Meeting Scribe | Per meeting (rotating) | During meeting | Owns Meeting Notes |
-| Session Lead | Per session (rotating) | End of session | Files Session Log; flags specialty entries to their owners |
-| Story Editor | 1 season | ~1 hr/week | Polishes raw story content from Outreach Logs into a curated story library; manages permission tracking |
-| Data Custodian | 1 season | ~30 min/week | Maintains KPI dashboard; ensures aggregations are current; maintains visual asset library |
+| Role                         | Term                   | Time commitment                      | Responsibilities                                                                                                                                               |
+| ---------------------------- | ---------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Documentation Captain        | 1 season               | ~3 hr/week                           | Owns the system; runs Friday 15; manages flag queue; weekly award classification pass; quarterly reverse audit; portfolio handoff to downstream artifact teams |
+| Deputy Documentation Captain | 1 season               | ~1 hr/week                           | Backup for Captain; trained to assume role if Captain unavailable                                                                                              |
+| Subsystem Documentation Lead | 1 season per subsystem | ~1 hr/week                           | Owns Decision Log and Hardware Change Log quality for their subsystem; signs off on Subsystem Handoff                                                          |
+| Outreach Reporter            | Per event (rotating)   | Event duration + finalize within 24h | Owns Outreach Log for the event including story capture                                                                                                        |
+| Meeting Scribe               | Per meeting (rotating) | During meeting                       | Owns Meeting Notes                                                                                                                                             |
+| Session Lead                 | Per session (rotating) | End of session                       | Files Session Log; flags specialty entries to their owners                                                                                                     |
+| Story Editor                 | 1 season               | ~1 hr/week                           | Polishes raw story content from Outreach Logs into a curated story library; manages permission tracking                                                        |
+| Data Custodian               | 1 season               | ~30 min/week                         | Maintains KPI dashboard; ensures aggregations are current; maintains visual asset library                                                                      |
 
 Notes on role design:
+
 - The **Documentation Captain** is the only role that requires significant time. Every other role is a few minutes per week or per event.
 - Most roles rotate. The Subsystem Documentation Lead is typically the same person as the Subsystem Lead, so no new headcount.
 - Roles rotate **annually** for Captain and Deputy, **per event** for Outreach Reporter, **per meeting** for Scribe, **per session** for Session Lead.
@@ -305,18 +310,18 @@ Notes on role design:
 
 Five recurring rhythms layered on top of event-driven captures. These maintain system health and aggregate raw entries into downstream-ready data.
 
-| Rhythm | Cadence | Duration | Owner | Purpose |
-|---|---|---|---|---|
-| Friday 15 | Weekly | 15 min | Documentation Captain | Review week's entries; clear overdue flags; identify gaps; spot-check quality |
-| Weekly Classification Pass | Weekly (separate from Friday 15) | 20 min | Documentation Captain (with Claude) | Tag new entries against current award criteria; update classification index |
-| Monthly KPI Sync | First Monday of each month | 30 min | Documentation Captain + Head Coach | Update dashboard; review trends; surface concerns |
-| Quarterly System Retro | End of each quarter | 60 min | Documentation Captain + Deputy + Mentors | Iterate on the system itself; run reverse audit (Sec 17); revise SOPs; refresh game-year overlay |
-| Quarterly Conversion Audit | End of each quarter (runs adjacent to System Retro) | 30 min | Documentation Captain | Cross-check projected outreach conversions ("X new FLL kids inspired today") against actual FIRST team rosters and Contact Logs; surface the outreach funnel as a dashboard rollup; identify event-type segments with high/low conversion for next-quarter planning |
-| Annual Handoff | After last competition of the season | 1 day workshop | Outgoing + incoming Captain | Knowledge transfer; Subsystem Handoffs written |
+| Rhythm                     | Cadence                                             | Duration       | Owner                                    | Purpose                                                                                                                                                                                                                                                             |
+| -------------------------- | --------------------------------------------------- | -------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Friday 15                  | Weekly                                              | 15 min         | Documentation Captain                    | Review week's entries; clear overdue flags; identify gaps; spot-check quality                                                                                                                                                                                       |
+| Weekly Classification Pass | Weekly (separate from Friday 15)                    | 20 min         | Documentation Captain (with Claude)      | Tag new entries against current award criteria; update classification index                                                                                                                                                                                         |
+| Monthly KPI Sync           | First Monday of each month                          | 30 min         | Documentation Captain + Head Coach       | Update dashboard; review trends; surface concerns                                                                                                                                                                                                                   |
+| Quarterly System Retro     | End of each quarter                                 | 60 min         | Documentation Captain + Deputy + Mentors | Iterate on the system itself; run reverse audit (Sec 17); revise SOPs; refresh game-year overlay                                                                                                                                                                    |
+| Quarterly Conversion Audit | End of each quarter (runs adjacent to System Retro) | 30 min         | Documentation Captain                    | Cross-check projected outreach conversions ("X new FLL kids inspired today") against actual FIRST team rosters and Contact Logs; surface the outreach funnel as a dashboard rollup; identify event-type segments with high/low conversion for next-quarter planning |
+| Annual Handoff             | After last competition of the season                | 1 day workshop | Outgoing + incoming Captain              | Knowledge transfer; Subsystem Handoffs written                                                                                                                                                                                                                      |
 
 The Friday 15 and the Weekly Classification Pass together are the most important rhythms. They are what prevent drift. If we skip either for three weeks running, capture compliance will collapse and classification will go stale.
 
-The Quarterly Conversion Audit is the rhythm that lets the team make claims like *"of the 47 new-to-FIRST kids we engaged this season, 8 are now on FLL teams and 3 are on our FTC team"* — the kind of funnel data that distinguishes Inspire-1 outreach evidence from Inspire-2. Rather than burdening each Outreach Log with projected-vs-actual fields the Reporter cannot honestly fill in at the event, the audit pulls the data as a quarterly rollup.
+The Quarterly Conversion Audit is the rhythm that lets the team make claims like _"of the 47 new-to-FIRST kids we engaged this season, 8 are now on FLL teams and 3 are on our FTC team"_ — the kind of funnel data that distinguishes Inspire-1 outreach evidence from Inspire-2. Rather than burdening each Outreach Log with projected-vs-actual fields the Reporter cannot honestly fill in at the event, the audit pulls the data as a quarterly rollup.
 
 ## 15. Toolchain
 
@@ -336,12 +341,12 @@ The deciding factors:
 
 ### Alternatives considered
 
-| Option | Summary | Why not chosen |
-|---|---|---|
-| **A — Notion-centric** | Capture via Notion forms; databases per entry type; rollups for dashboards | Coarse-grained access control; cannot enforce per-entry edit restrictions; conditional fields are hacks; documented mobile typing latency |
-| **B — Google Sheets + Forms** | Forms for capture; sheets per entry type; pivot tables for rollups; Apps Script automation | Sheet *is* the system of record, but editing the sheet directly is exactly what we want to restrict; poor handling of mixed-content entries (photos, narrative); dashboards look amateur |
-| **C — Discord bot + Drive hybrid** | Slash-command capture; bot writes to backing Sheet; Discord channels as social-accountability dashboard | Discord modals can't host long-form entries (5 text fields max, no rich text); the bot is itself a custom build — no escape from maintenance, only relocation |
-| **D — Custom web app** ✓ | Next.js + Supabase + Vercel, photos in Drive, Claude API for classification | Selected. Higher initial build cost is the real trade-off; mitigated by phased plan with operational milestones |
+| Option                             | Summary                                                                                                 | Why not chosen                                                                                                                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A — Notion-centric**             | Capture via Notion forms; databases per entry type; rollups for dashboards                              | Coarse-grained access control; cannot enforce per-entry edit restrictions; conditional fields are hacks; documented mobile typing latency                                                |
+| **B — Google Sheets + Forms**      | Forms for capture; sheets per entry type; pivot tables for rollups; Apps Script automation              | Sheet _is_ the system of record, but editing the sheet directly is exactly what we want to restrict; poor handling of mixed-content entries (photos, narrative); dashboards look amateur |
+| **C — Discord bot + Drive hybrid** | Slash-command capture; bot writes to backing Sheet; Discord channels as social-accountability dashboard | Discord modals can't host long-form entries (5 text fields max, no rich text); the bot is itself a custom build — no escape from maintenance, only relocation                            |
+| **D — Custom web app** ✓           | Next.js + Supabase + Vercel, photos in Drive, Claude API for classification                             | Selected. Higher initial build cost is the real trade-off; mitigated by phased plan with operational milestones                                                                          |
 
 ### Tool-independent principles
 
@@ -359,32 +364,32 @@ These principles outlive any specific tool choice and are restated here so they 
 
 Every entry must meet these minimum bars. Entries that fall below are returned to the owner for revision during Friday 15.
 
-| Quality bar | All entries | Applies especially to |
-|---|---|---|
-| Dated | Every entry has an ISO date | All |
-| Attributed | Every entry names the human(s) involved | All |
-| Per-person contributions named | For sessions with multiple participants, who did what (1 line per person) | Session Log, Outreach Log, Competition Recap |
-| Quantified where possible | Numbers preferred over adjectives | Test Log, Outreach Log, Hardware Change Log |
-| Visual evidence | Where physical or visual | Session Log, Hardware Change Log, Outreach Log |
-| Permission status | Stories with named minors have explicit permission status | Outreach Log |
-| Alternatives documented | Any decision shows ≥3 options considered including paths-not-taken | Decision Log |
-| Weighted trade-off matrix | Required when 3+ substantive alternatives AND being wrong would cost >1 build session of rework | Decision Log |
-| FMEA table | Required when failure mode could end a match OR pose safety/injury risk | Decision Log |
-| First-principles math | Required when decision rests on torque, force, current, voltage, geometry, or timing | Decision Log |
-| Sensitivity analysis | Required whenever first-principles math is required (paired) | Decision Log |
-| Outcome tracked | Predicted outcome later updated with actual outcome | Decision Log, Hardware Change Log |
-| Controlled variables named | Variables held constant during testing listed explicitly | Test Log |
-| Repeatability checked | Re-run with different operator or different day, results compared | Test Log |
-| Failure modes tracked separately | Failures within trials catalogued by mode, not just summarized in headline statistic | Test Log |
-| Sample size justified | Brief reason recorded for why N was chosen (dropdown options or short text) | Test Log |
-| Statistical treatment present | Confidence interval (pass/fail) or standard deviation (continuous) computed (auto-computed by app) | Test Log |
-| Type of change classified | Software type-of-change selected (control theory / sensor fusion / state machine / algorithm / bug fix / refactor / other) | Software Change Log |
-| Verification declared | Reference to a unit test OR explicit reasoning for why unit testing isn't feasible plus integration-test approach | Software Change Log |
-| AI deep-dive completed | Programmer engages with AI-driven prompting per `MD_SCL_AI_Integration.md`; transcript retained alongside entry | Software Change Log |
-| Structured root-cause analysis | 5-whys applied to up to 3 match-affecting failures | Competition Recap |
-| Incoming-lead acceptance | Subsystem Handoff co-signed with confidence rating and 3 first-month dig-deeper items | Subsystem Handoff |
-| Prior-season lineage | Link to prior season's handoff for this subsystem + 1-3 bullets on what's changed | Subsystem Handoff |
-| Specialty entries flagged | Tier 1 entries flag any Tier 2 entries triggered | Session Log, Outreach Log, Meeting Notes, Competition Recap |
+| Quality bar                      | All entries                                                                                                                | Applies especially to                                       |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Dated                            | Every entry has an ISO date                                                                                                | All                                                         |
+| Attributed                       | Every entry names the human(s) involved                                                                                    | All                                                         |
+| Per-person contributions named   | For sessions with multiple participants, who did what (1 line per person)                                                  | Session Log, Outreach Log, Competition Recap                |
+| Quantified where possible        | Numbers preferred over adjectives                                                                                          | Test Log, Outreach Log, Hardware Change Log                 |
+| Visual evidence                  | Where physical or visual                                                                                                   | Session Log, Hardware Change Log, Outreach Log              |
+| Permission status                | Stories with named minors have explicit permission status                                                                  | Outreach Log                                                |
+| Alternatives documented          | Any decision shows ≥3 options considered including paths-not-taken                                                         | Decision Log                                                |
+| Weighted trade-off matrix        | Required when 3+ substantive alternatives AND being wrong would cost >1 build session of rework                            | Decision Log                                                |
+| FMEA table                       | Required when failure mode could end a match OR pose safety/injury risk                                                    | Decision Log                                                |
+| First-principles math            | Required when decision rests on torque, force, current, voltage, geometry, or timing                                       | Decision Log                                                |
+| Sensitivity analysis             | Required whenever first-principles math is required (paired)                                                               | Decision Log                                                |
+| Outcome tracked                  | Predicted outcome later updated with actual outcome                                                                        | Decision Log, Hardware Change Log                           |
+| Controlled variables named       | Variables held constant during testing listed explicitly                                                                   | Test Log                                                    |
+| Repeatability checked            | Re-run with different operator or different day, results compared                                                          | Test Log                                                    |
+| Failure modes tracked separately | Failures within trials catalogued by mode, not just summarized in headline statistic                                       | Test Log                                                    |
+| Sample size justified            | Brief reason recorded for why N was chosen (dropdown options or short text)                                                | Test Log                                                    |
+| Statistical treatment present    | Confidence interval (pass/fail) or standard deviation (continuous) computed (auto-computed by app)                         | Test Log                                                    |
+| Type of change classified        | Software type-of-change selected (control theory / sensor fusion / state machine / algorithm / bug fix / refactor / other) | Software Change Log                                         |
+| Verification declared            | Reference to a unit test OR explicit reasoning for why unit testing isn't feasible plus integration-test approach          | Software Change Log                                         |
+| AI deep-dive completed           | Programmer engages with AI-driven prompting per `MD_SCL_AI_Integration.md`; transcript retained alongside entry            | Software Change Log                                         |
+| Structured root-cause analysis   | 5-whys applied to up to 3 match-affecting failures                                                                         | Competition Recap                                           |
+| Incoming-lead acceptance         | Subsystem Handoff co-signed with confidence rating and 3 first-month dig-deeper items                                      | Subsystem Handoff                                           |
+| Prior-season lineage             | Link to prior season's handoff for this subsystem + 1-3 bullets on what's changed                                          | Subsystem Handoff                                           |
+| Specialty entries flagged        | Tier 1 entries flag any Tier 2 entries triggered                                                                           | Session Log, Outreach Log, Meeting Notes, Competition Recap |
 
 Award/criterion tagging is **not** a per-entry quality bar in v2.0. Classification is done weekly by the Documentation Captain with Claude assistance against the current FTC manual's award criteria. See Appendix A.
 
@@ -402,6 +407,7 @@ MD exists to feed downstream judge-facing artifacts. For that contract to stay h
 Any gap identified is filed as a system iteration item. The reverse audit is the recurring forcing function that prevents MD from becoming detached from what we actually need at competition.
 
 Reference downstream artifacts to audit against (this list updated each season):
+
 - Portfolio (formal submission)
 - Pit display: monitors, banners, posters, sponsor wall
 - Pit binder (printed reference for judge pit visits)
@@ -419,7 +425,7 @@ The documentation system is treated as a subsystem and iterated using the same e
 - **Measurement** — capture latency, time-budget compliance, flag closure rate, and classification freshness are the system's "cycle time" and "accuracy."
 - **Failure mode analysis** — at the Quarterly System Retro, we examine where the system failed to capture something important. We trace it to a specific entry type, trigger, or template field, and fix the root cause.
 - **Version control** — this charter is versioned. Material changes are tracked in the changelog at the bottom, with rationale, so future Captains understand why the system looks the way it does.
-- **App synchronization** — when this charter changes in a way that affects the data model (new field, new entry type, changed required-status), an issue is opened against the MD-App repo within 72 hours per the interface contract in `MD_App_Charter.md` §9. When an app limitation forces a charter change, this charter is updated *first* and the app charter records the trigger. Neither document silently drifts from the other.
+- **App synchronization** — when this charter changes in a way that affects the data model (new field, new entry type, changed required-status), an issue is opened against the MD-App repo within 72 hours per the interface contract in `MD_App_Charter.md` §9. When an app limitation forces a charter change, this charter is updated _first_ and the app charter records the trigger. Neither document silently drifts from the other.
 
 This iteration philosophy is itself a Think and Sustain Award asset — it demonstrates that the team applies engineering process to non-mechanical systems.
 
@@ -452,6 +458,7 @@ The session lead must complete the "Specialty entries triggered" section before 
 **Critical** — The Outreach Reporter does **not** run the demo. Their job is to count, photograph, talk to participants, and capture. Trying to run the demo and document it simultaneously is the #1 cause of weak outreach documentation.
 
 Required sub-fields the Reporter cannot leave the event without:
+
 - Event type (one of the nine categories defined on Template T-02)
 - Total attendees
 - Number with **zero prior FIRST experience**
@@ -463,6 +470,7 @@ Required sub-fields the Reporter cannot leave the event without:
 - At least 1 video clip if the format allows
 
 Optional sub-fields:
+
 - Follow-up plan section. Most large public events will not have structured follow-up and the Reporter should mark "no structured follow-up planned" honestly rather than fabricate one. Individual follow-ups are tracked via flagged Contact Logs, not via fields on the Outreach Log itself.
 - Engagement custom note (1-2 sentences) for unusual texture the multi-select options don't capture.
 
@@ -500,14 +508,14 @@ The Competition Recap also includes a **documentation self-audit** section: what
 **Time budget** — ≤5 min initial entry; +5 to +45 min over the following 7 days for any triggered depth fields; +2 min for outcome update later.
 **Deadline** — 24h initial; depth fields complete within 7 days; outcome filled when tested.
 
-**Critical** — The Decision Log is filed **at the moment of decision**, with a *predicted* outcome. The actual outcome is filled in later, after testing. This separation is what produces credible engineering-process evidence. Reconstructed Decision Logs are obvious to experienced judges.
+**Critical** — The Decision Log is filed **at the moment of decision**, with a _predicted_ outcome. The actual outcome is filled in later, after testing. This separation is what produces credible engineering-process evidence. Reconstructed Decision Logs are obvious to experienced judges.
 
 **Draft → Complete model (per Section 11)** — Initial 5-minute entry captures the contemporaneous record. Triggered depth fields are filled in over the following 7 days. The Documentation Captain reviews entries stuck in draft state >7 days at Friday 15.
 
 ### Required content beyond standard fields
 
 - ≥3 substantive alternatives considered with brief pros, cons, and predicted performance
-- A **paths-not-taken** field: directions considered and excluded *before* the matrix, with rationale (always required)
+- A **paths-not-taken** field: directions considered and excluded _before_ the matrix, with rationale (always required)
 - Predicted outcome stated as a specific, testable claim
 - Later: actual outcome, delta from prediction, what we learned
 
@@ -515,12 +523,12 @@ The Competition Recap also includes a **documentation self-audit** section: what
 
 Each depth field has its own independent objective trigger. A Decision Log may require zero, one, or all four of these depending on which triggers fire.
 
-| Depth field | Required when… | Time budget |
-|---|---|---|
-| Weighted trade-off matrix | 3+ substantive alternatives are considered AND being wrong about the choice would cost more than one build session (~4 hours) of rework | +15 min within 7 days |
-| First-principles math | The decision rests on torque, force, current, voltage, geometry, or timing — anywhere physics, math, or measurable quantities determine the right answer | +15 min within 7 days |
-| Sensitivity analysis | Whenever first-principles math is required (paired) — varies one or more assumptions to test whether the decision still holds | +5 min within 7 days |
-| FMEA table | The failure mode of the chosen option could end a match OR pose a safety/injury risk | +30 min within 7 days |
+| Depth field               | Required when…                                                                                                                                           | Time budget           |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| Weighted trade-off matrix | 3+ substantive alternatives are considered AND being wrong about the choice would cost more than one build session (~4 hours) of rework                  | +15 min within 7 days |
+| First-principles math     | The decision rests on torque, force, current, voltage, geometry, or timing — anywhere physics, math, or measurable quantities determine the right answer | +15 min within 7 days |
+| Sensitivity analysis      | Whenever first-principles math is required (paired) — varies one or more assumptions to test whether the decision still holds                            | +5 min within 7 days  |
+| FMEA table                | The failure mode of the chosen option could end a match OR pose a safety/injury risk                                                                     | +30 min within 7 days |
 
 ### Trigger application discipline
 
@@ -542,6 +550,7 @@ The matrix trigger applies whether or not the chosen design survives to the fina
 **Deadline** — 24h after the new version goes on the robot.
 
 Required content:
+
 - Version number (replaces prior version)
 - Link to parent Decision Log if applicable
 - Photo of v(n) and v(n-1) side by side
@@ -595,7 +604,7 @@ If the AI integration is down, the programmer manually completes the baseline SC
 **Time budget** — ≤5-7 min (auto-compute handles headline statistics so student fills only narrative fields).
 **Deadline** — Same day; 24h hard cap.
 
-**Time-series discipline** — Use consistent test labels across the season so that repeat runs aggregate into a series. *"Autonomous reliability — full 30s routine — practice field"* is a test label that will appear many times in a season; the dashboard pulls them all into a single reliability-over-time chart.
+**Time-series discipline** — Use consistent test labels across the season so that repeat runs aggregate into a series. _"Autonomous reliability — full 30s routine — practice field"_ is a test label that will appear many times in a season; the dashboard pulls them all into a single reliability-over-time chart.
 
 **Auto-computed fields (handled by MD-App)** — The app computes the following from raw data the student pastes in:
 
@@ -638,6 +647,7 @@ The auto-compute and the depth fields together produce Test Logs with statistica
 The Contact Log replaces the previous separate Mentor Relationship Log and Sponsor Touchpoint. The relationship type is a field within the entry, not a separate entry type.
 
 Required content:
+
 - Person's name, role, organization
 - Relationship type (mentor / sponsor / university / alumni / industry / community / other)
 - Current relationship status (prospect / active / dormant / declined)
@@ -669,7 +679,7 @@ The Subsystem Handoff is **generated from the year's accumulated data**, not wri
 The transition between outgoing and incoming lead is not a single conversation. It is a structured four-step process. Each step has a written outcome that updates the handoff document.
 
 **Step 1 — Walkthrough at the robot/mechanism (~45 min)**
-Outgoing lead physically walks the incoming lead through the subsystem on the actual robot. Explains *why* each key design choice was made, not just what was built. A mentor is present where possible to witness and ask clarifying questions. Outcome: any new clarifications surfaced are captured directly into the handoff document.
+Outgoing lead physically walks the incoming lead through the subsystem on the actual robot. Explains _why_ each key design choice was made, not just what was built. A mentor is present where possible to witness and ask clarifying questions. Outcome: any new clarifications surfaced are captured directly into the handoff document.
 
 **Step 2 — Document review together (~45 min)**
 The two leads read the handoff side-by-side. Incoming lead asks questions; outgoing lead answers; answers update the document. This is the step that surfaces tacit knowledge the outgoing lead forgot to write down because it felt obvious to them.
@@ -1342,6 +1352,7 @@ The system is structurally the same in both modes. The differences are frequency
 ## Offseason mode (May through early September)
 
 Typical entry frequency:
+
 - Session Log: 2-4 per week (lower velocity than build season; covers training sessions, summer activities, design exploration)
 - Decision Log: 1-3 per week during summer design exploration sprints
 - Hardware/Software Change Log: 1-3 per week if hardware/code work continues
@@ -1351,6 +1362,7 @@ Typical entry frequency:
 - Meeting Notes: every team meeting
 
 Offseason emphasis:
+
 - Build the **mentor pipeline** while not under deadline pressure
 - Capture **community-building outreach** before the school year resumes
 - Run **design exploration sprints** with full Decision Log documentation — these become Innovate Award evidence
@@ -1363,6 +1375,7 @@ The offseason is when the team builds the documentation muscle. Going into kicko
 ## In-season mode (mid-September through Worlds)
 
 Typical entry frequency:
+
 - Session Log: 4-8 per week
 - Decision Log: 5-15 per week during peak iteration
 - Hardware Change Log: 3-10 per week during peak iteration
@@ -1373,6 +1386,7 @@ Typical entry frequency:
 - Competition Recap: after every competition
 
 In-season emphasis:
+
 - **Maintain the discipline** that was built in offseason
 - Friday 15 and Weekly Classification Pass become non-negotiable
 - Doc Captain runs reverse-audit checks more frequently — anything found missing surfaces a fast iteration
@@ -1415,6 +1429,7 @@ Award/criterion tagging is **not** a per-entry capture burden in v2.0. Instead, 
 ### Classification index structure
 
 For each FTC award in the current season's manual, the index lists:
+
 - The award's criteria (verbatim from the current manual)
 - For each criterion, a running list of entries that support it
 - A health rating per criterion: thin / adequate / strong
@@ -1424,6 +1439,7 @@ This is what the Documentation Captain hands to downstream artifact teams when t
 ### Why classification was removed from capture
 
 Three reasons:
+
 1. Awards overlap heavily in topic coverage; the same entry often supports 3-4 awards. Per-entry tagging forced people to either pick one (inaccurate) or list many (slow).
 2. The current FTC manual's award criteria can shift year to year. Classifying at capture time bakes in tags that may need re-doing.
 3. Removing tagging from capture is the single biggest time-budget recovery — drops every entry's effort by ~30 seconds.
@@ -1442,6 +1458,7 @@ Run by the Documentation Captain at each Quarterly System Retro.
 6. File gaps as system iteration items with owners and deadlines.
 
 ### Reference inputs to the audit
+
 - Current FTC Competition Manual award criteria
 - 2-3 top-portfolio examples from prior seasons (Inspire-winning teams; cross-checked against published portfolios like the Hivemind portfolio archive when relevant)
 - The downstream artifact teams' own asks (the portfolio team's "what do you need from us" list, etc.)
@@ -1455,6 +1472,7 @@ These prompts operate **on** the data layer; they do not replace human capture. 
 ### Classification
 
 **Weekly classification pass**
+
 ```
 Here are this week's new MD entries: [paste]. For each entry, propose award/criterion tags
 against the current FTC Competition Manual award criteria (below). Return a table:
@@ -1466,6 +1484,7 @@ Be specific to criteria, not just awards. Flag any entry where you're unsure for
 ```
 
 **Gap analysis against an award**
+
 ```
 Here is the classification index for [award name]: [paste]. Identify criteria where evidence is
 thin or missing. For each thin criterion, propose 2-3 concrete capture actions in the next two
@@ -1476,6 +1495,7 @@ outreach event in a Title I school").
 ### Capture support
 
 **Formatting a raw voice memo into a Session Log**
+
 ```
 Convert this raw build session voice memo into a Session Log using our template. Identify any
 decisions, hardware changes, software changes, tests, or external contacts mentioned, and flag
@@ -1484,6 +1504,7 @@ them in the "Specialty entries triggered" section with proposed owners. Raw memo
 ```
 
 **Polishing a story from an Outreach Log**
+
 ```
 Polish this raw story from an Outreach Log into a clean version for the story collection.
 Preserve the direct quote exactly. Keep it under 100 words. Do not embellish. Raw story:
@@ -1493,6 +1514,7 @@ Preserve the direct quote exactly. Keep it under 100 words. Do not embellish. Ra
 ### Engineering process support
 
 **Weighted trade-off analysis on a Decision Log**
+
 ```
 For this decision, run a weighted trade-off analysis. Decision: [describe]. Options: [list].
 Criteria with weights: mechanical complexity 0.2, reliability 0.3, cycle time 0.25,
@@ -1501,6 +1523,7 @@ rationale that I can paste into the Decision Log's rationale field.
 ```
 
 **First-principles derivation check**
+
 ```
 Here is a Decision Log's math section: [paste]. Sanity-check the derivation for unit consistency,
 correct application of physics, and any missing constraints (friction, efficiency losses,
@@ -1512,6 +1535,7 @@ saturation limits, etc.). Suggest corrections if needed.
 These prompts produce the data hand-offs that downstream artifact teams consume. They do not produce final artifacts.
 
 **Subsystem evidence dump**
+
 ```
 Here is the full year of Decision Logs, Hardware Change Logs, Software Change Logs, and
 Test Logs for [subsystem]: [paste]. Produce a structured evidence summary the portfolio team
@@ -1520,6 +1544,7 @@ Do not write portfolio prose; produce a structured summary.
 ```
 
 **Subsystem Handoff draft**
+
 ```
 Here is the year's MD data for [subsystem]: [paste]. Produce a first draft of a Subsystem
 Handoff using our SH template. Identify the three most important pieces of non-obvious
@@ -1527,6 +1552,7 @@ knowledge an incoming lead would need.
 ```
 
 **Interview prep question bank**
+
 ```
 Here is the classification index and a sample of strong entries: [paste]. Generate the 20 most
 likely questions a judging panel will ask, grouped by award. For each, point to the specific
@@ -1539,6 +1565,7 @@ evidence to answer well — these are gaps for the next two-week capture window.
 The dashboard is one page (one screen) showing the current state of the program. Sections:
 
 **Engineering**
+
 - Total Decision Logs filed (season-to-date)
 - Average alternatives per Decision Log
 - Decision Logs with completed actual-outcome fields: %
@@ -1548,10 +1575,12 @@ The dashboard is one page (one screen) showing the current state of the program.
 - Cycle time, current vs. season start (from Test Log time-series, per scoring activity)
 
 **Software**
+
 - Software Change Logs filed (season-to-date)
 - Control systems currently in use (list with reliability rate)
 
 **Outreach**
+
 - Total events
 - Total attendees
 - New-to-FIRST count
@@ -1563,6 +1592,7 @@ The dashboard is one page (one screen) showing the current state of the program.
 - Geographic reach map (from Outreach Log location fields)
 
 **Team**
+
 - Per-person contribution rollup (last 4 weeks): each active member with attributed entries
 - Capture compliance rate (rolling 4-week)
 - Capture latency, median
@@ -1571,6 +1601,7 @@ The dashboard is one page (one screen) showing the current state of the program.
 - Subsystems with current Subsystem Handoff
 
 **System health**
+
 - Open flags (overdue Tier 2 entries)
 - Friday 15s completed this quarter
 - Weekly Classification Passes completed this quarter
@@ -1579,42 +1610,42 @@ The dashboard is one page (one screen) showing the current state of the program.
 
 ## Appendix E — Glossary
 
-| Term | Meaning |
-|---|---|
-| MD | Maximum Documentation (this system) |
-| Tier 1 / Tier 2 / Tier 3 | Default capture / specialty capture / annual artifact |
-| Session Log | End-of-session lightweight log; replaces former BSC and OAL |
-| Outreach Log | Event-based outreach entry; replaces former OIC and absorbs SBE |
-| Meeting Notes | Formal meeting record; replaces former MM |
-| Competition Recap | Post-competition structured reflection; replaces former CR |
-| Decision Log | Design or strategy decision with alternatives; replaces former DDL |
-| Hardware Change Log | Mechanism version change; replaces former MIE |
-| Software Change Log | Code commit with behavior change; replaces former SCL (name unchanged) |
-| Test Log | Quantitative test with measured result; replaces former TPR |
-| Contact Log | External relationship contact; replaces former MRL and ST |
-| Subsystem Handoff | Year-end knowledge transfer document; replaces former SHD |
-| Friday 15 | Weekly 15-minute review by Documentation Captain |
-| Weekly Classification Pass | Weekly 20-minute award/criterion tagging by Documentation Captain + Claude |
-| 5/24 rule | ≤5 minutes per person per entry; entries filed within 24 hours of trigger |
-| Flag / flagging | When a Tier 1 entry lists Tier 2 entries it triggers, with assigned owners |
-| Reverse audit | Quarterly check that MD's data layer can supply every downstream judge-facing artifact |
-| FIRST conversion | A person recruited into FIRST who had no prior FIRST experience |
-| Capture latency | Median hours between event and entry being filed |
-| Capture compliance | % of triggering events that result in a filed entry |
-| Game-year overlay | Small set of season-specific subfields added to evergreen templates each year |
+| Term                       | Meaning                                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| MD                         | Maximum Documentation (this system)                                                    |
+| Tier 1 / Tier 2 / Tier 3   | Default capture / specialty capture / annual artifact                                  |
+| Session Log                | End-of-session lightweight log; replaces former BSC and OAL                            |
+| Outreach Log               | Event-based outreach entry; replaces former OIC and absorbs SBE                        |
+| Meeting Notes              | Formal meeting record; replaces former MM                                              |
+| Competition Recap          | Post-competition structured reflection; replaces former CR                             |
+| Decision Log               | Design or strategy decision with alternatives; replaces former DDL                     |
+| Hardware Change Log        | Mechanism version change; replaces former MIE                                          |
+| Software Change Log        | Code commit with behavior change; replaces former SCL (name unchanged)                 |
+| Test Log                   | Quantitative test with measured result; replaces former TPR                            |
+| Contact Log                | External relationship contact; replaces former MRL and ST                              |
+| Subsystem Handoff          | Year-end knowledge transfer document; replaces former SHD                              |
+| Friday 15                  | Weekly 15-minute review by Documentation Captain                                       |
+| Weekly Classification Pass | Weekly 20-minute award/criterion tagging by Documentation Captain + Claude             |
+| 5/24 rule                  | ≤5 minutes per person per entry; entries filed within 24 hours of trigger              |
+| Flag / flagging            | When a Tier 1 entry lists Tier 2 entries it triggers, with assigned owners             |
+| Reverse audit              | Quarterly check that MD's data layer can supply every downstream judge-facing artifact |
+| FIRST conversion           | A person recruited into FIRST who had no prior FIRST experience                        |
+| Capture latency            | Median hours between event and entry being filed                                       |
+| Capture compliance         | % of triggering events that result in a filed entry                                    |
+| Game-year overlay          | Small set of season-specific subfields added to evergreen templates each year          |
 
 ---
 
 ## Charter changelog
 
-| Version | Date | Changes | Author |
-|---|---|---|---|
-| 1.0 | *[initial date]* | Initial charter and system design — 13 entry types, per-entry 90s rule, per-entry award tagging, separate Judge Interaction Log and Mentor/Sponsor logs | *[Documentation Captain]* |
-| 2.0 | *[v2 date]* | **Taxonomy simplification:** 13 → 10 entry types. Merged BSC + OAL → Session Log. Merged OIC + SBE → Outreach Log. Merged MRL + ST → Contact Log. Renamed all entries to plain language (no acronyms in everyday use). **Tier structure:** organized entries into Tier 1 (universal), Tier 2 (specialty), Tier 3 (annual). **Time budget:** replaced per-entry 90s rule with per-person 5-minute rule plus universal 24-hour hard deadline. **Flagging mechanism:** Tier 1 entries now explicitly flag triggered Tier 2 entries with owners. **Award tagging:** moved off individual entries onto a weekly Documentation Captain pass with Claude. **Judge interactions:** absorbed into Competition Recap; no separate entry type. **New fields:** per-person contribution traces, hero-quality visual asset flag, math/CAD attachments on Decision Log, paths-not-taken field, time-series test labels, geographic location on Outreach Log, sponsor visual assets in Contact Log. **New principle:** reverse audit (Section 17 and Appendix B) — quarterly check that MD's data can supply every downstream judge-facing artifact. **Game-year overlay:** explicit pattern for adding season-specific fields without modifying core templates. **Scope clarification:** MD is bounded to the data layer; portfolio, pit display, formal presentation, and other artifacts are out of scope but their content needs drive MD's reverse audit. | *[Documentation Captain]* |
-| 2.1 | *[v2.1 date]* | **Toolchain decision:** Section 15 rewritten to record that the team has selected Option D (custom web application on Next.js + Supabase + Vercel). Options A–C retained as alternatives considered. **Companion document added:** architectural decisions for the application moved into `MD_App_Charter.md`; the split keeps *what is captured* (this charter) durable and *how it is captured* (app charter) replaceable. **Interface contract:** new bullet in Section 18 (Iteration philosophy) recording the 72-hour issue-opening rule when this charter changes in a way that affects the data model, and the rule that app limitations force a charter update before they force an app change. **Forward-looking content:** Decision Log and Test Log v2.1 templates with depth-of-thinking trigger logic and auto-compute specifications are tracked in the chat record and will be folded into the SOPs and templates in v2.2. | *[Documentation Captain]* |
-| 2.2 | *[v2.2 date]* | **Outreach Log enhancements:** SOP-02 and Template T-02 expanded with a nine-option event-type single-select (private sponsor/mentor meeting, public robot/FIRST showcase, presentation/conference invited, classroom visit, workshop hosted, recurring program/FLL coaching, FIRST community engagement, online/virtual, other), an eight-option engagement-depth multi-select with optional 1-2 sentence custom note (hands-on interaction, sustained engagement, substantive questions, network expansion, direct interest in joining/supporting, specific next-step commitment, brief walk-by interactions, distracted audience), and an optional four-option follow-up plan section. Individual follow-up tracking remains on the Contact Log; the Outreach Log captures only whether follow-up is intended. **New operating rhythm:** Quarterly Conversion Audit added to Section 14 — 30 minutes adjacent to the Quarterly System Retro, owned by Documentation Captain. Cross-checks projected outreach conversions against actual FIRST team rosters and Contact Logs to produce the outreach funnel as a dashboard rollup rather than as a per-entry capture burden. **Pending in chat record (for v2.3):** Decision Log depth-of-thinking template with weighted trade-off matrix, FMEA, first-principles math, sensitivity analysis, and "cost of being wrong" trigger logic; Test Log depth template with controlled-variables, what-failed-separately, repeatability check, sample-size justification, and auto-computed statistics; Software Change Log simplified template with type-of-change dropdown, Verification field replacing telemetry plan, and AI-prompted deep-dive section deferred to the new `MD_SCL_AI_Integration.md` companion spec. | *[Documentation Captain]* |
-| 2.3 | *[v2.3 date]* | **Depth-of-thinking consolidation across five entry types.** **Section 11 (Trigger model):** added the *Draft → Complete* model — initial 5-minute entry captures the contemporaneous record; triggered depth fields complete within 7 days; Documentation Captain reviews stuck-in-draft entries at Friday 15. **Section 16 (Quality standards):** augmented from 9 to 23 quality bars, adding all v2.3 depth-field requirements (matrix, FMEA, math, sensitivity, controlled variables, repeatability, etc.) with explicit applicability per entry type. **SOP-05 and Template T-05 (Decision Log):** added four objective-trigger depth fields (weighted trade-off matrix when 3+ alternatives AND rework cost > 1 build session; first-principles math when decision rests on physics/quantities; sensitivity analysis paired with math; FMEA when failure could end a match or pose safety risk). Trigger application discipline added (Captain spot-checks at Friday 15; subsystem lead can override with documented reasoning; Quarterly Retro reviews retrospective misclassifications). Trigger explicitly applies to abandoned prototypes, not only production-path decisions. **SOP-07 and Template T-07 (Software Change Log):** simplified template — type-of-change dropdown replaces ad-hoc categorization; Verification field replaces v2.0 "telemetry/debug logging plan"; AI-prompted deep-dive section replaces all earlier conditional trigger fields. Full integration mechanics (GitHub webhook, AI classification, classification-specific prompting, transcript retention, prompt versioning, failure-mode fallbacks) deferred to new companion document `MD_SCL_AI_Integration.md` v1.0. **SOP-08 and Template T-08 (Test Log):** depth fields added (controlled variables, what-failed-separately, repeatability check); sample-size justification added as quick-select; auto-computed statistical treatment specified (95% CI for pass/fail tests, standard deviation for continuous tests, last-run lookup with delta). Auto-compute eliminates statistics expertise burden on student filers. **SOP-04 and Template T-04 (Competition Recap):** time budget extended from 60 to 60–90 minutes. JUDGING section simplified to three structured questions (formal interview/Q&A reflection, pit-panel inferred award areas, evidence we didn't include or present best). New sections: STRUCTURED ROOT-CAUSE ANALYSIS (5-whys on up to 3 match-affecting failures), NOTABLE MATCHES (2-4 standout matches with structured narrative), STRATEGIC INSIGHTS (game/opponent/field learnings flagged for follow-up Decision Logs). Auto-generated companion view from prior Test Logs added as an MD-App dashboard feature. The proposed "Gracious Professionalism moments" section was rejected on cultural grounds — GP capture remains organic via Outreach Logs, per-person contributions, and Contact Logs. **SOP-10 and Template T-10 (Subsystem Handoff):** restructured into a four-step transition process (walkthrough at robot, document review together, hands-on demonstration, co-sign with confidence rating). Template T-10 gains a Prior-Season Lineage section at top establishing the multi-season audit trail Sustain Award judges look for, an Incoming Lead Acceptance section at bottom with confidence rating and three first-month dig-deeper items, a Transition Process Record tracking the four steps, and tiered Key Knowledge (🔴 Must / 🟡 Should / 🟢 Worth) so the incoming lead can navigate by attention budget. | *[Documentation Captain]* |
+| Version | Date             | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Author                    |
+| ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| 1.0     | _[initial date]_ | Initial charter and system design — 13 entry types, per-entry 90s rule, per-entry award tagging, separate Judge Interaction Log and Mentor/Sponsor logs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | _[Documentation Captain]_ |
+| 2.0     | _[v2 date]_      | **Taxonomy simplification:** 13 → 10 entry types. Merged BSC + OAL → Session Log. Merged OIC + SBE → Outreach Log. Merged MRL + ST → Contact Log. Renamed all entries to plain language (no acronyms in everyday use). **Tier structure:** organized entries into Tier 1 (universal), Tier 2 (specialty), Tier 3 (annual). **Time budget:** replaced per-entry 90s rule with per-person 5-minute rule plus universal 24-hour hard deadline. **Flagging mechanism:** Tier 1 entries now explicitly flag triggered Tier 2 entries with owners. **Award tagging:** moved off individual entries onto a weekly Documentation Captain pass with Claude. **Judge interactions:** absorbed into Competition Recap; no separate entry type. **New fields:** per-person contribution traces, hero-quality visual asset flag, math/CAD attachments on Decision Log, paths-not-taken field, time-series test labels, geographic location on Outreach Log, sponsor visual assets in Contact Log. **New principle:** reverse audit (Section 17 and Appendix B) — quarterly check that MD's data can supply every downstream judge-facing artifact. **Game-year overlay:** explicit pattern for adding season-specific fields without modifying core templates. **Scope clarification:** MD is bounded to the data layer; portfolio, pit display, formal presentation, and other artifacts are out of scope but their content needs drive MD's reverse audit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | _[Documentation Captain]_ |
+| 2.1     | _[v2.1 date]_    | **Toolchain decision:** Section 15 rewritten to record that the team has selected Option D (custom web application on Next.js + Supabase + Vercel). Options A–C retained as alternatives considered. **Companion document added:** architectural decisions for the application moved into `MD_App_Charter.md`; the split keeps _what is captured_ (this charter) durable and _how it is captured_ (app charter) replaceable. **Interface contract:** new bullet in Section 18 (Iteration philosophy) recording the 72-hour issue-opening rule when this charter changes in a way that affects the data model, and the rule that app limitations force a charter update before they force an app change. **Forward-looking content:** Decision Log and Test Log v2.1 templates with depth-of-thinking trigger logic and auto-compute specifications are tracked in the chat record and will be folded into the SOPs and templates in v2.2.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | _[Documentation Captain]_ |
+| 2.2     | _[v2.2 date]_    | **Outreach Log enhancements:** SOP-02 and Template T-02 expanded with a nine-option event-type single-select (private sponsor/mentor meeting, public robot/FIRST showcase, presentation/conference invited, classroom visit, workshop hosted, recurring program/FLL coaching, FIRST community engagement, online/virtual, other), an eight-option engagement-depth multi-select with optional 1-2 sentence custom note (hands-on interaction, sustained engagement, substantive questions, network expansion, direct interest in joining/supporting, specific next-step commitment, brief walk-by interactions, distracted audience), and an optional four-option follow-up plan section. Individual follow-up tracking remains on the Contact Log; the Outreach Log captures only whether follow-up is intended. **New operating rhythm:** Quarterly Conversion Audit added to Section 14 — 30 minutes adjacent to the Quarterly System Retro, owned by Documentation Captain. Cross-checks projected outreach conversions against actual FIRST team rosters and Contact Logs to produce the outreach funnel as a dashboard rollup rather than as a per-entry capture burden. **Pending in chat record (for v2.3):** Decision Log depth-of-thinking template with weighted trade-off matrix, FMEA, first-principles math, sensitivity analysis, and "cost of being wrong" trigger logic; Test Log depth template with controlled-variables, what-failed-separately, repeatability check, sample-size justification, and auto-computed statistics; Software Change Log simplified template with type-of-change dropdown, Verification field replacing telemetry plan, and AI-prompted deep-dive section deferred to the new `MD_SCL_AI_Integration.md` companion spec.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | _[Documentation Captain]_ |
+| 2.3     | _[v2.3 date]_    | **Depth-of-thinking consolidation across five entry types.** **Section 11 (Trigger model):** added the _Draft → Complete_ model — initial 5-minute entry captures the contemporaneous record; triggered depth fields complete within 7 days; Documentation Captain reviews stuck-in-draft entries at Friday 15. **Section 16 (Quality standards):** augmented from 9 to 23 quality bars, adding all v2.3 depth-field requirements (matrix, FMEA, math, sensitivity, controlled variables, repeatability, etc.) with explicit applicability per entry type. **SOP-05 and Template T-05 (Decision Log):** added four objective-trigger depth fields (weighted trade-off matrix when 3+ alternatives AND rework cost > 1 build session; first-principles math when decision rests on physics/quantities; sensitivity analysis paired with math; FMEA when failure could end a match or pose safety risk). Trigger application discipline added (Captain spot-checks at Friday 15; subsystem lead can override with documented reasoning; Quarterly Retro reviews retrospective misclassifications). Trigger explicitly applies to abandoned prototypes, not only production-path decisions. **SOP-07 and Template T-07 (Software Change Log):** simplified template — type-of-change dropdown replaces ad-hoc categorization; Verification field replaces v2.0 "telemetry/debug logging plan"; AI-prompted deep-dive section replaces all earlier conditional trigger fields. Full integration mechanics (GitHub webhook, AI classification, classification-specific prompting, transcript retention, prompt versioning, failure-mode fallbacks) deferred to new companion document `MD_SCL_AI_Integration.md` v1.0. **SOP-08 and Template T-08 (Test Log):** depth fields added (controlled variables, what-failed-separately, repeatability check); sample-size justification added as quick-select; auto-computed statistical treatment specified (95% CI for pass/fail tests, standard deviation for continuous tests, last-run lookup with delta). Auto-compute eliminates statistics expertise burden on student filers. **SOP-04 and Template T-04 (Competition Recap):** time budget extended from 60 to 60–90 minutes. JUDGING section simplified to three structured questions (formal interview/Q&A reflection, pit-panel inferred award areas, evidence we didn't include or present best). New sections: STRUCTURED ROOT-CAUSE ANALYSIS (5-whys on up to 3 match-affecting failures), NOTABLE MATCHES (2-4 standout matches with structured narrative), STRATEGIC INSIGHTS (game/opponent/field learnings flagged for follow-up Decision Logs). Auto-generated companion view from prior Test Logs added as an MD-App dashboard feature. The proposed "Gracious Professionalism moments" section was rejected on cultural grounds — GP capture remains organic via Outreach Logs, per-person contributions, and Contact Logs. **SOP-10 and Template T-10 (Subsystem Handoff):** restructured into a four-step transition process (walkthrough at robot, document review together, hands-on demonstration, co-sign with confidence rating). Template T-10 gains a Prior-Season Lineage section at top establishing the multi-season audit trail Sustain Award judges look for, an Incoming Lead Acceptance section at bottom with confidence rating and three first-month dig-deeper items, a Transition Process Record tracking the four steps, and tiered Key Knowledge (🔴 Must / 🟡 Should / 🟢 Worth) so the incoming lead can navigate by attention budget. | _[Documentation Captain]_ |
 
 ---
 
-*Per the current FTC Competition Manual, this charter and the entries the system produces may use AI as a writing and research aid; AI assistance is credited in the footnotes of any downstream judging artifact that consumes MD's data.*
+_Per the current FTC Competition Manual, this charter and the entries the system produces may use AI as a writing and research aid; AI assistance is credited in the footnotes of any downstream judging artifact that consumes MD's data._
