@@ -17,19 +17,21 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-Decomposed from [`docs/briefs/2026-06-04-2b-quick-forms.md`](briefs/2026-06-04-2b-quick-forms.md) (2A live on prod — unblocked). Three self-contained forms, one PR each (Q3 default); each ships its own nav button + list pill so it's independently verifiable. All auto-merge tier (no migration — 2A created the tables). Build order below: SW reuses HW's repeating block. **Contact Log shipped (#35); HW in progress; SW remains.**
+Decomposed from [`docs/briefs/2026-06-04-2b-quick-forms.md`](briefs/2026-06-04-2b-quick-forms.md) (2A live on prod — unblocked). Three self-contained forms, one PR each (Q3 default); each ships its own nav button + list pill so it's independently verifiable. All auto-merge tier (no migration — 2A created the tables). Build order below: SW reuses HW's repeating block. **Contact Log (#35) + Hardware Change Log (#36) shipped; SW remains.**
 
-1. **[2B] Software Change Log (baseline)** — `entries/software-change-log.ts` + registry + route `app/(authed)/entries/software/new/page.tsx` (`defaultEntryState: 'draft'`) + nav + pill. Typed `change_type_option_id` (reuse `change_type`), `change_date`, `commit_hash`, `branch`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `hardware_sensors`, `game_challenge`, `before_behavior`, `after_behavior`, `failure_modes`, `verification`, `files_changed` (array — reuse the repeating block from the HW Change Log item). AI deep-dive OUT (2G). Saves to `sw_change_logs` with `entry_state='draft'`. Auto-merge.
+1. **[2B] Software Change Log (baseline)** — `entries/software-change-log.ts` + registry + route `app/(authed)/entries/software/new/page.tsx` (`defaultEntryState: 'draft'`) + nav + pill. Typed `change_type_option_id` (reuse `change_type`), `change_date`, `commit_hash`, `branch`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `hardware_sensors`, `game_challenge`, `before_behavior`, `after_behavior`, `failure_modes`, `verification`, `files_changed` (array — reuse the `repeating-rows` block from the HW Change Log item, single column). AI deep-dive OUT (2G). Saves to `sw_change_logs` with `entry_state='draft'`. Auto-merge.
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-- **[2B] Hardware Change Log** (branch `routine/2b-hw-change-log`) — `entries/hardware-change-log.ts` + registry + route `app/(authed)/entries/hardware/new/page.tsx` + nav + pill. Typed `subsystem_option_id` (reuse `subsystem`), `change_date`, `version`, `replaces_version`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `deltas` (array of `{metric, was, now}`), `tradeoffs`. Adds one minimal repeating block for `deltas` (per brief Q2 — new block touches `_types.ts` union + `FieldRenderer` + `validate-entry` + `EntryDetailView`). Saves to `hw_change_logs`. Auto-merge.
+_(empty)_
 
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
+
+- 2026-06-05 — **[2B]** Hardware Change Log (decomposed item 2/3 of `2026-06-04-2b-quick-forms.md`). Second Phase 2 form on the 2A tables. `entries/hardware-change-log.ts` + `entries/_registry.ts` + route `app/(authed)/entries/hardware/new/page.tsx` + list pill + nav (list + dashboard). Single-table write to `hw_change_logs` via the generic `insertEntry`. Adds one new field-block type `repeating-rows` (generic free-text columns; `_types.ts` union + `RepeatingRowsBlock.tsx` + `FieldRenderer` + `validate-entry` parse/schema + `EntryDetailView` table render) used for `deltas` (`{metric, was, now}`) — built generic so the SW Change Log reuses it for `files_changed` (single column). Auto-merge in [#36](https://github.com/FTC-23511/md-app/pull/36).
 
 - 2026-06-05 — **[2B]** Contact Log (decomposed item 1/3 of `2026-06-04-2b-quick-forms.md`). First Phase 2 form on the 2A tables. `entries/contact-log.ts` (existing block types only — no new block) + `entries/_registry.ts` + route `app/(authed)/entries/contact/new/page.tsx` + list pill + nav (list + dashboard). Two-table write `lib/insert-contact-log.ts` (creates a `contacts` row → `contact_logs` referencing it; reuses the `insertEntry` parse/validate pipeline). Detail page merges the contact via `lib/entry-detail.ts` (first cross-table entry; `contact_info` stays private in extras). Per brief Q1 fallback (b): create-new contact inline; select-existing/dedup deferred. Auto-merge in [#35](https://github.com/FTC-23511/md-app/pull/35).
 
