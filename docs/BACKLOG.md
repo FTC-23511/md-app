@@ -17,7 +17,10 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-_(empty — 2B–2E briefs exist and are now **unblocked** (2A live on prod). Next routine prep cycle can decompose them via `/prep-backlog`. 2F/2G await briefs from the owner.)_
+Decomposed from [`docs/briefs/2026-06-04-2b-quick-forms.md`](briefs/2026-06-04-2b-quick-forms.md) (2A live on prod — unblocked). Three self-contained forms, one PR each (Q3 default); each ships its own nav button + list pill so it's independently verifiable. All auto-merge tier (no migration — 2A created the tables). Build order below: SW reuses HW's repeating block. **Contact Log shipped (#35); HW + SW remain.**
+
+1. **[2B] Hardware Change Log** — `entries/hardware-change-log.ts` + registry + route `app/(authed)/entries/hardware/new/page.tsx` + nav + pill. Typed `subsystem_option_id` (reuse `subsystem`), `change_date`, `version`, `replaces_version`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `deltas` (array of `{metric, was, now}`), `tradeoffs`. Adds one minimal repeating block for `deltas` (per brief Q2 — new block touches `_types.ts` union + `FieldRenderer` + `validate-entry` + `EntryDetailView`). Saves to `hw_change_logs`. Auto-merge.
+2. **[2B] Software Change Log (baseline)** — `entries/software-change-log.ts` + registry + route `app/(authed)/entries/software/new/page.tsx` (`defaultEntryState: 'draft'`) + nav + pill. Typed `change_type_option_id` (reuse `change_type`), `change_date`, `commit_hash`, `branch`, optional `parent_decision_id` (text); extras `what_changed`, `why`, `hardware_sensors`, `game_challenge`, `before_behavior`, `after_behavior`, `failure_modes`, `verification`, `files_changed` (array — reuse the repeating block from item 1). AI deep-dive OUT (2G). Saves to `sw_change_logs` with `entry_state='draft'`. Auto-merge.
 
 ## In progress
 
@@ -28,6 +31,8 @@ _(empty)_
 ## Done
 
 <!-- Auto-archived after merge. Keep the last ~20 for reference; older entries can be pruned. -->
+
+- 2026-06-05 — **[2B]** Contact Log (decomposed item 1/3 of `2026-06-04-2b-quick-forms.md`). First Phase 2 form on the 2A tables. `entries/contact-log.ts` (existing block types only — no new block) + `entries/_registry.ts` + route `app/(authed)/entries/contact/new/page.tsx` + list pill + nav (list + dashboard). Two-table write `lib/insert-contact-log.ts` (creates a `contacts` row → `contact_logs` referencing it; reuses the `insertEntry` parse/validate pipeline). Detail page merges the contact via `lib/entry-detail.ts` (first cross-table entry; `contact_info` stays private in extras). Per brief Q1 fallback (b): create-new contact inline; select-existing/dedup deferred. Auto-merge in [#35](https://github.com/FTC-23511/md-app/pull/35).
 
 - 2026-06-05 — **[2A]** Schema rebuild + entry detail page. Two migrations (`20260604000001_phase2_tables.sql` — 8 Tier 2 tables `contacts`/`contact_logs`/`hw_change_logs`/`sw_change_logs`/`test_logs`/`decision_logs`/`comp_recaps`/`media_links` per `01-schema.md` §§1–7; `20260604000002_grants_for_phase2_tables.sql`) **applied to dev AND prod**. Detail page `/entries/[type]/[id]` (`lib/entry-detail.ts` + `components/entry-detail/EntryDetailView.tsx`) renders existing Tier 1 entries read-only — owner verified on Vercel preview. Approval-required, squash-merged in [#34](https://github.com/FTC-23511/md-app/pull/34). **Unblocks 2B–2G.** Also greened pre-existing CI-red on main (doc format drift, [86b359b](https://github.com/FTC-23511/md-app/commit/86b359b)).
 

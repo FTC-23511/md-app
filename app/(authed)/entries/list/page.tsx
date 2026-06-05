@@ -5,6 +5,7 @@ const TYPE_PILL_CLASSES: Record<string, string> = {
   session_log: 'bg-blue-100 text-blue-900',
   outreach_log: 'bg-emerald-100 text-emerald-900',
   meeting_notes: 'bg-amber-100 text-amber-900',
+  contact_log: 'bg-violet-100 text-violet-900',
 };
 
 export default async function EntriesListPage() {
@@ -32,6 +33,12 @@ export default async function EntriesListPage() {
             className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
           >
             New Meeting Notes
+          </Link>
+          <Link
+            href={'/entries/contact/new' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            New Contact Log
           </Link>
         </nav>
       </header>
