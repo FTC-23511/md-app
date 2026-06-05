@@ -17,14 +17,13 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-- **[2A · detail page]** _(auto-merge)_ — Build the entry detail page `/entries/[type]/[id]` (currently a placeholder). Resolve `type` → definition via `entries/_registry.ts`, read `definition.table`, select row by `id` `WHERE deleted_at IS NULL`. Render existing **Tier 1** entries (session / outreach / meeting) read-only: `*_option_id` columns resolved to option labels; `extras` arrays (stories, per-person, action items, specialty triggers) as readable tables; `entry_state` Draft/Complete badge; any `flags` from the entry listed; missing/soft-deleted `id` → clean "not found", not a crash. Spec: brief [`2026-06-04-2a-schema-and-detail.md`](briefs/2026-06-04-2a-schema-and-detail.md) + `docs/phase2/02-forms-and-detail.md` §3. **Does not depend on the new tables** — renders existing Tier 1 data, so it ships independently of item 2.
-- **[2A · schema]** _(approval-required — migrations)_ — Create the Phase 2 tables per `docs/phase2/01-schema.md` §§1–7: `contacts`, `contact_logs`, `hw_change_logs`, `sw_change_logs`, `test_logs`, `decision_logs`, `comp_recaps`, `media_links`. Each: common columns, `set_updated_at` trigger, `created_at DESC` partial index `WHERE deleted_at IS NULL`, permissive `*_all_authenticated` RLS. `defaultEntryState='draft'` accepted on `decision_logs`/`sw_change_logs`/`test_logs`. **Grants in their own migration file** (mirror `20260530000001` / `20260602000001`). `LANGUAGE plpgsql` for any function. Apply **dev first** (confirm CLI linked to dev), then prod (ROUTINE §9). One PR, two migration files. Spec: brief [`2026-06-04-2a-schema-and-detail.md`](briefs/2026-06-04-2a-schema-and-detail.md) + `docs/phase2/01-schema.md`. **Gates all of 2B–2G** — they write into these tables.
+_(empty — 2B–2G stay gated until 2A is live on **prod**; see [`briefs/INDEX.md`](briefs/INDEX.md) gating note)_
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[2A · schema + detail page]** _(approval-required — migrations)_ — Shipped as one PR [#34](https://github.com/FTC-23511/md-app/pull/34). Two migrations (`20260604000001_phase2_tables.sql` — 8 Tier 2 tables per `01-schema.md` §§1–7; `20260604000002_grants_for_phase2_tables.sql`) **applied to dev**. Detail page `/entries/[type]/[id]` (`lib/entry-detail.ts` + `components/entry-detail/EntryDetailView.tsx` + page rewrite) renders existing Tier 1 entries read-only. All 4 CI checks green; Vercel preview live. **Awaiting owner approval + prod migration push** (ROUTINE §9). Unblocks all of 2B–2G once on prod. Brief: [`2026-06-04-2a-schema-and-detail.md`](briefs/2026-06-04-2a-schema-and-detail.md).
 
 ## Done
 
