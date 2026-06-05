@@ -15,6 +15,20 @@ The intent is **focused planning while awake → autonomous execution while asle
 | **Fallback**        | T18–T19 | [2026-05-28-fallback.md](2026-05-28-fallback.md)                                              | ✅ shipped — templates + importer live; smoke test ([#33](https://github.com/FTC-23511/md-app/pull/33)) surfaced + fixed a service_role grant gap, a parser bug, and non-idempotent re-runs |
 | Deploy              | T20–T21 | n/a (manual ops)                                                                              | ✅ ready                                                                                       |
 
+## Phase 2 batch status
+
+Build order + specs: `docs/phase2/00-plan.md`. One brief per batch (2A–2G).
+
+| Batch | Brief | Status |
+| ----- | ----- | ------ |
+| **2A — schema rebuild + detail page** | [2026-06-04-2a-schema-and-detail.md](2026-06-04-2a-schema-and-detail.md) | brief written — ready for `/prep-backlog` |
+| 2B — three quick forms (Contact/HW/SW) | owed | |
+| 2C — Test Log + auto-compute | owed | |
+| 2D — Competition Recap | owed | |
+| 2E — Decision Log + depth | owed | |
+| 2F — Media to Drive | owed | |
+| 2G — SCL AI integration | owed (own planning pass) | |
+
 ## How to write a brief
 
 1. Open the [md-app Claude Project](https://claude.ai) (Opus 4.7 recommended).
@@ -28,6 +42,7 @@ That's all you do. The next routine cycle (or an on-demand `/prep-backlog`) read
 
 ## Brief inventory
 
+- [`2026-06-04-2a-schema-and-detail.md`](2026-06-04-2a-schema-and-detail.md) — Phase 2 batch 2A: rebuild the Tier 2 tables + build the entry detail page. First Phase 2 brief.
 - [`2026-05-28-forms-rev2.md`](2026-05-28-forms-rev2.md) — Forms + entries batch (T13–T17), path B. Sprint C. 16 BACKLOG items, 3 approval-required (schema migrations) + 13 auto-merge. **Supersedes rev1.**
 - [`2026-05-28-forms.md`](2026-05-28-forms.md) — Forms + entries rev1. Sprint C. Superseded by rev2 after cycle 2 surfaced a schema-architecture mismatch with the auth-batch migrations.
 - [`2026-05-28-fallback.md`](2026-05-28-fallback.md) — Fallback batch (T18–T19). Sprint D. ✅ Shipped across [#31](https://github.com/FTC-23511/md-app/pull/31) (templates), [#32](https://github.com/FTC-23511/md-app/pull/32) (importer), [#33](https://github.com/FTC-23511/md-app/pull/33) (smoke test + fixes).

@@ -20,9 +20,9 @@ The App Lead is **not a programmer** and wants to be **as hands-off as physicall
 Two tracks:
 
 1. **Maintenance / cleanup** → the automation pipeline. `docs/BACKLOG.md` is the queue; `docs/ROUTINE.md` is the source of truth for routine behavior (prep, run, tier rules, hard rules, schedule). Slash commands: `/prep-backlog` (queue work interactively), `/run-routine` (execute one prep+run cycle on demand), `/human-task-list` (review digest). The scheduled remote routine runs 3×/day, every day (3:15 AM, 8:30 AM, 10 PM PT) and reads `docs/ROUTINE.md` directly each cycle. Read `docs/ROUTINE.md` before any routine work.
-2. **Phase 1 sprint features** (auth, forms, fallback — Sprints B/C/D) → plan in Claude Chat, produce a brief in `docs/briefs/` (template at `docs/briefs/_TEMPLATE.md`), hand to Claude Code. Then: branch `phase1/T<n>-<slug>`, one task one commit, batch related tasks into one PR per `00-plan.md` §"PR batching strategy." See `docs/DEV_WORKFLOW.md`.
+2. **Phase features** → plan in Claude Chat, produce a brief in `docs/briefs/` (template at `docs/briefs/_TEMPLATE.md`), hand to Claude Code. Then: branch `phase<N>/<slug>`, one task one commit, batch related tasks into one PR per the plan's PR-batching strategy. See `docs/DEV_WORKFLOW.md`. **Phase 2 is the active phase** — build order and specs in `docs/phase2/` (`00-plan.md` is the spine).
 
-Sprint A (T01–T08, setup + schema) is **already done** — the existing 8 migrations came in richer than the original plan (full RBAC RLS, base `entries` + 10 detail tables). The app layer stays single-user per Phase 1; the schema is just future-ready.
+Schema reality: the live schema is **standalone tables per entry type** (each carries its own common columns + `extras` JSONB + `entry_state`, like `session_logs`). The original Sprint A base-`entries`+detail design was dropped in the forms-rev2 reshape; Phase 1 left only the three Tier-1 tables + `flags` + classification placeholders live. **Phase 2 batch 2A rebuilds the Tier 2 tables** per `docs/phase2/01-schema.md`. The app layer stays single-user until Phase 3.
 
 ## Read map
 
@@ -38,24 +38,29 @@ Do not read full files. Use grep + `view --view-range`. Jump to sections.
 | Text-file fallback templates + importer                     | `docs/phase1/05-fallback.md`             | §3 format; §5 importer                                                    |
 | What MD captures (data semantics)                           | `docs/charters/MD_Project_Charter.md`    | **NEVER read whole. Grep for entry name (e.g. SOP-05) or topic.**         |
 | Architectural decisions, phased build                       | `docs/charters/MD_App_Charter.md`        | **NEVER read whole. Grep for topic.**                                     |
-| Phase 2 AI integration                                      | `docs/charters/MD_SCL_AI_Integration.md` | **NEVER read whole. Phase 2 only — do not implement in Phase 1.**         |
+| SCL AI integration (Phase 2 step 2G)                        | `docs/charters/MD_SCL_AI_Integration.md` | **NEVER read whole. Deferred to its own pass — see `docs/phase2/05-scl-ai.md`.** |
+| Phase 2 build order, scope, decisions                       | `docs/phase2/00-plan.md`                 | build order 2A–2G; §3 architecture decisions                              |
+| Phase 2 Tier 2 tables, media table                          | `docs/phase2/01-schema.md`               | per-table specs; §8 migration plan                                        |
+| Phase 2 new field blocks, detail page, update flow          | `docs/phase2/02-forms-and-detail.md`     | §1 new blocks; §3 detail page; §4 updateEntry                             |
+| Test Log flexible data + auto-compute                       | `docs/phase2/03-test-log.md`             | §2 input modes; §3 compute; §5 AI fallback                                |
+| Media → Google Drive ingest                                 | `docs/phase2/04-media.md`                | §2 paths; §3 pipeline; §4 auth + setup                                    |
 
 ## Phase
 
-Phase 1 (Capture MVP) is **shipped** — T01–T21 merged, capture MVP live on prod (see the `docs/BACKLOG.md` Done log; definition of done in `docs/phase1/00-plan.md`). Phase 2 planning is in progress in Claude Chat: Tier 2 entry forms (Decision / Hardware / Software / Test / Contact Log), triggered depth fields, Test Log auto-compute, media upload, entry detail pages, and the SCL AI integration (`docs/charters/MD_SCL_AI_Integration.md`). The Phase 2 plan and deep specs will live in `docs/phase2/`, mirroring the `docs/phase1/` layout. **Until that plan lands, the Phase 1 scope rules below stay in force for in-flight maintenance — do not start Phase 2 feature implementation before the Phase 2 plan exists.**
+**Phase 2 is active.** Phase 1 (Capture MVP) shipped — T01–T21 merged, live on prod (`docs/BACKLOG.md` Done log). The Phase 2 plan and specs are committed in `docs/phase2/`. Build order, scope, and definition of done are in `docs/phase2/00-plan.md` (batches 2A–2G). **2A — Tier 2 schema rebuild + entry detail page — is first.**
 
 ## Absolute rules
 
-1. **Phase 1 scope only.** Do not add features not in the plan. Doing more than asked is this project's most common failure mode.
+1. **Phase 2 scope only.** Build only what's in `docs/phase2/00-plan.md` (batches 2A–2G). Phase 3/4/5 items stay deferred (see below). Doing more than asked is this project's most common failure mode.
 2. **No new dependencies.** Stack fixed: Next.js, TS, Tailwind, shadcn/ui, Supabase JS, Zod. Want another lib? Ask in PR. Default no.
 3. **Migrations as code.** All schema via `supabase/migrations/*.sql`. Never edit tables in Supabase dashboard — silent drift, `db push` fails later.
 4. **No secrets in repo.** `.env.local` gitignored. `SUPABASE_SERVICE_ROLE_KEY` never in any `NEXT_PUBLIC_*` var. Leak → rotate immediately.
 5. **TypeScript strict.** No `any` unless commented why.
-6. **No tests in Phase 1** unless the task asks. Manual smoke tests per task acceptance criteria are enough.
+6. **Tests where they're the safety net.** Phase 2 adds unit tests for the pure compute functions in `lib/compute/` (Test Log stats, matrix totals — `docs/phase2/00-plan.md` §3). Everything else is verified by manual smoke test against the acceptance criteria. No tests beyond that unless a brief asks.
 
 ## Deferred to later phases (do not implement)
 
-Phase 2: photo upload, voice memo, AI Software-Change-Log integration, Tier 2 entry forms (Decision/HW/SW/Test/Contact Logs), auto-compute on Test Logs, entry detail pages.
+Phase 2: **now active** — see `docs/phase2/00-plan.md` (Tier 2 forms, depth fields, Test Log auto-compute, media-to-Drive, detail pages, SCL AI integration).
 
 Phase 3: multi-user auth, role-based access, strict RLS policies (Phase 1 has permissive `FOR ALL TO authenticated USING (true)` — Phase 3 replaces, not adds), Discord webhooks, edit-within-24h.
 
@@ -71,7 +76,7 @@ Charters in `docs/charters/` are the **source of truth** — the single home for
 
 ## Branches and PRs
 
-Branch: `phase1/T<n>-<slug>`. PR title: `phase1: T<n> <task name>`. PR body: link to task in `00-plan.md`, bullet what changed, confirm each acceptance criterion. Smaller PRs review faster; if a single task generates >500 lines of substantive code, that's a signal to ask whether the task needs splitting.
+Branch: `phase<N>/<slug>` (e.g. `phase2/2a-schema`). PR title: `phase<N>: <task name>`. PR body: link to the relevant brief / plan task, bullet what changed, confirm each acceptance criterion. Smaller PRs review faster; if a single task generates >500 lines of substantive code, that's a signal to ask whether the task needs splitting.
 
 ## Environment (non-obvious facts that have bitten us)
 
