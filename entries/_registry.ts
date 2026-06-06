@@ -3,6 +3,7 @@ import { outreachLogEntry } from './outreach-log';
 import { meetingNotesEntry } from './meeting-notes';
 import { contactLogEntry } from './contact-log';
 import { hardwareChangeLogEntry } from './hardware-change-log';
+import { softwareChangeLogEntry } from './software-change-log';
 import type { EntryDefinition } from './_types';
 
 /**
@@ -16,6 +17,7 @@ export const ENTRY_REGISTRY: Record<string, EntryDefinition> = {
   meeting_notes: meetingNotesEntry,
   contact_log: contactLogEntry,
   hw_change_log: hardwareChangeLogEntry,
+  sw_change_log: softwareChangeLogEntry,
 };
 
 export const ENTRY_LIST: EntryDefinition[] = Object.values(ENTRY_REGISTRY);
