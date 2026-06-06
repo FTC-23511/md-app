@@ -12,6 +12,7 @@ import { listSummary as outreachLogListSummary } from '@/entries/outreach-log';
 import { listSummary as meetingNotesListSummary } from '@/entries/meeting-notes';
 import { listSummary as contactLogListSummary } from '@/entries/contact-log';
 import { listSummary as hardwareChangeLogListSummary } from '@/entries/hardware-change-log';
+import { listSummary as softwareChangeLogListSummary } from '@/entries/software-change-log';
 
 const LIST_SUMMARIES: Record<string, (row: Record<string, unknown>) => string> = {
   session_log: sessionLogListSummary,
@@ -19,6 +20,7 @@ const LIST_SUMMARIES: Record<string, (row: Record<string, unknown>) => string> =
   meeting_notes: meetingNotesListSummary,
   contact_log: contactLogListSummary,
   hw_change_log: hardwareChangeLogListSummary,
+  sw_change_log: softwareChangeLogListSummary,
 };
 
 export type EntryListRow = {
