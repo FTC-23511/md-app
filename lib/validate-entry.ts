@@ -43,7 +43,12 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
       case 'text':
       case 'long-text': {
         const v = getOne(fd, field.name);
-        out[field.name] = v == null ? undefined : v.trim();
+        const trimmed = v == null ? undefined : v.trim();
+        // Drop empty optional text so it inserts as NULL, not "". Required-but-empty
+        // stays "" so the zod .min(1) check fires the "Required" error. This matters
+        // for optional UUID-backed columns (e.g. robot_version_hw_id): Postgres
+        // rejects "" for type uuid.
+        out[field.name] = trimmed === '' && !field.required ? undefined : trimmed;
         break;
       }
       case 'date': {
