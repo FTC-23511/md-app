@@ -157,6 +157,17 @@ being shipped (the README edit, the migration, the SETUP.md fix, etc.).
 The BACKLOG.md commit happens on `main` before the branch is created and
 again after the PR closes.
 
+**Fallback when direct-to-main push is unavailable.** The owner pushes
+BACKLOG commits straight to `main` via admin bypass. The scheduled
+remote routine's GitHub identity does **not** have that bypass — a direct
+push to protected `main` returns `403`. When that happens (and only
+then), the routine folds the BACKLOG state change **into the single
+feature PR** for the item it is shipping, so it lands atomically on merge.
+This is sanctioned, not a rule violation: with one item in flight per
+cycle there is no list-renumber conflict to avoid, so the outcome is
+identical to the direct-to-main path. The routine must still touch only
+its own item's rows. Do not treat the `403` as an error to escalate.
+
 ### Concurrency note
 
 If Step 1 finds any in-flight item from a _previous_ cycle that you're

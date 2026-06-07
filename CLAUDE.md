@@ -90,7 +90,7 @@ Branch: `phase<N>/<slug>` (e.g. `phase2/2a-schema`). PR title: `phase<N>: <task 
   If `GH_TOKEN` comes back empty, the user must push something to trigger the credential prompt — surface it, don't guess.
 - **Repo is public** (for free Vercel). No secrets in briefs, docs, or commits.
 - **`main` has branch protection** (PR + 2 status checks required). The routine/owner merges via `gh pr merge --squash --delete-branch --admin`. Direct pushes to main bypass via admin and are fine for the sole owner.
-- **BACKLOG state changes commit directly to main**, never in feature branches — prevents conflicts when multiple items are in flight.
+- **BACKLOG state changes commit directly to main**, never in feature branches — prevents conflicts when multiple items are in flight. Exception: the scheduled remote routine lacks main's admin-bypass (direct push `403`s), so it folds its BACKLOG commit into the single feature PR — sanctioned fallback, see `docs/ROUTINE.md` §"BACKLOG state tracking".
 - **Never chain destructive commands** (e.g. `cd x && rm -rf y`). The deny list catches direct invocations, not compounds.
 
 ## When uncertain
