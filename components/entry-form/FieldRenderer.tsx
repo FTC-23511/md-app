@@ -12,6 +12,7 @@ import { ActionItemsBlock } from './blocks/ActionItemsBlock';
 import { StoryBlock } from './blocks/StoryBlock';
 import { SpecialtyTriggersBlock } from './blocks/SpecialtyTriggersBlock';
 import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
+import { RawDataTableBlock } from './blocks/RawDataTableBlock';
 
 export function FieldRenderer({
   block,
@@ -57,5 +58,7 @@ export function FieldRenderer({
       return <SpecialtyTriggersBlock block={block} error={error} />;
     case 'repeating-rows':
       return <RepeatingRowsBlock block={block} error={error} />;
+    case 'raw-data-table':
+      return <RawDataTableBlock block={block} error={error} />;
   }
 }

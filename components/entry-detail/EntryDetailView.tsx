@@ -1,4 +1,4 @@
-import type { FieldBlock } from '@/entries/_types';
+import type { FieldBlock, RawDataTableValue } from '@/entries/_types';
 import { readFieldValue, type EntryDetail } from '@/lib/entry-detail';
 
 /** A field whose stored value is empty / absent — rendered as a muted dash. */
@@ -223,6 +223,52 @@ function FieldValue({
                   {columns.map((col) => (
                     <td key={col.name} className="py-1 pr-4 align-top">
                       {r[col.name] ? r[col.name] : <Dash />}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    case 'raw-data-table': {
+      const v = (value ?? {}) as Partial<RawDataTableValue>;
+      const rows = v.raw_rows ?? [];
+      if (rows.length === 0) return <Dash />;
+      let columns: Array<{ key: string; label: string }>;
+      if (block.mode === 'pass_fail') {
+        columns = [
+          { key: 'success', label: 'Result' },
+          { key: 'note', label: 'Note' },
+        ];
+      } else if (block.mode === 'single_measure') {
+        columns = [{ key: 'value', label: 'Value' }];
+      } else {
+        const names = (v.custom_columns ?? []).map((c) => c.name);
+        const keys =
+          names.length > 0 ? names : Array.from(new Set(rows.flatMap((r) => Object.keys(r))));
+        columns = keys.map((k) => ({ key: k, label: k }));
+      }
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border text-left text-xs text-muted-foreground">
+                {columns.map((col) => (
+                  <th key={col.key} className="py-1 pr-4 font-medium">
+                    {col.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={i} className="border-b border-border/50">
+                  {columns.map((col) => (
+                    <td key={col.key} className="py-1 pr-4 align-top">
+                      {r[col.key] ? r[col.key] : <Dash />}
                     </td>
                   ))}
                 </tr>

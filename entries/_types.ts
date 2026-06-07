@@ -13,6 +13,8 @@
  * typed columns vs `extras` JSONB based on each field's `storage` setting.
  */
 
+import type { ColumnKind, CustomColumn } from '@/lib/compute/test-stats';
+
 // ---- Option categories ----------------------------------------------------
 // Mirrors the CHECK constraint on option_lists.category in
 // supabase/migrations/20260528000002_option_lists.sql.
@@ -174,6 +176,42 @@ export type RepeatingRowsBlock = BlockBase & {
   addLabel?: string;
 };
 
+/** Which Test Log input mode a raw-data-table captures (mirrors test_type). */
+export type RawDataTableMode = 'pass_fail' | 'single_measure' | 'custom';
+
+/**
+ * Paste-friendly tabular input for the Test Log (`docs/phase2/03-test-log.md`
+ * §2). The tester pastes tab/comma-separated rows (from a phone or sheet) and
+ * confirms them in an editable grid. Three modes:
+ *
+ *  - `pass_fail` — fixed columns: a pass/fail result + an optional note.
+ *  - `single_measure` — one fixed numeric column.
+ *  - `custom` — the tester defines their own columns (name + kind), the escape
+ *    hatch for any shape.
+ *
+ * Parsed/stored value is a {@link RawDataTableValue}: `raw_rows` (the grid) plus
+ * `custom_columns` (custom mode only). That object is exactly the wire format
+ * `lib/compute/test-stats.ts` consumes, so the form submit path and the
+ * fallback importer feed it the same shape with no reshaping.
+ */
+export type RawDataTableBlock = BlockBase & {
+  type: 'raw-data-table';
+  mode: RawDataTableMode;
+  /** Max rows accepted (pasted datasets can be large). Default 500. */
+  maxRows?: number;
+};
+
+/** Parsed/stored value of a {@link RawDataTableBlock}. */
+export type RawDataTableValue = {
+  /** One object per data row, keyed by column name; values kept as strings. */
+  raw_rows: Array<Record<string, string>>;
+  /** Tester-defined columns; populated only in `custom` mode (else empty). */
+  custom_columns: CustomColumn[];
+};
+
+// re-export so call sites can `import { ColumnKind } from '@/entries/_types'`
+export type { ColumnKind, CustomColumn };
+
 // ---- Discriminated union --------------------------------------------------
 
 export type FieldBlock =
@@ -187,7 +225,8 @@ export type FieldBlock =
   | StoryBlock
   | ActionItemsBlock
   | SpecialtyTriggersBlock
-  | RepeatingRowsBlock;
+  | RepeatingRowsBlock
+  | RawDataTableBlock;
 
 // ---- Entry definition -----------------------------------------------------
 
