@@ -13,6 +13,7 @@ import { StoryBlock } from './blocks/StoryBlock';
 import { SpecialtyTriggersBlock } from './blocks/SpecialtyTriggersBlock';
 import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
 import { RawDataTableBlock } from './blocks/RawDataTableBlock';
+import { ComputedReadonlyBlock } from './blocks/ComputedReadonlyBlock';
 
 export function FieldRenderer({
   block,
@@ -60,5 +61,7 @@ export function FieldRenderer({
       return <RepeatingRowsBlock block={block} error={error} />;
     case 'raw-data-table':
       return <RawDataTableBlock block={block} error={error} />;
+    case 'computed-readonly':
+      return <ComputedReadonlyBlock block={block} error={error} />;
   }
 }
