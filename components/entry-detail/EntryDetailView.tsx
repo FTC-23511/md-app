@@ -1,4 +1,4 @@
-import type { FieldBlock, RawDataTableValue } from '@/entries/_types';
+import type { FieldBlock, RawDataTableMode, RawDataTableValue } from '@/entries/_types';
 import type { ComputedStats } from '@/lib/compute/test-stats';
 import { readFieldValue, type EntryDetail } from '@/lib/entry-detail';
 import { ComputedStatsView } from './ComputedStatsView';
@@ -34,10 +34,13 @@ function FieldValue({
   block,
   value,
   optionLabels,
+  rawMode,
 }: {
   block: FieldBlock;
   value: unknown;
   optionLabels: Record<string, string>;
+  /** Resolved mode for a `modeField`-driven raw-data-table (from the row). */
+  rawMode?: RawDataTableMode;
 }) {
   if (isEmpty(value)) return <Dash />;
 
@@ -45,6 +48,11 @@ function FieldValue({
     case 'text':
     case 'date':
       return <span>{String(value)}</span>;
+
+    case 'choice': {
+      const opt = block.options.find((o) => o.value === String(value));
+      return <span>{opt ? opt.label : String(value)}</span>;
+    }
 
     case 'long-text':
       return <p className="whitespace-pre-wrap">{String(value)}</p>;
@@ -239,13 +247,14 @@ function FieldValue({
       const v = (value ?? {}) as Partial<RawDataTableValue>;
       const rows = v.raw_rows ?? [];
       if (rows.length === 0) return <Dash />;
+      const mode = rawMode ?? block.mode;
       let columns: Array<{ key: string; label: string }>;
-      if (block.mode === 'pass_fail') {
+      if (mode === 'pass_fail') {
         columns = [
           { key: 'success', label: 'Result' },
           { key: 'note', label: 'Note' },
         ];
-      } else if (block.mode === 'single_measure') {
+      } else if (mode === 'single_measure') {
         columns = [{ key: 'value', label: 'Value' }];
       } else {
         const names = (v.custom_columns ?? []).map((c) => c.name);
@@ -294,11 +303,20 @@ export function EntryDetailView({ detail }: { detail: EntryDetail }) {
     <article className="mt-6 flex flex-col gap-6">
       {definition.fields.map((block) => {
         const value = readFieldValue(block, row);
+        const rawMode =
+          block.type === 'raw-data-table' && block.modeField
+            ? (row[block.modeField] as RawDataTableMode | undefined)
+            : undefined;
         return (
           <section key={block.name} className="grid gap-1">
             <h2 className="text-sm font-medium text-muted-foreground">{block.label}</h2>
             <div className="text-sm">
-              <FieldValue block={block} value={value} optionLabels={optionLabels} />
+              <FieldValue
+                block={block}
+                value={value}
+                optionLabels={optionLabels}
+                rawMode={rawMode}
+              />
             </div>
           </section>
         );

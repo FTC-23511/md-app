@@ -5,6 +5,7 @@ import type {
   ColumnKind,
   CustomColumn,
   RawDataTableBlock as RawDataTableBlockType,
+  RawDataTableMode,
 } from '@/entries/_types';
 import { BlockShell } from './BlockShell';
 
@@ -63,11 +64,15 @@ function parsePaste(text: string, columns: GridColumn[]): Row[] {
 export function RawDataTableBlock({
   block,
   error,
+  mode: modeOverride,
 }: {
   block: RawDataTableBlockType;
   error?: string;
+  /** Runtime mode from a `modeField` sibling; falls back to block.mode. */
+  mode?: RawDataTableMode;
 }) {
-  const isCustom = block.mode === 'custom';
+  const mode = modeOverride ?? block.mode;
+  const isCustom = mode === 'custom';
   const maxRows = block.maxRows ?? 500;
 
   const [customCols, setCustomCols] = useState<CustomColState[]>(() =>
@@ -77,9 +82,9 @@ export function RawDataTableBlock({
   const [paste, setPaste] = useState('');
 
   const gridColumns: GridColumn[] =
-    block.mode === 'custom'
+    mode === 'custom'
       ? customCols.map((c) => ({ id: c.id, name: c.name, label: c.name, kind: c.kind }))
-      : FIXED_COLUMNS[block.mode];
+      : FIXED_COLUMNS[mode];
 
   // Only columns with a usable name contribute to the serialized payload.
   const namedColumns = isCustom ? gridColumns.filter((c) => c.name.trim().length > 0) : gridColumns;

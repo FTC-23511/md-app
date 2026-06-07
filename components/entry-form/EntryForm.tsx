@@ -122,16 +122,25 @@ export function EntryForm({
         </div>
       ) : null}
 
-      {definition.fields.map((block) =>
-        shouldRender(block) ? (
+      {definition.fields.map((block) => {
+        if (!shouldRender(block)) return null;
+        // A raw-data-table whose mode is driven by a sibling field must remount
+        // when that mode changes, so its internal column/row state resets to the
+        // new shape. Folding the live mode into the key does that.
+        const key =
+          block.type === 'raw-data-table' && block.modeField
+            ? `${block.name}:${String(values[block.modeField] ?? '')}`
+            : block.name;
+        return (
           <FieldRenderer
-            key={block.name}
+            key={key}
             block={block}
             optionsByCategory={optionsByCategory}
             error={fieldErrors[block.name]}
+            values={values}
           />
-        ) : null,
-      )}
+        );
+      })}
 
       <div className="flex items-center gap-2 pt-2">
         <button

@@ -1,6 +1,6 @@
 'use client';
 
-import type { FieldBlock, OptionCategory, OptionListRow } from '@/entries/_types';
+import type { FieldBlock, OptionCategory, OptionListRow, RawDataTableMode } from '@/entries/_types';
 import { TextBlock } from './blocks/TextBlock';
 import { LongTextBlock } from './blocks/LongTextBlock';
 import { DateBlock } from './blocks/DateBlock';
@@ -14,15 +14,21 @@ import { SpecialtyTriggersBlock } from './blocks/SpecialtyTriggersBlock';
 import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
 import { RawDataTableBlock } from './blocks/RawDataTableBlock';
 import { ComputedReadonlyBlock } from './blocks/ComputedReadonlyBlock';
+import { ChoiceBlock } from './blocks/ChoiceBlock';
+
+const RAW_MODES: ReadonlySet<string> = new Set(['pass_fail', 'single_measure', 'custom']);
 
 export function FieldRenderer({
   block,
   optionsByCategory,
   error,
+  values,
 }: {
   block: FieldBlock;
   optionsByCategory: Partial<Record<OptionCategory, OptionListRow[]>>;
   error?: string;
+  /** Live form values, used to resolve a raw-data-table's `modeField`. */
+  values?: Record<string, unknown>;
 }) {
   switch (block.type) {
     case 'text':
@@ -59,9 +65,15 @@ export function FieldRenderer({
       return <SpecialtyTriggersBlock block={block} error={error} />;
     case 'repeating-rows':
       return <RepeatingRowsBlock block={block} error={error} />;
-    case 'raw-data-table':
-      return <RawDataTableBlock block={block} error={error} />;
+    case 'raw-data-table': {
+      const raw = block.modeField ? values?.[block.modeField] : undefined;
+      const mode =
+        typeof raw === 'string' && RAW_MODES.has(raw) ? (raw as RawDataTableMode) : undefined;
+      return <RawDataTableBlock block={block} error={error} mode={mode} />;
+    }
     case 'computed-readonly':
       return <ComputedReadonlyBlock block={block} error={error} />;
+    case 'choice':
+      return <ChoiceBlock block={block} error={error} />;
   }
 }

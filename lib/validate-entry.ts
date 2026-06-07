@@ -61,7 +61,8 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         }
         break;
       }
-      case 'single-select': {
+      case 'single-select':
+      case 'choice': {
         const v = getOne(fd, field.name);
         out[field.name] = v && v.length > 0 ? v : undefined;
         break;
@@ -210,6 +211,11 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
     }
     case 'single-select': {
       const s = z.string().uuid('Pick an option');
+      return maybeOptional(s, block.required);
+    }
+    case 'choice': {
+      const allowed = new Set(block.options.map((o) => o.value));
+      const s = z.string().refine((v) => allowed.has(v), { message: 'Pick an option' });
       return maybeOptional(s, block.required);
     }
     case 'multi-select': {
