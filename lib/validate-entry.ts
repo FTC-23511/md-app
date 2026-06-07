@@ -14,6 +14,9 @@
  *                        name__owner__<target_type> + name__subject__<target_type>
  *   - MultiSelect:       name (repeated UUIDs) + optional name__note
  *   - RepeatingRows:     name__<col> (repeated, one parallel array per column)
+ *   - RawDataTable:      name (JSON-encoded raw_rows) + name__columns (JSON
+ *                        custom_columns, custom mode only) → parsed to a
+ *                        { raw_rows, custom_columns } composite value
  */
 
 import { z, type ZodTypeAny } from 'zod';
@@ -149,10 +152,29 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         out[field.name] = rows;
         break;
       }
+      case 'raw-data-table': {
+        out[field.name] = {
+          raw_rows: parseJsonArray(getOne(fd, field.name)),
+          custom_columns:
+            field.mode === 'custom' ? parseJsonArray(getOne(fd, `${field.name}__columns`)) : [],
+        };
+        break;
+      }
     }
   }
 
   return out;
+}
+
+/** Parse a JSON array from a hidden-input string; returns [] on anything unexpected. */
+function parseJsonArray(raw: string | undefined): unknown[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
 // ---------- Zod schema construction ---------------------------------------
@@ -274,6 +296,25 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
       if (min > 0) s = s.min(min, `At least ${min} required`);
       s = s.max(max, `At most ${max} allowed`);
       return s;
+    }
+    case 'raw-data-table': {
+      const cell = z.union([z.string(), z.number(), z.boolean(), z.null()]).optional();
+      const rowSchema = z.record(cell);
+      const columnSchema = z.object({
+        name: z.string().min(1),
+        kind: z.enum(['number', 'text', 'pass_fail', 'category']),
+        isCondition: z.boolean().optional(),
+      });
+      const composite = z.object({
+        raw_rows: z
+          .array(rowSchema)
+          .max(block.maxRows ?? 500, `At most ${block.maxRows ?? 500} rows`),
+        custom_columns: z.array(columnSchema).default([]),
+      });
+      if (block.required) {
+        return composite.refine((v) => v.raw_rows.length > 0, { message: 'Add at least one row' });
+      }
+      return composite;
     }
   }
 }
