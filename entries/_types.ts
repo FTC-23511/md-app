@@ -196,9 +196,38 @@ export type RawDataTableMode = 'pass_fail' | 'single_measure' | 'custom';
  */
 export type RawDataTableBlock = BlockBase & {
   type: 'raw-data-table';
+  /** Default/fallback mode. Overridden at runtime when `modeField` is set. */
   mode: RawDataTableMode;
+  /**
+   * Name of a sibling `choice` field whose current value (one of the
+   * RawDataTableMode strings) supplies the active mode. Lets the Test Log's
+   * `test_type` radio drive the table shape from a single block instead of one
+   * block per mode. The form passes the live value; the detail page reads it
+   * off the stored row.
+   */
+  modeField?: string;
   /** Max rows accepted (pasted datasets can be large). Default 500. */
   maxRows?: number;
+};
+
+/** One fixed option of a {@link ChoiceBlock}. */
+export type ChoiceOption = { value: string; label: string };
+
+/**
+ * Single-choice from a small set of **fixed, inline** options (not from
+ * `option_lists`). Stored as the literal `value` string in a typed column —
+ * used by the Test Log's `test_type` (pass_fail / single_measure / custom),
+ * which drives both the compute path and a `modeField`-linked raw-data-table.
+ * Unlike `single-select`, the value is a known string, not an option UUID, so
+ * it composes directly with `visibleWhen: {field, equals}`.
+ */
+export type ChoiceBlock = BlockBase & {
+  type: 'choice';
+  options: ChoiceOption[];
+  /** Display style. Default 'radio'. */
+  display?: 'radio' | 'dropdown';
+  /** Pre-selected value on page load. */
+  defaultValue?: string;
 };
 
 /** Parsed/stored value of a {@link RawDataTableBlock}. */
@@ -244,7 +273,8 @@ export type FieldBlock =
   | SpecialtyTriggersBlock
   | RepeatingRowsBlock
   | RawDataTableBlock
-  | ComputedReadonlyBlock;
+  | ComputedReadonlyBlock
+  | ChoiceBlock;
 
 // ---- Entry definition -----------------------------------------------------
 

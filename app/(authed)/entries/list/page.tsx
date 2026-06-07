@@ -8,6 +8,7 @@ const TYPE_PILL_CLASSES: Record<string, string> = {
   contact_log: 'bg-violet-100 text-violet-900',
   hw_change_log: 'bg-rose-100 text-rose-900',
   sw_change_log: 'bg-cyan-100 text-cyan-900',
+  test_log: 'bg-lime-100 text-lime-900',
 };
 
 export default async function EntriesListPage() {
@@ -53,6 +54,12 @@ export default async function EntriesListPage() {
             className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
           >
             New Software Change Log
+          </Link>
+          <Link
+            href={'/entries/test/new' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            New Test Log
           </Link>
         </nav>
       </header>
