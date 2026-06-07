@@ -17,15 +17,13 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine pulls from the top of this list. -->
 
-Decomposed from [`2026-06-04-2c-test-log.md`](briefs/2026-06-04-2c-test-log.md) (Test Log + auto-compute). Full design: `docs/phase2/03-test-log.md`; tables `docs/phase2/01-schema.md` §4. Build order top-down; `test_logs` already live on prod (2A). `test_series` migration merged ([#38](https://github.com/FTC-23511/md-app/pull/38)) but **not yet deployed to prod** — item 5 below assumes it is on prod.
-
-5. **[2C] Wire `test-stats` into the fallback importer** — **approval-required** (service-role writes in `scripts/fallback/`, consistent with #32/#33). Depends on items 1, 4 + the `test_series` migration being on prod. Call the shared compute module from `scripts/fallback/import.ts` so fallback-created Test Logs get `extras.computed` + a `test_series` row, matching the app submit path (brief: shared, path-independent compute — no DB trigger).
+_(empty)_
 
 ## In progress
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
-_(empty)_
+- **[2C] Wire `test-stats` into the fallback importer** — decomposed item 5 of [`2026-06-04-2c-test-log.md`](briefs/2026-06-04-2c-test-log.md). **approval-required** (service-role writes in `scripts/fallback/`, consistent with #32/#33). PR [#43](https://github.com/FTC-23511/md-app/pull/43) open, CI (Vercel) green — **awaiting human merge approval**. Calls the shared compute module (`lib/test-log-finalize.ts`) from `scripts/fallback/import.ts` so fallback-created Test Logs get identical `extras.computed` + `extras.headline` + a `test_series` rollup row, matching the app submit path. **Blocked on prod:** the `test_series` migration (#38) is merged but **not yet deployed to prod** (re-link to prod + `supabase db push`, §9) — the importer will fail against prod until then. Code is safe to merge now.
 
 ## Done
 
