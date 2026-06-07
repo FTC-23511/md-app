@@ -160,6 +160,10 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         };
         break;
       }
+      case 'computed-readonly': {
+        // Never submitted — statistics are recomputed server-side. Leave absent.
+        break;
+      }
     }
   }
 
@@ -315,6 +319,10 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
         return composite.refine((v) => v.raw_rows.length > 0, { message: 'Add at least one row' });
       }
       return composite;
+    }
+    case 'computed-readonly': {
+      // Excluded from the submit payload; accept absence so validation passes.
+      return z.unknown().optional();
     }
   }
 }

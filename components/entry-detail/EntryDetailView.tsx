@@ -1,5 +1,7 @@
 import type { FieldBlock, RawDataTableValue } from '@/entries/_types';
+import type { ComputedStats } from '@/lib/compute/test-stats';
 import { readFieldValue, type EntryDetail } from '@/lib/entry-detail';
+import { ComputedStatsView } from './ComputedStatsView';
 
 /** A field whose stored value is empty / absent — rendered as a muted dash. */
 function isEmpty(value: unknown): boolean {
@@ -278,6 +280,9 @@ function FieldValue({
         </div>
       );
     }
+
+    case 'computed-readonly':
+      return <ComputedStatsView stats={value as ComputedStats} />;
   }
 }
 

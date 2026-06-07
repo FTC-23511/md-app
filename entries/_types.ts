@@ -209,6 +209,23 @@ export type RawDataTableValue = {
   custom_columns: CustomColumn[];
 };
 
+/**
+ * Display-only block surfacing values produced by `lib/compute/` (Test Log
+ * stats today; matrix/FMEA totals later). It never accepts typed input and is
+ * **excluded from the submit payload** — the server recomputes and stores the
+ * object itself (`extras.computed`), so the form can never disagree with the
+ * persisted statistic (`docs/phase2/02-forms-and-detail.md` §1).
+ *
+ * `name` is the `extras` key the computed object lives under (e.g. `computed`).
+ * On a fresh form there is nothing to show yet, so the renderer prints a short
+ * "computes on save" placeholder; the real stats render on the detail page.
+ */
+export type ComputedReadonlyBlock = BlockBase & {
+  type: 'computed-readonly';
+  /** Which computed shape to render. Only `test-stats` exists in 2C. */
+  shape: 'test-stats';
+};
+
 // re-export so call sites can `import { ColumnKind } from '@/entries/_types'`
 export type { ColumnKind, CustomColumn };
 
@@ -226,7 +243,8 @@ export type FieldBlock =
   | ActionItemsBlock
   | SpecialtyTriggersBlock
   | RepeatingRowsBlock
-  | RawDataTableBlock;
+  | RawDataTableBlock
+  | ComputedReadonlyBlock;
 
 // ---- Entry definition -----------------------------------------------------
 
