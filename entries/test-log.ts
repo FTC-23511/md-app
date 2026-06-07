@@ -185,6 +185,27 @@ export const testLogEntry: EntryDefinition = {
   ],
 };
 
+/**
+ * Maps fallback-template body headers (normalized: lowercased, whitespace
+ * collapsed) → field names, for the importer (scripts/fallback/import.ts).
+ * Columns (test_label / test_date / robot_version_hw_id / test_type) come from
+ * frontmatter; everything below is a body `## Header` section. The raw-data-table
+ * (`test_data`) is parsed by scripts/fallback/parsers/raw-data-table.ts using the
+ * `test_type` frontmatter as the mode + a `custom_columns` frontmatter list.
+ */
+export const testLogBodyMapping: Record<string, string> = {
+  hypothesis: 'hypothesis',
+  'field setup': 'field_setup',
+  'method / steps': 'method_steps',
+  'raw data': 'test_data',
+  'sample size justification': 'sample_size_justification',
+  'controlled variables': 'controlled_variables',
+  'what failed': 'what_failed',
+  'repeatability check': 'repeatability_check',
+  interpretation: 'interpretation',
+  'action taken': 'action_taken',
+};
+
 // Used by the list view to format a one-line headline per row.
 export function listSummary(row: Record<string, unknown>): string {
   const date = String(row.test_date ?? '');
