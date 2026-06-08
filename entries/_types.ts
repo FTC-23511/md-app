@@ -255,6 +255,33 @@ export type ComputedReadonlyBlock = BlockBase & {
   shape: 'test-stats';
 };
 
+/**
+ * A single boolean checkbox. Its primary use is a **depth trigger** on the
+ * Decision Log (`docs/phase2/02-forms-and-detail.md` §2): checking it reveals
+ * an optional deep-dive section gated by `visibleWhen: {field, truthy: true}`.
+ * The submitted value parses to a boolean (`true` when checked, `false` when
+ * not), so it composes with `truthy`/`equals` visibility. `storage` decides
+ * whether the boolean is persisted (typed column / `extras` key) or only used
+ * in-form to gate other fields.
+ */
+export type CheckboxBlock = BlockBase & {
+  type: 'checkbox';
+  /** Pre-checked on page load. Default: false. */
+  defaultChecked?: boolean;
+};
+
+/**
+ * Presentational-only heading that breaks a long form into labelled sections
+ * (`docs/phase2/02-forms-and-detail.md` §2; shared with 2D). It holds no value
+ * and is **excluded from the submit payload** — like every block it honors
+ * `visibleWhen`, so pairing one with a `checkbox` trigger reveals a titled
+ * deep-dive section as a unit. The `label` is the heading; `helper` (optional)
+ * is the sub-text under it. `storage` is required by BlockBase but unused.
+ */
+export type SectionHeaderBlock = BlockBase & {
+  type: 'section-header';
+};
+
 // re-export so call sites can `import { ColumnKind } from '@/entries/_types'`
 export type { ColumnKind, CustomColumn };
 
@@ -274,7 +301,9 @@ export type FieldBlock =
   | RepeatingRowsBlock
   | RawDataTableBlock
   | ComputedReadonlyBlock
-  | ChoiceBlock;
+  | ChoiceBlock
+  | CheckboxBlock
+  | SectionHeaderBlock;
 
 // ---- Entry definition -----------------------------------------------------
 

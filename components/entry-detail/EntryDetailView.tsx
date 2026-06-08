@@ -292,6 +292,13 @@ function FieldValue({
 
     case 'computed-readonly':
       return <ComputedStatsView stats={value as ComputedStats} />;
+
+    case 'checkbox':
+      return <span>{value === true ? 'Yes' : 'No'}</span>;
+
+    case 'section-header':
+      // Rendered as a divider heading in the map below, not as a field row.
+      return null;
   }
 }
 
@@ -302,6 +309,17 @@ export function EntryDetailView({ detail }: { detail: EntryDetail }) {
   return (
     <article className="mt-6 flex flex-col gap-6">
       {definition.fields.map((block) => {
+        // Section headers are dividers, not labelled value rows.
+        if (block.type === 'section-header') {
+          return (
+            <section key={block.name} className="grid gap-0.5 border-t border-border pt-4">
+              <h2 className="text-base font-semibold">{block.label}</h2>
+              {block.helper ? (
+                <p className="text-sm text-muted-foreground">{block.helper}</p>
+              ) : null}
+            </section>
+          );
+        }
         const value = readFieldValue(block, row);
         const rawMode =
           block.type === 'raw-data-table' && block.modeField

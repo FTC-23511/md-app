@@ -165,6 +165,15 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         // Never submitted — statistics are recomputed server-side. Leave absent.
         break;
       }
+      case 'checkbox': {
+        // Present (any value) when checked, absent when not → a definite boolean.
+        out[field.name] = getOne(fd, field.name) != null;
+        break;
+      }
+      case 'section-header': {
+        // Presentational only — holds no value, never submitted. Leave absent.
+        break;
+      }
     }
   }
 
@@ -328,6 +337,15 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
     }
     case 'computed-readonly': {
       // Excluded from the submit payload; accept absence so validation passes.
+      return z.unknown().optional();
+    }
+    case 'checkbox': {
+      // Always parsed to a definite boolean; `required` is a no-op here (use a
+      // refine in a future consent-style field if "must be checked" is needed).
+      return maybeOptional(z.boolean(), block.required);
+    }
+    case 'section-header': {
+      // Presentational; excluded from the submit payload. Accept absence.
       return z.unknown().optional();
     }
   }
