@@ -12,6 +12,7 @@ import { ActionItemsBlock } from './blocks/ActionItemsBlock';
 import { StoryBlock } from './blocks/StoryBlock';
 import { SpecialtyTriggersBlock } from './blocks/SpecialtyTriggersBlock';
 import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
+import { AlternativesBlock } from './blocks/AlternativesBlock';
 import { RawDataTableBlock } from './blocks/RawDataTableBlock';
 import { ComputedReadonlyBlock } from './blocks/ComputedReadonlyBlock';
 import { ChoiceBlock } from './blocks/ChoiceBlock';
@@ -67,6 +68,8 @@ export function FieldRenderer({
       return <SpecialtyTriggersBlock block={block} error={error} />;
     case 'repeating-rows':
       return <RepeatingRowsBlock block={block} error={error} />;
+    case 'alternatives':
+      return <AlternativesBlock block={block} error={error} />;
     case 'raw-data-table': {
       const raw = block.modeField ? values?.[block.modeField] : undefined;
       const mode =

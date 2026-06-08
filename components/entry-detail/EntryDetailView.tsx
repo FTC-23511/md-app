@@ -243,6 +243,44 @@ function FieldValue({
       );
     }
 
+    case 'alternatives': {
+      const rows = value as Array<{
+        label?: string;
+        pros?: string;
+        cons?: string;
+        predicted?: string;
+      }>;
+      return (
+        <ul className="flex flex-col gap-3">
+          {rows.map((r, i) => (
+            <li key={i} className="rounded-md border border-border p-3 text-sm">
+              <span className="font-medium">{r.label}</span>
+              <div className="mt-1 grid gap-1">
+                {r.pros ? (
+                  <p className="whitespace-pre-wrap">
+                    <span className="text-muted-foreground">Pros: </span>
+                    {r.pros}
+                  </p>
+                ) : null}
+                {r.cons ? (
+                  <p className="whitespace-pre-wrap">
+                    <span className="text-muted-foreground">Cons: </span>
+                    {r.cons}
+                  </p>
+                ) : null}
+                {r.predicted ? (
+                  <p className="whitespace-pre-wrap">
+                    <span className="text-muted-foreground">Predicted: </span>
+                    {r.predicted}
+                  </p>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
     case 'raw-data-table': {
       const v = (value ?? {}) as Partial<RawDataTableValue>;
       const rows = v.raw_rows ?? [];

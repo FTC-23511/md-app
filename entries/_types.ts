@@ -176,6 +176,23 @@ export type RepeatingRowsBlock = BlockBase & {
   addLabel?: string;
 };
 
+/**
+ * Repeating set of decision alternatives for the Decision Log (brief
+ * `2026-06-04-2e-decision-log.md`; `docs/phase2/02-forms-and-detail.md`). Each
+ * row captures one option considered as `{label, pros, cons, predicted}` and is
+ * stored as `Array<{label, pros?, cons?, predicted?}>` in `extras`. At least
+ * `minRows` (default 3) are required so the filer is forced to weigh real
+ * trade-offs (SOP-05). Follows the dynamic-row pattern of `story-block` /
+ * `repeating-rows`.
+ */
+export type AlternativesBlock = BlockBase & {
+  type: 'alternatives';
+  /** Minimum alternatives required. Default 3. */
+  minRows?: number;
+  /** Maximum alternatives allowed. Default 10. */
+  maxRows?: number;
+};
+
 /** Which Test Log input mode a raw-data-table captures (mirrors test_type). */
 export type RawDataTableMode = 'pass_fail' | 'single_measure' | 'custom';
 
@@ -299,6 +316,7 @@ export type FieldBlock =
   | ActionItemsBlock
   | SpecialtyTriggersBlock
   | RepeatingRowsBlock
+  | AlternativesBlock
   | RawDataTableBlock
   | ComputedReadonlyBlock
   | ChoiceBlock
