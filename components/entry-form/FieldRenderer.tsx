@@ -15,6 +15,8 @@ import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
 import { RawDataTableBlock } from './blocks/RawDataTableBlock';
 import { ComputedReadonlyBlock } from './blocks/ComputedReadonlyBlock';
 import { ChoiceBlock } from './blocks/ChoiceBlock';
+import { CheckboxBlock } from './blocks/CheckboxBlock';
+import { SectionHeaderBlock } from './blocks/SectionHeaderBlock';
 
 const RAW_MODES: ReadonlySet<string> = new Set(['pass_fail', 'single_measure', 'custom']);
 
@@ -75,5 +77,9 @@ export function FieldRenderer({
       return <ComputedReadonlyBlock block={block} error={error} />;
     case 'choice':
       return <ChoiceBlock block={block} error={error} />;
+    case 'checkbox':
+      return <CheckboxBlock block={block} error={error} />;
+    case 'section-header':
+      return <SectionHeaderBlock block={block} />;
   }
 }
