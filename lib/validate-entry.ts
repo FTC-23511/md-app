@@ -14,6 +14,8 @@
  *                        name__owner__<target_type> + name__subject__<target_type>
  *   - MultiSelect:       name (repeated UUIDs) + optional name__note
  *   - RepeatingRows:     name__<col> (repeated, one parallel array per column)
+ *   - Alternatives:      name__label + name__pros + name__cons + name__predicted
+ *                        (repeated, parallel arrays → {label, pros, cons, predicted})
  *   - RawDataTable:      name (JSON-encoded raw_rows) + name__columns (JSON
  *                        custom_columns, custom mode only) → parsed to a
  *                        { raw_rows, custom_columns } composite value
@@ -149,6 +151,35 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
             if (v.length > 0) anyFilled = true;
           });
           if (anyFilled) rows.push(row);
+        }
+        out[field.name] = rows;
+        break;
+      }
+      case 'alternatives': {
+        const labels = getAll(fd, `${field.name}__label`);
+        const pros = getAll(fd, `${field.name}__pros`);
+        const cons = getAll(fd, `${field.name}__cons`);
+        const predicted = getAll(fd, `${field.name}__predicted`);
+        const rowCount = Math.max(labels.length, pros.length, cons.length, predicted.length);
+        const rows: Array<{
+          label: string;
+          pros?: string;
+          cons?: string;
+          predicted?: string;
+        }> = [];
+        for (let i = 0; i < rowCount; i++) {
+          const label = (labels[i] ?? '').trim();
+          const p = (pros[i] ?? '').trim();
+          const c = (cons[i] ?? '').trim();
+          const pr = (predicted[i] ?? '').trim();
+          if (label || p || c || pr) {
+            rows.push({
+              label,
+              pros: p || undefined,
+              cons: c || undefined,
+              predicted: pr || undefined,
+            });
+          }
         }
         out[field.name] = rows;
         break;
@@ -314,6 +345,20 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
       const max = block.maxRows ?? 50;
       if (min > 0) s = s.min(min, `At least ${min} required`);
       s = s.max(max, `At most ${max} allowed`);
+      return s;
+    }
+    case 'alternatives': {
+      const rowSchema = z.object({
+        label: z.string().min(1, 'Label required'),
+        pros: z.string().optional(),
+        cons: z.string().optional(),
+        predicted: z.string().optional(),
+      });
+      let s = z.array(rowSchema);
+      const min = block.minRows ?? 3;
+      const max = block.maxRows ?? 10;
+      if (min > 0) s = s.min(min, `At least ${min} alternatives required`);
+      s = s.max(max, `At most ${max} alternatives allowed`);
       return s;
     }
     case 'raw-data-table': {
