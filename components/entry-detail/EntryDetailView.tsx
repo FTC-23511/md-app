@@ -251,7 +251,7 @@ function FieldValue({
       let columns: Array<{ key: string; label: string }>;
       if (mode === 'pass_fail') {
         columns = [
-          { key: 'success', label: 'Result' },
+          { key: 'success', label: 'Pass / fail' },
           { key: 'note', label: 'Note' },
         ];
       } else if (mode === 'single_measure') {

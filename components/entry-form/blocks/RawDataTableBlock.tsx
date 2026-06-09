@@ -22,7 +22,7 @@ const KIND_OPTIONS: ColumnKind[] = ['number', 'text', 'pass_fail', 'category'];
 
 const FIXED_COLUMNS: Record<'pass_fail' | 'single_measure', GridColumn[]> = {
   pass_fail: [
-    { id: 'success', name: 'success', label: 'Result (pass / fail)', kind: 'pass_fail' },
+    { id: 'success', name: 'success', label: 'Pass / fail', kind: 'pass_fail' },
     { id: 'note', name: 'note', label: 'Note (optional)', kind: 'text' },
   ],
   single_measure: [{ id: 'value', name: 'value', label: 'Value', kind: 'number' }],
@@ -193,6 +193,14 @@ export function RawDataTableBlock({
           </div>
         ) : null}
 
+        {!isCustom ? (
+          <p className="text-xs text-muted-foreground">
+            {mode === 'pass_fail'
+              ? 'One trial per row. Columns, in order: Pass / fail (type pass or fail), then an optional Note. Do not add a trial-number column — rows are counted automatically.'
+              : 'One number per row — the measured value for that trial. No extra columns.'}
+          </p>
+        ) : null}
+
         <div className="space-y-2">
           <textarea
             value={paste}
@@ -217,7 +225,7 @@ export function RawDataTableBlock({
               style={{ gridTemplateColumns: cellGrid }}
             >
               {gridColumns.map((col) => (
-                <span key={col.id}>{col.name.trim() || col.label}</span>
+                <span key={col.id}>{isCustom ? col.name.trim() || col.label : col.label}</span>
               ))}
               <span aria-hidden />
             </div>
