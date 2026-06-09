@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ClipboardEvent } from 'react';
 import type {
   ColumnKind,
   CustomColumn,
@@ -38,21 +38,45 @@ const newCol = (): CustomColState => ({
   isCondition: false,
 });
 
-/** Split pasted text into trimmed rows of cells, detecting tab vs comma delimiter. */
+/** Map an array of cell strings onto column ids for one row. */
+function cellsToRow(cells: string[], columns: GridColumn[]): Row {
+  const values: Record<string, string> = {};
+  columns.forEach((col, i) => {
+    values[col.id] = (cells[i] ?? '').trim();
+  });
+  return newRow(values);
+}
+
+/** Split pasted plain text into trimmed rows of cells, detecting tab vs comma delimiter. */
 function parsePaste(text: string, columns: GridColumn[]): Row[] {
   const delim = text.includes('\t') ? '\t' : ',';
   return text
     .replace(/\r/g, '')
     .split('\n')
     .filter((line) => line.trim().length > 0)
-    .map((line) => {
-      const cells = line.split(delim).map((c) => c.trim());
-      const values: Record<string, string> = {};
-      columns.forEach((col, i) => {
-        values[col.id] = cells[i] ?? '';
-      });
-      return newRow(values);
-    });
+    .map((line) => cellsToRow(line.split(delim), columns));
+}
+
+/**
+ * Extract rows from a clipboard HTML <table> — what Google Sheets / Excel put on
+ * the clipboard alongside plain text. More reliable than delimiter-sniffing
+ * because the cell boundaries are explicit, so a sheet copy fills the grid even
+ * when the plain-text fallback would mis-split. Returns null if there's no table.
+ */
+function parseHtmlTable(html: string, columns: GridColumn[]): Row[] | null {
+  if (!/<table/i.test(html)) return null;
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const rows = Array.from(doc.querySelectorAll('tr'))
+    .map((tr) =>
+      cellsToRow(
+        Array.from(tr.querySelectorAll('td, th')).map((td) =>
+          (td.textContent ?? '').replace(/\s+/g, ' ').trim(),
+        ),
+        columns,
+      ),
+    )
+    .filter((r) => Object.values(r.values).some((v) => v.length > 0));
+  return rows.length > 0 ? rows : null;
 }
 
 /**
@@ -121,6 +145,17 @@ export function RawDataTableBlock({
   function applyPaste() {
     if (paste.trim().length === 0) return;
     setRows(parsePaste(paste, gridColumns).slice(0, maxRows));
+    setPaste('');
+  }
+  /** Paste straight into the grid: prefer the clipboard HTML table, fall back to text. */
+  function handlePaste(e: ClipboardEvent<HTMLTextAreaElement>) {
+    const html = e.clipboardData.getData('text/html');
+    const text = e.clipboardData.getData('text/plain');
+    const parsed = (html && parseHtmlTable(html, gridColumns)) || null;
+    const rowsOut = parsed ?? (text.trim().length > 0 ? parsePaste(text, gridColumns) : []);
+    if (rowsOut.length === 0) return; // nothing usable — let the default paste happen
+    e.preventDefault();
+    setRows(rowsOut.slice(0, maxRows));
     setPaste('');
   }
 
@@ -205,8 +240,9 @@ export function RawDataTableBlock({
           <textarea
             value={paste}
             onChange={(e) => setPaste(e.target.value)}
+            onPaste={handlePaste}
             rows={3}
-            placeholder="Paste rows here (tab- or comma-separated, one trial per line)…"
+            placeholder="Paste straight from Google Sheets or Excel — the grid fills automatically. Or type rows here (one trial per line) and click below."
             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           />
           <button
