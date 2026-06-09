@@ -196,8 +196,8 @@ export function RawDataTableBlock({
         {!isCustom ? (
           <p className="text-xs text-muted-foreground">
             {mode === 'pass_fail'
-              ? 'One trial per row. Columns, in order: Pass / fail (type pass or fail), then an optional Note. Do not add a trial-number column — rows are counted automatically.'
-              : 'One number per row — the measured value for that trial. No extra columns.'}
+              ? 'Columns, in order: Pass / fail, then an optional Note. Do not add a trial-number column — rows are counted automatically.'
+              : 'Just the measured number for each trial — no extra columns.'}
           </p>
         ) : null}
 
@@ -235,16 +235,28 @@ export function RawDataTableBlock({
                 className="grid items-start gap-2"
                 style={{ gridTemplateColumns: cellGrid }}
               >
-                {gridColumns.map((col) => (
-                  <input
-                    key={col.id}
-                    type={col.kind === 'number' ? 'number' : 'text'}
-                    value={row.values[col.id] ?? ''}
-                    onChange={(e) => updateCell(row.id, col.id, e.target.value)}
-                    placeholder={col.kind === 'pass_fail' ? 'pass / fail' : ''}
-                    className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  />
-                ))}
+                {gridColumns.map((col) =>
+                  col.kind === 'pass_fail' ? (
+                    <select
+                      key={col.id}
+                      value={row.values[col.id] ?? ''}
+                      onChange={(e) => updateCell(row.id, col.id, e.target.value)}
+                      className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    >
+                      <option value="">—</option>
+                      <option value="pass">pass</option>
+                      <option value="fail">fail</option>
+                    </select>
+                  ) : (
+                    <input
+                      key={col.id}
+                      type={col.kind === 'number' ? 'number' : 'text'}
+                      value={row.values[col.id] ?? ''}
+                      onChange={(e) => updateCell(row.id, col.id, e.target.value)}
+                      className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    />
+                  ),
+                )}
                 <button
                   type="button"
                   onClick={() => removeRow(row.id)}
