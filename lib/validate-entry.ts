@@ -19,6 +19,8 @@
  *   - RawDataTable:      name (JSON-encoded raw_rows) + name__columns (JSON
  *                        custom_columns, custom mode only) → parsed to a
  *                        { raw_rows, custom_columns } composite value
+ *   - Matrix:            name (JSON-encoded MatrixInput) → parsed to a
+ *                        { criteria, options, scores } composite value
  */
 
 import { z, type ZodTypeAny } from 'zod';
@@ -192,6 +194,10 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         };
         break;
       }
+      case 'matrix': {
+        out[field.name] = parseMatrixInput(getOne(fd, field.name));
+        break;
+      }
       case 'computed-readonly': {
         // Never submitted — statistics are recomputed server-side. Leave absent.
         break;
@@ -219,6 +225,35 @@ function parseJsonArray(raw: string | undefined): unknown[] {
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
+  }
+}
+
+/**
+ * Parse a MatrixInput ({ criteria, options, scores }) from a hidden-input
+ * string; returns an empty matrix on anything unexpected so validation can
+ * fail cleanly via the schema rather than throwing here.
+ */
+function parseMatrixInput(raw: string | undefined): {
+  criteria: unknown[];
+  options: unknown[];
+  scores: Record<string, unknown>;
+} {
+  const empty = { criteria: [], options: [], scores: {} };
+  if (!raw) return empty;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return empty;
+    const o = parsed as Record<string, unknown>;
+    return {
+      criteria: Array.isArray(o.criteria) ? o.criteria : [],
+      options: Array.isArray(o.options) ? o.options : [],
+      scores:
+        o.scores && typeof o.scores === 'object' && !Array.isArray(o.scores)
+          ? (o.scores as Record<string, unknown>)
+          : {},
+    };
+  } catch {
+    return empty;
   }
 }
 
@@ -377,6 +412,28 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
       });
       if (block.required) {
         return composite.refine((v) => v.raw_rows.length > 0, { message: 'Add at least one row' });
+      }
+      return composite;
+    }
+    case 'matrix': {
+      // Cells are forgiving (string|number|…) — the compute module coerces.
+      const cell = z.union([z.string(), z.number(), z.boolean(), z.null()]).optional();
+      const criterion = z.object({ name: z.string(), weight: cell });
+      const composite = z.object({
+        criteria: z
+          .array(criterion)
+          .max(block.maxCriteria ?? 20)
+          .default([]),
+        options: z
+          .array(z.string())
+          .max(block.maxOptions ?? 10)
+          .default([]),
+        scores: z.record(z.record(cell)).default({}),
+      });
+      if (block.required) {
+        return composite.refine((v) => v.criteria.length > 0 && v.options.length > 0, {
+          message: 'Add at least one criterion and one option',
+        });
       }
       return composite;
     }

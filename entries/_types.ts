@@ -193,6 +193,29 @@ export type AlternativesBlock = BlockBase & {
   maxRows?: number;
 };
 
+/**
+ * Weighted trade-off matrix for the Decision Log (brief
+ * `2026-06-04-2e-decision-log.md`; `docs/phase2/02-forms-and-detail.md` §1).
+ * Criteria rows `{name, weight}` × option columns, with a 1–5 score per cell.
+ * Serialized/stored as the {@link MatrixInput} wire format consumed by
+ * `lib/compute/decision-matrix.ts` — the form submit path and the fallback
+ * importer feed it the same shape with no reshaping. Weights need not sum to
+ * 1.0: the compute warns and auto-normalizes (brief Q2). The weighted totals +
+ * winner are never typed; they render via a paired `computed-readonly` block
+ * (`shape: 'decision-matrix'`) fed by the server-side compute.
+ */
+export type MatrixBlock = BlockBase & {
+  type: 'matrix';
+  /** Criterion rows shown on a fresh form. Default 2. */
+  minCriteria?: number;
+  /** Option columns shown on a fresh form. Default 2. */
+  minOptions?: number;
+  /** Max criterion rows. Default 20. */
+  maxCriteria?: number;
+  /** Max option columns. Default 10. */
+  maxOptions?: number;
+};
+
 /** Which Test Log input mode a raw-data-table captures (mirrors test_type). */
 export type RawDataTableMode = 'pass_fail' | 'single_measure' | 'custom';
 
@@ -268,8 +291,13 @@ export type RawDataTableValue = {
  */
 export type ComputedReadonlyBlock = BlockBase & {
   type: 'computed-readonly';
-  /** Which computed shape to render. Only `test-stats` exists in 2C. */
-  shape: 'test-stats';
+  /**
+   * Which computed shape to render: `test-stats` (2C, `lib/compute/test-stats`)
+   * or `decision-matrix` (2E, `lib/compute/decision-matrix` — weighted totals +
+   * winner). The form-side placeholder is shape-agnostic; the detail page picks
+   * the matching renderer.
+   */
+  shape: 'test-stats' | 'decision-matrix';
 };
 
 /**
@@ -317,6 +345,7 @@ export type FieldBlock =
   | SpecialtyTriggersBlock
   | RepeatingRowsBlock
   | AlternativesBlock
+  | MatrixBlock
   | RawDataTableBlock
   | ComputedReadonlyBlock
   | ChoiceBlock

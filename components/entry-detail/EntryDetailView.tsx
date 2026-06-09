@@ -1,7 +1,9 @@
 import type { FieldBlock, RawDataTableMode, RawDataTableValue } from '@/entries/_types';
 import type { ComputedStats } from '@/lib/compute/test-stats';
+import type { MatrixInput, MatrixStats } from '@/lib/compute/decision-matrix';
 import { readFieldValue, type EntryDetail } from '@/lib/entry-detail';
 import { ComputedStatsView } from './ComputedStatsView';
+import { MatrixStatsView } from './MatrixStatsView';
 
 /** A field whose stored value is empty / absent — rendered as a muted dash. */
 function isEmpty(value: unknown): boolean {
@@ -281,6 +283,49 @@ function FieldValue({
       );
     }
 
+    case 'matrix': {
+      const v = (value ?? {}) as Partial<MatrixInput>;
+      const criteria = v.criteria ?? [];
+      const options = v.options ?? [];
+      const scores = v.scores ?? {};
+      if (criteria.length === 0 || options.length === 0) return <Dash />;
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border text-left text-xs text-muted-foreground">
+                <th className="py-1 pr-4 font-medium">Criterion</th>
+                <th className="py-1 pr-4 font-medium">Weight</th>
+                {options.map((o) => (
+                  <th key={o} className="py-1 pr-4 font-medium">
+                    {o}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {criteria.map((c, i) => (
+                <tr key={i} className="border-b border-border/50">
+                  <td className="py-1 pr-4 align-top">{c.name}</td>
+                  <td className="py-1 pr-4 align-top tabular-nums">
+                    {c.weight === '' || c.weight == null ? <Dash /> : String(c.weight)}
+                  </td>
+                  {options.map((o) => {
+                    const cell = scores[o]?.[c.name];
+                    return (
+                      <td key={o} className="py-1 pr-4 align-top tabular-nums">
+                        {cell === '' || cell == null ? <Dash /> : String(cell)}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
     case 'raw-data-table': {
       const v = (value ?? {}) as Partial<RawDataTableValue>;
       const rows = v.raw_rows ?? [];
@@ -329,7 +374,11 @@ function FieldValue({
     }
 
     case 'computed-readonly':
-      return <ComputedStatsView stats={value as ComputedStats} />;
+      return block.shape === 'decision-matrix' ? (
+        <MatrixStatsView stats={value as MatrixStats} />
+      ) : (
+        <ComputedStatsView stats={value as ComputedStats} />
+      );
 
     case 'checkbox':
       return <span>{value === true ? 'Yes' : 'No'}</span>;
