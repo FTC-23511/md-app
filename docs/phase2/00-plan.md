@@ -88,15 +88,15 @@ Same discipline as Phase 1 (`docs/phase1/00-plan.md` §PR batching, `ROUTINE.md`
 
 ## 6. Progress tracker
 
-| Step | Status      | PR(s) | Notes                           |
-| ---- | ----------- | ----- | ------------------------------- |
-| 2A   | not started |       |                                 |
-| 2B   | not started |       |                                 |
-| 2C   | not started |       | review Test Log design first    |
-| 2D   | not started |       |                                 |
-| 2E   | not started |       | engine extension PR may precede |
-| 2F   | not started |       | review media design first       |
-| 2G   | not started |       | own planning pass               |
+| Step | Status      | PR(s)   | Notes                                                   |
+| ---- | ----------- | ------- | ------------------------------------------------------- |
+| 2A   | **done**    | #34     | schema on dev + prod; detail page live                  |
+| 2B   | **done**    | #35–#37 | Contact / HW / SW (baseline) all live                   |
+| 2C   | **done**    | #38–#43 | auto-compute + `test_series` rollup + fallback importer |
+| 2D   | **done**    | #52–#53 | Comp Recap + companion trend view — Tier 1 set complete |
+| 2E   | **done**    | #44–#51 | Decision Log + depth + `updateEntry` + outcome flow     |
+| 2F   | not started |         | review media design first                               |
+| 2G   | not started |         | own planning pass — unblocked (2B baseline shipped)     |
 
 ---
 
