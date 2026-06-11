@@ -1,9 +1,11 @@
 import type { FieldBlock, RawDataTableMode, RawDataTableValue } from '@/entries/_types';
 import type { ComputedStats } from '@/lib/compute/test-stats';
 import type { MatrixInput, MatrixStats } from '@/lib/compute/decision-matrix';
+import type { FmeaRow, FmeaStats } from '@/lib/compute/fmea';
 import { readFieldValue, type EntryDetail } from '@/lib/entry-detail';
 import { ComputedStatsView } from './ComputedStatsView';
 import { MatrixStatsView } from './MatrixStatsView';
+import { FmeaStatsView } from './FmeaStatsView';
 
 /** A field whose stored value is empty / absent — rendered as a muted dash. */
 function isEmpty(value: unknown): boolean {
@@ -326,6 +328,51 @@ function FieldValue({
       );
     }
 
+    case 'fmea': {
+      const rows = (value ?? []) as FmeaRow[];
+      if (rows.length === 0) return <Dash />;
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border text-left text-xs text-muted-foreground">
+                <th className="py-1 pr-4 font-medium">Failure mode</th>
+                <th className="py-1 pr-4 font-medium">Effect</th>
+                <th className="py-1 pr-4 font-medium">S</th>
+                <th className="py-1 pr-4 font-medium">L</th>
+                <th className="py-1 pr-4 font-medium">D</th>
+                <th className="py-1 pr-4 font-medium">Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={i} className="border-b border-border/50">
+                  <td className="py-1 pr-4 align-top">{r.failure_mode ?? <Dash />}</td>
+                  <td className="py-1 pr-4 align-top">{r.effect ? String(r.effect) : <Dash />}</td>
+                  <td className="py-1 pr-4 align-top tabular-nums">
+                    {r.severity == null || r.severity === '' ? <Dash /> : String(r.severity)}
+                  </td>
+                  <td className="py-1 pr-4 align-top tabular-nums">
+                    {r.likelihood == null || r.likelihood === '' ? <Dash /> : String(r.likelihood)}
+                  </td>
+                  <td className="py-1 pr-4 align-top tabular-nums">
+                    {r.detectability == null || r.detectability === '' ? (
+                      <Dash />
+                    ) : (
+                      String(r.detectability)
+                    )}
+                  </td>
+                  <td className="py-1 pr-4 align-top">
+                    {r.mitigation ? String(r.mitigation) : <Dash />}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
     case 'raw-data-table': {
       const v = (value ?? {}) as Partial<RawDataTableValue>;
       const rows = v.raw_rows ?? [];
@@ -374,11 +421,10 @@ function FieldValue({
     }
 
     case 'computed-readonly':
-      return block.shape === 'decision-matrix' ? (
-        <MatrixStatsView stats={value as MatrixStats} />
-      ) : (
-        <ComputedStatsView stats={value as ComputedStats} />
-      );
+      if (block.shape === 'decision-matrix')
+        return <MatrixStatsView stats={value as MatrixStats} />;
+      if (block.shape === 'fmea') return <FmeaStatsView stats={value as FmeaStats} />;
+      return <ComputedStatsView stats={value as ComputedStats} />;
 
     case 'checkbox':
       return <span>{value === true ? 'Yes' : 'No'}</span>;

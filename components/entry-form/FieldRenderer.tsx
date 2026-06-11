@@ -14,6 +14,7 @@ import { SpecialtyTriggersBlock } from './blocks/SpecialtyTriggersBlock';
 import { RepeatingRowsBlock } from './blocks/RepeatingRowsBlock';
 import { AlternativesBlock } from './blocks/AlternativesBlock';
 import { MatrixBlock } from './blocks/MatrixBlock';
+import { FmeaBlock } from './blocks/FmeaBlock';
 import { RawDataTableBlock } from './blocks/RawDataTableBlock';
 import { ComputedReadonlyBlock } from './blocks/ComputedReadonlyBlock';
 import { ChoiceBlock } from './blocks/ChoiceBlock';
@@ -73,6 +74,8 @@ export function FieldRenderer({
       return <AlternativesBlock block={block} error={error} />;
     case 'matrix':
       return <MatrixBlock block={block} error={error} />;
+    case 'fmea':
+      return <FmeaBlock block={block} error={error} />;
     case 'raw-data-table': {
       const raw = block.modeField ? values?.[block.modeField] : undefined;
       const mode =

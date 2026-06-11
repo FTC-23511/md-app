@@ -216,6 +216,25 @@ export type MatrixBlock = BlockBase & {
   maxOptions?: number;
 };
 
+/**
+ * FMEA (failure mode and effects analysis) table for the Decision Log depth
+ * section (brief `2026-06-04-2e-decision-log.md`;
+ * `docs/phase2/02-forms-and-detail.md` §1). Repeating rows of
+ * `{failure_mode, effect, severity, likelihood, detectability, mitigation}`
+ * with S/L/D scored 1–10, stored as the `FmeaRow[]` wire format consumed by
+ * `lib/compute/fmea.ts` — the form submit path and the fallback importer feed
+ * it the same shape with no reshaping. The per-row RPN (= S×L×D), max RPN, and
+ * top risk are never typed; they render via a paired `computed-readonly` block
+ * (`shape: 'fmea'`) fed by the server-side compute.
+ */
+export type FmeaBlock = BlockBase & {
+  type: 'fmea';
+  /** Rows shown on a fresh form. Default 1. */
+  minRows?: number;
+  /** Max rows. Default 30. */
+  maxRows?: number;
+};
+
 /** Which Test Log input mode a raw-data-table captures (mirrors test_type). */
 export type RawDataTableMode = 'pass_fail' | 'single_measure' | 'custom';
 
@@ -292,12 +311,13 @@ export type RawDataTableValue = {
 export type ComputedReadonlyBlock = BlockBase & {
   type: 'computed-readonly';
   /**
-   * Which computed shape to render: `test-stats` (2C, `lib/compute/test-stats`)
-   * or `decision-matrix` (2E, `lib/compute/decision-matrix` — weighted totals +
-   * winner). The form-side placeholder is shape-agnostic; the detail page picks
-   * the matching renderer.
+   * Which computed shape to render: `test-stats` (2C, `lib/compute/test-stats`),
+   * `decision-matrix` (2E, `lib/compute/decision-matrix` — weighted totals +
+   * winner), or `fmea` (2E, `lib/compute/fmea` — per-row RPN + top risk). The
+   * form-side placeholder is shape-agnostic; the detail page picks the matching
+   * renderer.
    */
-  shape: 'test-stats' | 'decision-matrix';
+  shape: 'test-stats' | 'decision-matrix' | 'fmea';
 };
 
 /**
@@ -346,6 +366,7 @@ export type FieldBlock =
   | RepeatingRowsBlock
   | AlternativesBlock
   | MatrixBlock
+  | FmeaBlock
   | RawDataTableBlock
   | ComputedReadonlyBlock
   | ChoiceBlock

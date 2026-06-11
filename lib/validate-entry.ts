@@ -21,6 +21,9 @@
  *                        { raw_rows, custom_columns } composite value
  *   - Matrix:            name (JSON-encoded MatrixInput) → parsed to a
  *                        { criteria, options, scores } composite value
+ *   - Fmea:              name__failure_mode + name__effect + name__severity +
+ *                        name__likelihood + name__detectability + name__mitigation
+ *                        (repeated, parallel arrays → FmeaRow objects)
  */
 
 import { z, type ZodTypeAny } from 'zod';
@@ -201,6 +204,50 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
       }
       case 'matrix': {
         out[field.name] = parseMatrixInput(getOne(fd, field.name));
+        break;
+      }
+      case 'fmea': {
+        const failureModes = getAll(fd, `${field.name}__failure_mode`);
+        const effects = getAll(fd, `${field.name}__effect`);
+        const severities = getAll(fd, `${field.name}__severity`);
+        const likelihoods = getAll(fd, `${field.name}__likelihood`);
+        const detectabilities = getAll(fd, `${field.name}__detectability`);
+        const mitigations = getAll(fd, `${field.name}__mitigation`);
+        const rowCount = Math.max(
+          failureModes.length,
+          effects.length,
+          severities.length,
+          likelihoods.length,
+          detectabilities.length,
+          mitigations.length,
+        );
+        const rows: Array<{
+          failure_mode: string;
+          effect?: string;
+          severity?: string;
+          likelihood?: string;
+          detectability?: string;
+          mitigation?: string;
+        }> = [];
+        for (let i = 0; i < rowCount; i++) {
+          const failure_mode = (failureModes[i] ?? '').trim();
+          const effect = (effects[i] ?? '').trim();
+          const severity = (severities[i] ?? '').trim();
+          const likelihood = (likelihoods[i] ?? '').trim();
+          const detectability = (detectabilities[i] ?? '').trim();
+          const mitigation = (mitigations[i] ?? '').trim();
+          if (failure_mode || effect || severity || likelihood || detectability || mitigation) {
+            rows.push({
+              failure_mode,
+              effect: effect || undefined,
+              severity: severity || undefined,
+              likelihood: likelihood || undefined,
+              detectability: detectability || undefined,
+              mitigation: mitigation || undefined,
+            });
+          }
+        }
+        out[field.name] = rows;
         break;
       }
       case 'computed-readonly': {
@@ -441,6 +488,23 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
         });
       }
       return composite;
+    }
+    case 'fmea': {
+      // S/L/D cells are forgiving strings — `lib/compute/fmea.ts` coerces.
+      const rowSchema = z.object({
+        failure_mode: z.string().min(1, 'Failure mode required'),
+        effect: z.string().optional(),
+        severity: z.string().optional(),
+        likelihood: z.string().optional(),
+        detectability: z.string().optional(),
+        mitigation: z.string().optional(),
+      });
+      let s = z.array(rowSchema);
+      const min = block.minRows ?? 0;
+      const max = block.maxRows ?? 30;
+      if (block.required && min > 0) s = s.min(min, `At least ${min} required`);
+      s = s.max(max, `At most ${max} allowed`);
+      return s;
     }
     case 'computed-readonly': {
       // Excluded from the submit payload; accept absence so validation passes.
