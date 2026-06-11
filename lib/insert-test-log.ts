@@ -25,25 +25,13 @@ import {
   flattenZodErrors,
   parseFormDataWithDefinition,
 } from '@/lib/validate-entry';
-import { computeTestStats, type ComputedStats, type CustomColumn } from '@/lib/compute/test-stats';
-
-type TestType = 'pass_fail' | 'single_measure' | 'custom';
+import type { CustomColumn } from '@/lib/compute/test-stats';
+import { computeTestLogExtras, writeTestSeriesRow, type TestType } from '@/lib/test-log-finalize';
 
 type RawTable = {
   raw_rows: Array<Record<string, string>>;
   custom_columns: CustomColumn[];
 };
-
-/** The single trend stat for this test, by mode. Null when none is derivable. */
-function deriveHeadline(stats: ComputedStats): { label: string; stat: number } | null {
-  if (stats.kind === 'pass_fail') return { label: 'Pass rate', stat: stats.passRate };
-  if (stats.kind === 'single_measure') return { label: 'Mean', stat: stats.mean };
-  // custom: first number column's mean (brief Q3 — default to first number column).
-  for (const [name, col] of Object.entries(stats.columns)) {
-    if (col.kind === 'number') return { label: name, stat: col.mean };
-  }
-  return null;
-}
 
 export async function insertTestLog(formData: FormData): Promise<InsertResult> {
   const definition = testLogEntry;
@@ -67,52 +55,31 @@ export async function insertTestLog(formData: FormData): Promise<InsertResult> {
     else extrasValues[field.name] = value;
   }
 
-  // 3. Auto-compute statistics from the raw table.
-  const testType = String(columnValues.test_type ?? 'pass_fail') as TestType;
-  const table = (extrasValues.test_data as RawTable | undefined) ?? {
-    raw_rows: [],
-    custom_columns: [],
-  };
-  const computed = computeTestStats({
-    testType,
-    rawRows: table.raw_rows,
-    customColumns: table.custom_columns,
-  });
-  extrasValues.computed = computed;
-
-  const headline = deriveHeadline(computed);
-
-  // 4. Auth.
+  // 3. Auth.
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, formError: 'Not authenticated.' };
 
-  // 5. Most-recent prior run of the same label → delta on the headline stat.
+  // 4. Auto-compute statistics + headline (with prior-run delta) via the shared,
+  //    path-independent finalize module — identical output to the importer.
+  const testType = String(columnValues.test_type ?? 'pass_fail') as TestType;
+  const table = (extrasValues.test_data as RawTable | undefined) ?? {
+    raw_rows: [],
+    custom_columns: [],
+  };
   const testLabel = String(columnValues.test_label ?? '');
-  let priorStat: number | null = null;
-  if (headline && testLabel) {
-    const { data: prior } = await supabase
-      .from('test_series')
-      .select('headline_stat, test_date')
-      .eq('test_label', testLabel)
-      .order('test_date', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    const ps = (prior as { headline_stat: number | null } | null)?.headline_stat;
-    if (typeof ps === 'number') priorStat = ps;
-  }
-  if (headline) {
-    extrasValues.headline = {
-      label: headline.label,
-      stat: headline.stat,
-      delta: priorStat === null ? null : headline.stat - priorStat,
-      prior_stat: priorStat,
-    };
-  }
+  const { computed, headline } = await computeTestLogExtras(supabase, {
+    testType,
+    rawRows: table.raw_rows,
+    customColumns: table.custom_columns,
+    testLabel,
+  });
+  extrasValues.computed = computed;
+  if (headline) extrasValues.headline = headline;
 
-  // 6. Insert the test_logs row.
+  // 5. Insert the test_logs row.
   const { data: log, error: logError } = await supabase
     .from('test_logs')
     .insert({
@@ -130,20 +97,14 @@ export async function insertTestLog(formData: FormData): Promise<InsertResult> {
   }
   const logId = (log as { id: string }).id;
 
-  // 7. Write the rollup row (best-effort — the log is already saved).
+  // 6. Write the rollup row (best-effort — the log is already saved).
   if (headline) {
-    const { error: seriesError } = await supabase.from('test_series').insert({
-      test_label: testLabel,
-      test_log_id: logId,
-      test_date: (columnValues.test_date as string | undefined) ?? null,
-      headline_stat: headline.stat,
-      headline_label: headline.label,
+    await writeTestSeriesRow(supabase, {
+      testLabel,
+      testLogId: logId,
+      testDate: (columnValues.test_date as string | undefined) ?? null,
+      headline,
     });
-    if (seriesError) {
-      // Don't fail the submit; the log row is the source of truth and the
-      // series row can be backfilled. Surface for logs only.
-      console.error('insertTestLog: test_series insert failed —', seriesError.message);
-    }
   }
 
   return { ok: true, id: logId };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ClipboardEvent } from 'react';
 import type {
   ColumnKind,
   CustomColumn,
@@ -22,7 +22,7 @@ const KIND_OPTIONS: ColumnKind[] = ['number', 'text', 'pass_fail', 'category'];
 
 const FIXED_COLUMNS: Record<'pass_fail' | 'single_measure', GridColumn[]> = {
   pass_fail: [
-    { id: 'success', name: 'success', label: 'Result (pass / fail)', kind: 'pass_fail' },
+    { id: 'success', name: 'success', label: 'Pass / fail', kind: 'pass_fail' },
     { id: 'note', name: 'note', label: 'Note (optional)', kind: 'text' },
   ],
   single_measure: [{ id: 'value', name: 'value', label: 'Value', kind: 'number' }],
@@ -38,21 +38,45 @@ const newCol = (): CustomColState => ({
   isCondition: false,
 });
 
-/** Split pasted text into trimmed rows of cells, detecting tab vs comma delimiter. */
+/** Map an array of cell strings onto column ids for one row. */
+function cellsToRow(cells: string[], columns: GridColumn[]): Row {
+  const values: Record<string, string> = {};
+  columns.forEach((col, i) => {
+    values[col.id] = (cells[i] ?? '').trim();
+  });
+  return newRow(values);
+}
+
+/** Split pasted plain text into trimmed rows of cells, detecting tab vs comma delimiter. */
 function parsePaste(text: string, columns: GridColumn[]): Row[] {
   const delim = text.includes('\t') ? '\t' : ',';
   return text
     .replace(/\r/g, '')
     .split('\n')
     .filter((line) => line.trim().length > 0)
-    .map((line) => {
-      const cells = line.split(delim).map((c) => c.trim());
-      const values: Record<string, string> = {};
-      columns.forEach((col, i) => {
-        values[col.id] = cells[i] ?? '';
-      });
-      return newRow(values);
-    });
+    .map((line) => cellsToRow(line.split(delim), columns));
+}
+
+/**
+ * Extract rows from a clipboard HTML <table> — what Google Sheets / Excel put on
+ * the clipboard alongside plain text. More reliable than delimiter-sniffing
+ * because the cell boundaries are explicit, so a sheet copy fills the grid even
+ * when the plain-text fallback would mis-split. Returns null if there's no table.
+ */
+function parseHtmlTable(html: string, columns: GridColumn[]): Row[] | null {
+  if (!/<table/i.test(html)) return null;
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const rows = Array.from(doc.querySelectorAll('tr'))
+    .map((tr) =>
+      cellsToRow(
+        Array.from(tr.querySelectorAll('td, th')).map((td) =>
+          (td.textContent ?? '').replace(/\s+/g, ' ').trim(),
+        ),
+        columns,
+      ),
+    )
+    .filter((r) => Object.values(r.values).some((v) => v.length > 0));
+  return rows.length > 0 ? rows : null;
 }
 
 /**
@@ -121,6 +145,17 @@ export function RawDataTableBlock({
   function applyPaste() {
     if (paste.trim().length === 0) return;
     setRows(parsePaste(paste, gridColumns).slice(0, maxRows));
+    setPaste('');
+  }
+  /** Paste straight into the grid: prefer the clipboard HTML table, fall back to text. */
+  function handlePaste(e: ClipboardEvent<HTMLTextAreaElement>) {
+    const html = e.clipboardData.getData('text/html');
+    const text = e.clipboardData.getData('text/plain');
+    const parsed = (html && parseHtmlTable(html, gridColumns)) || null;
+    const rowsOut = parsed ?? (text.trim().length > 0 ? parsePaste(text, gridColumns) : []);
+    if (rowsOut.length === 0) return; // nothing usable — let the default paste happen
+    e.preventDefault();
+    setRows(rowsOut.slice(0, maxRows));
     setPaste('');
   }
 
@@ -193,12 +228,21 @@ export function RawDataTableBlock({
           </div>
         ) : null}
 
+        {!isCustom ? (
+          <p className="text-xs text-muted-foreground">
+            {mode === 'pass_fail'
+              ? 'Columns, in order: Pass / fail, then an optional Note. Do not add a trial-number column — rows are counted automatically.'
+              : 'Just the measured number for each trial — no extra columns.'}
+          </p>
+        ) : null}
+
         <div className="space-y-2">
           <textarea
             value={paste}
             onChange={(e) => setPaste(e.target.value)}
+            onPaste={handlePaste}
             rows={3}
-            placeholder="Paste rows here (tab- or comma-separated, one trial per line)…"
+            placeholder="Paste straight from Google Sheets or Excel — the grid fills automatically. Or type rows here (one trial per line) and click below."
             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           />
           <button
@@ -217,7 +261,7 @@ export function RawDataTableBlock({
               style={{ gridTemplateColumns: cellGrid }}
             >
               {gridColumns.map((col) => (
-                <span key={col.id}>{col.name.trim() || col.label}</span>
+                <span key={col.id}>{isCustom ? col.name.trim() || col.label : col.label}</span>
               ))}
               <span aria-hidden />
             </div>
@@ -227,16 +271,28 @@ export function RawDataTableBlock({
                 className="grid items-start gap-2"
                 style={{ gridTemplateColumns: cellGrid }}
               >
-                {gridColumns.map((col) => (
-                  <input
-                    key={col.id}
-                    type={col.kind === 'number' ? 'number' : 'text'}
-                    value={row.values[col.id] ?? ''}
-                    onChange={(e) => updateCell(row.id, col.id, e.target.value)}
-                    placeholder={col.kind === 'pass_fail' ? 'pass / fail' : ''}
-                    className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  />
-                ))}
+                {gridColumns.map((col) =>
+                  col.kind === 'pass_fail' ? (
+                    <select
+                      key={col.id}
+                      value={row.values[col.id] ?? ''}
+                      onChange={(e) => updateCell(row.id, col.id, e.target.value)}
+                      className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    >
+                      <option value="">—</option>
+                      <option value="pass">pass</option>
+                      <option value="fail">fail</option>
+                    </select>
+                  ) : (
+                    <input
+                      key={col.id}
+                      type={col.kind === 'number' ? 'number' : 'text'}
+                      value={row.values[col.id] ?? ''}
+                      onChange={(e) => updateCell(row.id, col.id, e.target.value)}
+                      className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    />
+                  ),
+                )}
                 <button
                   type="button"
                   onClick={() => removeRow(row.id)}

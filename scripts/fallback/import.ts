@@ -20,7 +20,14 @@ import { ENTRY_REGISTRY } from '../../entries/_registry';
 import { sessionLogBodyMapping } from '../../entries/session-log';
 import { outreachLogBodyMapping } from '../../entries/outreach-log';
 import { meetingNotesBodyMapping } from '../../entries/meeting-notes';
+import { testLogBodyMapping } from '../../entries/test-log';
 import { buildZodSchemaFromDefinition, flattenZodErrors } from '../../lib/validate-entry';
+import {
+  computeTestLogExtras,
+  writeTestSeriesRow,
+  type TestType,
+} from '../../lib/test-log-finalize';
+import type { CustomRow, PassFailRow, SingleMeasureRow } from '../../lib/compute/test-stats';
 import type { FieldBlock } from '../../entries/_types';
 
 import { parsePersonAttribution } from './parsers/person-attribution';
@@ -28,6 +35,7 @@ import { parseActionItems } from './parsers/action-items';
 import { parseSpecialtyTriggers } from './parsers/specialty-triggers';
 import { parseStories } from './parsers/stories';
 import { parseMultiSelectWithNote } from './parsers/multi-select-with-note';
+import { parseRawDataTable, parseCustomColumns, type RawDataTable } from './parsers/raw-data-table';
 
 // ---------------------------------------------------------------------------
 // Body mapping registry
@@ -37,6 +45,7 @@ const BODY_MAPPINGS: Record<string, Record<string, string>> = {
   session_log: sessionLogBodyMapping,
   outreach_log: outreachLogBodyMapping,
   meeting_notes: meetingNotesBodyMapping,
+  test_log: testLogBodyMapping,
 };
 
 // ---------------------------------------------------------------------------
@@ -236,6 +245,12 @@ async function parseFrontmatterValue(
       return Number.isNaN(n) ? undefined : n;
     }
 
+    case 'choice': {
+      // Literal-string option (e.g. test_type). Zod refine validates membership.
+      const v = String(rawValue).trim();
+      return v || undefined;
+    }
+
     case 'single-select': {
       const id = await resolveOption(
         field.category,
@@ -279,12 +294,24 @@ async function parseBodyValue(
   sectionText: string,
   supabase: SupabaseClient,
   errors: string[],
+  frontmatter: Record<string, unknown>,
 ): Promise<unknown> {
-  if (!sectionText.trim()) return undefined;
+  // raw-data-table can legitimately need parsing even from an empty section
+  // (an empty table → empty rows, which the schema rejects with a clear error).
+  if (!sectionText.trim() && field.type !== 'raw-data-table') return undefined;
 
   switch (field.type) {
     case 'long-text':
       return sectionText.trim() || undefined;
+
+    case 'raw-data-table': {
+      const modeRaw = String(frontmatter['test_type'] ?? field.mode ?? 'pass_fail').trim();
+      const mode = (
+        ['pass_fail', 'single_measure', 'custom'].includes(modeRaw) ? modeRaw : 'pass_fail'
+      ) as 'pass_fail' | 'single_measure' | 'custom';
+      const customColumns = parseCustomColumns(frontmatter['custom_columns']);
+      return parseRawDataTable(sectionText, mode, customColumns);
+    }
 
     case 'person-attribution':
       return parsePersonAttribution(sectionText);
@@ -373,7 +400,7 @@ async function processFile(filePath: string, supabase: SupabaseClient): Promise<
     if (bodyHeader !== undefined) {
       // Field comes from a body section
       const sectionText = bodySections[bodyHeader] ?? '';
-      data[field.name] = await parseBodyValue(field, sectionText, supabase, errors);
+      data[field.name] = await parseBodyValue(field, sectionText, supabase, errors, frontmatter);
     } else {
       // Field comes from frontmatter
       const fmKey = getFrontmatterKey(field);
@@ -401,6 +428,30 @@ async function processFile(filePath: string, supabase: SupabaseClient): Promise<
     else extras[field.name] = val;
   }
 
+  // Test Log: auto-compute stats + headline via the SAME shared module the app
+  // submit path uses (lib/test-log-finalize.ts), so fallback-created Test Logs
+  // get identical extras.computed / extras.headline and a matching test_series
+  // rollup row. Done here (post-validate, pre-insert) so the computed object is
+  // persisted in the same insert.
+  let testHeadline: { label: string; stat: number } | null = null;
+  if (entryType === 'test_log') {
+    const table = (extras.test_data as RawDataTable | undefined) ?? {
+      raw_rows: [],
+      custom_columns: [],
+    };
+    const finalized = await computeTestLogExtras(supabase, {
+      testType: String(columns.test_type ?? 'pass_fail') as TestType,
+      rawRows: table.raw_rows as unknown as PassFailRow[] | SingleMeasureRow[] | CustomRow[],
+      customColumns: table.custom_columns,
+      testLabel: String(columns.test_label ?? ''),
+    });
+    extras.computed = finalized.computed;
+    if (finalized.headline) {
+      extras.headline = finalized.headline;
+      testHeadline = finalized.headline;
+    }
+  }
+
   const row = {
     ...columns,
     extras,
@@ -417,7 +468,19 @@ async function processFile(filePath: string, supabase: SupabaseClient): Promise<
 
   if (insertError) return { ok: false, errors: [`Database insert failed: ${insertError.message}`] };
 
-  return { ok: true, id: (inserted as { id: string }).id };
+  const insertedId = (inserted as { id: string }).id;
+
+  // Test Log: best-effort test_series rollup row (mirrors the app submit path).
+  if (entryType === 'test_log' && testHeadline) {
+    await writeTestSeriesRow(supabase, {
+      testLabel: String(columns.test_label ?? ''),
+      testLogId: insertedId,
+      testDate: (columns.test_date as string | undefined) ?? null,
+      headline: testHeadline,
+    });
+  }
+
+  return { ok: true, id: insertedId };
 }
 
 // ---------------------------------------------------------------------------

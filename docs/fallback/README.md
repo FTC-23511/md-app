@@ -13,6 +13,7 @@ If you can't reach the app and need to log a session, outreach event, or meeting
 | Build session / practice | `templates/session-log.md`   |
 | Outreach event           | `templates/outreach-log.md`  |
 | Team meeting             | `templates/meeting-notes.md` |
+| Test + its raw data      | `templates/test-log.md`      |
 
 ## How to fill one out
 
