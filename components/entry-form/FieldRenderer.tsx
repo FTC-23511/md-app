@@ -1,6 +1,7 @@
 'use client';
 
 import type { FieldBlock, OptionCategory, OptionListRow, RawDataTableMode } from '@/entries/_types';
+import type { MatrixInput } from '@/lib/compute/decision-matrix';
 import { TextBlock } from './blocks/TextBlock';
 import { LongTextBlock } from './blocks/LongTextBlock';
 import { DateBlock } from './blocks/DateBlock';
@@ -28,20 +29,25 @@ export function FieldRenderer({
   optionsByCategory,
   error,
   values,
+  defaults,
 }: {
   block: FieldBlock;
   optionsByCategory: Partial<Record<OptionCategory, OptionListRow[]>>;
   error?: string;
   /** Live form values, used to resolve a raw-data-table's `modeField`. */
   values?: Record<string, unknown>;
+  /** Stored values when pre-filling (the 2E complete-this-entry flow). */
+  defaults?: Record<string, unknown>;
 }) {
+  const d = defaults?.[block.name];
+  const dString = typeof d === 'string' ? d : undefined;
   switch (block.type) {
     case 'text':
-      return <TextBlock block={block} error={error} />;
+      return <TextBlock block={block} defaultValue={dString} error={error} />;
     case 'long-text':
-      return <LongTextBlock block={block} error={error} />;
+      return <LongTextBlock block={block} defaultValue={dString} error={error} />;
     case 'date':
-      return <DateBlock block={block} error={error} />;
+      return <DateBlock block={block} defaultValue={dString} error={error} />;
     case 'number':
       return <NumberBlock block={block} error={error} />;
     case 'single-select':
@@ -49,6 +55,7 @@ export function FieldRenderer({
         <SingleSelectBlock
           block={block}
           options={optionsByCategory[block.category] ?? []}
+          defaultValue={dString}
           error={error}
         />
       );
@@ -71,11 +78,29 @@ export function FieldRenderer({
     case 'repeating-rows':
       return <RepeatingRowsBlock block={block} error={error} />;
     case 'alternatives':
-      return <AlternativesBlock block={block} error={error} />;
+      return (
+        <AlternativesBlock
+          block={block}
+          defaultValue={Array.isArray(d) ? (d as Array<Record<string, string>>) : undefined}
+          error={error}
+        />
+      );
     case 'matrix':
-      return <MatrixBlock block={block} error={error} />;
+      return (
+        <MatrixBlock
+          block={block}
+          defaultValue={d && typeof d === 'object' ? (d as MatrixInput) : undefined}
+          error={error}
+        />
+      );
     case 'fmea':
-      return <FmeaBlock block={block} error={error} />;
+      return (
+        <FmeaBlock
+          block={block}
+          defaultValue={Array.isArray(d) ? (d as Array<Record<string, string>>) : undefined}
+          error={error}
+        />
+      );
     case 'raw-data-table': {
       const raw = block.modeField ? values?.[block.modeField] : undefined;
       const mode =
@@ -85,9 +110,11 @@ export function FieldRenderer({
     case 'computed-readonly':
       return <ComputedReadonlyBlock block={block} error={error} />;
     case 'choice':
-      return <ChoiceBlock block={block} error={error} />;
+      return <ChoiceBlock block={block} defaultValue={dString} error={error} />;
     case 'checkbox':
-      return <CheckboxBlock block={block} error={error} />;
+      return (
+        <CheckboxBlock block={block} defaultChecked={d === true ? true : undefined} error={error} />
+      );
     case 'section-header':
       return <SectionHeaderBlock block={block} />;
   }

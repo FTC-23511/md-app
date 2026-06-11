@@ -40,6 +40,24 @@ export function readFieldValue(block: FieldBlock, row: Record<string, unknown>):
   return extras[block.name];
 }
 
+/**
+ * Map a stored row to `EntryForm` defaultValues keyed by field name — the
+ * pre-fill side of the 2E "Complete this entry" / "Add outcome" flows.
+ * computed-readonly / section-header hold no input and are skipped.
+ */
+export function buildFormDefaults(
+  definition: EntryDefinition,
+  row: Record<string, unknown>,
+): Record<string, unknown> {
+  const defaults: Record<string, unknown> = {};
+  for (const block of definition.fields) {
+    if (block.type === 'computed-readonly' || block.type === 'section-header') continue;
+    const value = readFieldValue(block, row);
+    if (value !== undefined && value !== null) defaults[block.name] = value;
+  }
+  return defaults;
+}
+
 /** Collect every option_id uuid referenced by the row across the definition. */
 function collectOptionIds(definition: EntryDefinition, row: Record<string, unknown>): string[] {
   const ids = new Set<string>();

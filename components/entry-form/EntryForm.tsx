@@ -30,14 +30,27 @@ export function EntryForm({
   definition,
   optionsByCategory,
   action,
+  defaultValues,
+  submitLabel,
+  successPath,
 }: {
   definition: EntryDefinition;
   optionsByCategory: Partial<Record<OptionCategory, OptionListRow[]>>;
   action: InsertEntryAction;
+  /**
+   * Stored values keyed by field name, for the pre-filled edit flows (2E
+   * "Complete this entry" / "Add outcome"). Also seeds the visibility values
+   * so sections whose stored trigger is checked start revealed.
+   */
+  defaultValues?: Record<string, unknown>;
+  /** Submit button label. Default: 'Save entry'. */
+  submitLabel?: string;
+  /** Where to navigate on success. Default: '/entries/list'. */
+  successPath?: string;
 }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [values, setValues] = useState<Record<string, unknown>>({});
+  const [values, setValues] = useState<Record<string, unknown>>(() => defaultValues ?? {});
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -89,7 +102,7 @@ export function EntryForm({
         // The /entries/list route lands in item 16 of the rev2 brief; until
         // typed routes pick it up, cast through `as never` to satisfy
         // experimental typedRoutes. Swap to a typed import after item 16.
-        router.push('/entries/list' as never);
+        router.push((successPath ?? '/entries/list') as never);
         return;
       }
       if (result.fieldErrors) setFieldErrors(result.fieldErrors);
@@ -138,6 +151,7 @@ export function EntryForm({
             optionsByCategory={optionsByCategory}
             error={fieldErrors[block.name]}
             values={values}
+            defaults={defaultValues}
           />
         );
       })}
@@ -148,7 +162,7 @@ export function EntryForm({
           disabled={isPending}
           className="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
         >
-          {isPending ? 'Saving…' : 'Save entry'}
+          {isPending ? 'Saving…' : (submitLabel ?? 'Save entry')}
         </button>
       </div>
     </form>

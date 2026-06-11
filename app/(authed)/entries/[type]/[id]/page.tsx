@@ -32,6 +32,14 @@ export default async function EntryDetailPage({
   }
 
   const isDraft = String(detail.row.entry_state ?? 'complete') === 'draft';
+  const isDecisionLog = type === 'decision_log';
+  const extras = (detail.row.extras ?? {}) as Record<string, unknown>;
+  const outcome = {
+    actual_outcome: extras.actual_outcome ? String(extras.actual_outcome) : '',
+    delta: extras.delta ? String(extras.delta) : '',
+    learned: extras.learned ? String(extras.learned) : '',
+  };
+  const hasOutcome = Boolean(outcome.actual_outcome || outcome.delta || outcome.learned);
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-8">
@@ -46,15 +54,53 @@ export default async function EntryDetailPage({
             {isDraft ? 'Draft' : 'Complete'}
           </span>
         </div>
-        <Link
-          href={'/entries/list' as never}
-          className="text-sm text-primary underline-offset-4 hover:underline"
-        >
-          ← Back to entries
-        </Link>
+        <div className="flex flex-wrap items-center gap-3 text-sm">
+          {isDecisionLog && isDraft ? (
+            <Link
+              href={`/entries/decision/${id}/complete` as never}
+              className="inline-flex h-8 items-center rounded-md bg-primary px-3 font-medium text-primary-foreground shadow hover:bg-primary/90"
+            >
+              Complete this entry
+            </Link>
+          ) : null}
+          {isDecisionLog ? (
+            <Link
+              href={`/entries/decision/${id}/outcome` as never}
+              className="inline-flex h-8 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+            >
+              {hasOutcome ? 'Edit outcome' : 'Add outcome'}
+            </Link>
+          ) : null}
+          <Link
+            href={'/entries/list' as never}
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            ← Back to entries
+          </Link>
+        </div>
       </header>
 
       <EntryDetailView detail={detail} />
+
+      {isDecisionLog && hasOutcome ? (
+        <section className="mt-6 grid gap-4 border-t border-border pt-4">
+          <h2 className="text-base font-semibold">Outcome</h2>
+          {(
+            [
+              ['Actual outcome', outcome.actual_outcome],
+              ['Delta from prediction', outcome.delta],
+              ['What we learned', outcome.learned],
+            ] as const
+          ).map(([label, value]) =>
+            value ? (
+              <div key={label} className="grid gap-1">
+                <h3 className="text-sm font-medium text-muted-foreground">{label}</h3>
+                <p className="whitespace-pre-wrap text-sm">{value}</p>
+              </div>
+            ) : null,
+          )}
+        </section>
+      ) : null}
     </main>
   );
 }
