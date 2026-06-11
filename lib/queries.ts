@@ -15,6 +15,7 @@ import { listSummary as hardwareChangeLogListSummary } from '@/entries/hardware-
 import { listSummary as softwareChangeLogListSummary } from '@/entries/software-change-log';
 import { listSummary as testLogListSummary } from '@/entries/test-log';
 import { listSummary as decisionLogListSummary } from '@/entries/decision-log';
+import { listSummary as competitionRecapListSummary } from '@/entries/competition-recap';
 
 const LIST_SUMMARIES: Record<string, (row: Record<string, unknown>) => string> = {
   session_log: sessionLogListSummary,
@@ -25,6 +26,7 @@ const LIST_SUMMARIES: Record<string, (row: Record<string, unknown>) => string> =
   sw_change_log: softwareChangeLogListSummary,
   test_log: testLogListSummary,
   decision_log: decisionLogListSummary,
+  comp_recap: competitionRecapListSummary,
 };
 
 export type EntryListRow = {

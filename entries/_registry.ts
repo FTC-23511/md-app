@@ -6,6 +6,7 @@ import { hardwareChangeLogEntry } from './hardware-change-log';
 import { softwareChangeLogEntry } from './software-change-log';
 import { testLogEntry } from './test-log';
 import { decisionLogEntry } from './decision-log';
+import { competitionRecapEntry } from './competition-recap';
 import type { EntryDefinition } from './_types';
 
 /**
@@ -22,6 +23,7 @@ export const ENTRY_REGISTRY: Record<string, EntryDefinition> = {
   sw_change_log: softwareChangeLogEntry,
   test_log: testLogEntry,
   decision_log: decisionLogEntry,
+  comp_recap: competitionRecapEntry,
 };
 
 export const ENTRY_LIST: EntryDefinition[] = Object.values(ENTRY_REGISTRY);
