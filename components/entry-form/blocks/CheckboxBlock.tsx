@@ -12,7 +12,16 @@ import type { CheckboxBlock as CheckboxBlockType } from '@/entries/_types';
  * `false` in validate-entry. Rendered inline (box beside label) rather than via
  * BlockShell, whose label sits above the input.
  */
-export function CheckboxBlock({ block, error }: { block: CheckboxBlockType; error?: string }) {
+export function CheckboxBlock({
+  block,
+  defaultChecked,
+  error,
+}: {
+  block: CheckboxBlockType;
+  /** Stored value when pre-filling (wins over the block's own defaultChecked). */
+  defaultChecked?: boolean;
+  error?: string;
+}) {
   return (
     <div className="space-y-1.5">
       <label htmlFor={block.name} className="flex items-start gap-2 text-sm font-medium">
@@ -21,7 +30,7 @@ export function CheckboxBlock({ block, error }: { block: CheckboxBlockType; erro
           id={block.name}
           name={block.name}
           value="true"
-          defaultChecked={block.defaultChecked ?? false}
+          defaultChecked={defaultChecked ?? block.defaultChecked ?? false}
           className="mt-0.5 h-4 w-4 rounded border-input"
         />
         <span>

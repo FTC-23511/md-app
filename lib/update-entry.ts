@@ -40,6 +40,12 @@ export async function updateEntry(
      * stats) — these win over both stored and submitted values.
      */
     computedExtras?: Record<string, unknown>;
+    /**
+     * Extras keys removed after all merging — for composite blocks (matrix /
+     * fmea) that parse to empty shells rather than undefined, so an
+     * untriggered depth section's shell never lands in storage.
+     */
+    clearExtras?: string[];
   },
 ): Promise<UpdateResult> {
   // 1. Parse FormData into the shape the schema expects.
@@ -92,6 +98,7 @@ export async function updateEntry(
   const mergedExtras: Record<string, unknown> = { ...currentExtras, ...setExtras };
   for (const key of clearExtras) delete mergedExtras[key];
   if (options?.computedExtras) Object.assign(mergedExtras, options.computedExtras);
+  for (const key of options?.clearExtras ?? []) delete mergedExtras[key];
 
   const row: Record<string, unknown> = {
     ...columnValues,

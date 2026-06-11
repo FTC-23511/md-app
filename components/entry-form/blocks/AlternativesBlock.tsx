@@ -38,7 +38,7 @@ export function AlternativesBlock({
   error,
 }: {
   block: AlternativesBlockType;
-  defaultValue?: Array<Omit<Alternative, 'id'>>;
+  defaultValue?: Array<Partial<Omit<Alternative, 'id'>>>;
   error?: string;
 }) {
   const minRows = block.minRows ?? 3;

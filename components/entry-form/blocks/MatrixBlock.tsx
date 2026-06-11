@@ -31,20 +31,55 @@ const inputCls =
  * The weighted totals + winner are not shown here — they compute on save and
  * render on the detail page via a paired `computed-readonly` block.
  */
-export function MatrixBlock({ block, error }: { block: MatrixBlockType; error?: string }) {
+/** Rehydrate editor state from a stored MatrixInput (the pre-fill flow). */
+function buildInitial(
+  dv: MatrixInput | undefined,
+  minCriteria: number,
+  minOptions: number,
+): { criteria: Criterion[]; options: OptionCol[]; scores: Record<string, string> } {
+  if (!dv || (dv.criteria?.length ?? 0) === 0 || (dv.options?.length ?? 0) === 0) {
+    return {
+      criteria: Array.from({ length: Math.max(minCriteria, 1) }, () => newCriterion()),
+      options: Array.from({ length: Math.max(minOptions, 1) }, () => newOption()),
+      scores: {},
+    };
+  }
+  const criteria = dv.criteria.map((c) => ({
+    ...newCriterion(),
+    name: c.name,
+    weight: c.weight == null ? '' : String(c.weight),
+  }));
+  const options = dv.options.map((o) => ({ ...newOption(), name: o }));
+  const scores: Record<string, string> = {};
+  for (const o of options) {
+    for (const c of criteria) {
+      const cell = dv.scores?.[o.name]?.[c.name];
+      if (cell != null && cell !== '') scores[cellKey(c.id, o.id)] = String(cell);
+    }
+  }
+  return { criteria, options, scores };
+}
+
+export function MatrixBlock({
+  block,
+  defaultValue,
+  error,
+}: {
+  block: MatrixBlockType;
+  /** Stored MatrixInput when pre-filling (the 2E complete-this-entry flow). */
+  defaultValue?: MatrixInput;
+  error?: string;
+}) {
   const minCriteria = block.minCriteria ?? 2;
   const minOptions = block.minOptions ?? 2;
   const maxCriteria = block.maxCriteria ?? 20;
   const maxOptions = block.maxOptions ?? 10;
 
-  const [criteria, setCriteria] = useState<Criterion[]>(() =>
-    Array.from({ length: Math.max(minCriteria, 1) }, () => newCriterion()),
-  );
-  const [options, setOptions] = useState<OptionCol[]>(() =>
-    Array.from({ length: Math.max(minOptions, 1) }, () => newOption()),
-  );
+  const [initial] = useState(() => buildInitial(defaultValue, minCriteria, minOptions));
+  const [criteria, setCriteria] = useState<Criterion[]>(initial.criteria);
+  const [options, setOptions] = useState<OptionCol[]>(initial.options);
   // scores[`${critId}__${optId}`] = '1'..'5' (string; blank → 0 on compute).
-  const [scores, setScores] = useState<Record<string, string>>({});
+  const [scores, setScores] = useState<Record<string, string>>(initial.scores);
 
   function updateCriterion(id: string, patch: Partial<Criterion>) {
     setCriteria((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)));

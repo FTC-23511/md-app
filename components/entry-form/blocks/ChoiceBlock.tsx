@@ -11,8 +11,17 @@ import { BlockShell } from './BlockShell';
  * and a raw-data-table's `modeField` directly. Uncontrolled-ish: local state
  * keeps the selection so the bubbled form onChange re-evaluates visibility.
  */
-export function ChoiceBlock({ block, error }: { block: ChoiceBlockType; error?: string }) {
-  const [value, setValue] = useState(block.defaultValue ?? '');
+export function ChoiceBlock({
+  block,
+  defaultValue,
+  error,
+}: {
+  block: ChoiceBlockType;
+  /** Stored value when pre-filling (wins over the block's own defaultValue). */
+  defaultValue?: string;
+  error?: string;
+}) {
+  const [value, setValue] = useState(defaultValue ?? block.defaultValue ?? '');
   const display = block.display ?? 'radio';
 
   if (display === 'dropdown') {
