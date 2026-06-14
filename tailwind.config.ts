@@ -1,5 +1,9 @@
 import type { Config } from 'tailwindcss';
 
+// Color tokens are OKLCH channels (L C H) in app/globals.css; wrap with
+// oklch(var(--token) / <alpha-value>) so alpha utilities (bg-primary/50) work.
+const c = (token: string) => `oklch(var(${token}) / <alpha-value>)`;
+
 const config: Config = {
   darkMode: ['class'],
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './lib/**/*.{ts,tsx}'],
@@ -11,36 +15,54 @@ const config: Config = {
     },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        border: c('--border'),
+        input: c('--input'),
+        ring: c('--ring'),
+        background: c('--background'),
+        foreground: c('--foreground'),
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: c('--primary'),
+          foreground: c('--primary-foreground'),
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: c('--secondary'),
+          foreground: c('--secondary-foreground'),
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: c('--muted'),
+          foreground: c('--muted-foreground'),
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: c('--accent'),
+          foreground: c('--accent-foreground'),
+        },
+        destructive: {
+          DEFAULT: c('--destructive'),
+          foreground: c('--destructive-foreground'),
+        },
+        card: {
+          DEFAULT: c('--card'),
+          foreground: c('--card-foreground'),
+        },
+        popover: {
+          DEFAULT: c('--popover'),
+          foreground: c('--popover-foreground'),
         },
       },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'ui-sans-serif', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+      },
       borderRadius: {
+        xl: 'calc(var(--radius) + 4px)',
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        card: 'var(--shadow-card)',
+        modal: 'var(--shadow-modal)',
       },
     },
   },
