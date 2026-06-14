@@ -25,6 +25,12 @@ Priority is top-down — drag the most important items to the top of "Next up."
 
 <!-- Routine moves items here with the PR link when work starts. -->
 
+## Deferred / later
+
+<!-- NOT pulled by the routine. Gated until the stated condition. Promote into "Next up" when ready. -->
+
+- **[UI] Real structural redesign (not just theme)** — _gated: revisit after more Phase 2+ batches ship._ The `frontend-design` pass in [#54](https://github.com/FTC-23511/md-app/pull/54) applied the Seattle Solvers brand (colors, fonts, tokens, focus/motion base) but left **layout/IA/component structure essentially unchanged** — forms, lists, dashboard, detail pages still use the original arrangement. Come back and actually fix structure against `docs/UI_GUIDE.md`: page composition, hierarchy, entry-list as the signature surface (mono entry-code + state badge + staggered reveal), dashboard layout, empty states, spacing rhythm, asymmetry on identity surfaces. Net-new scope, not a 2A–2G batch — needs its own brief. App Lead flagged 2026-06-14.
+
 ## Done
 
 - 2026-06-11 — **[2D]** Comp Recap companion Test Log trend view (second half of `2026-06-04-2d-comp-recap.md`). **2D batch complete — Tier 1 entry set done.** `lib/comp-recap-companion.ts` (`loadCompRecapTrend`: `test_series` rows 6 weeks before `comp_start_date` through `comp_end_date` per brief Q1, grouped by `test_label`, best-effort) + `components/entry-detail/TestTrendView.tsx` (per-series date-annotated arrow chain, runs link to their Test Logs) + detail-page section for `comp_recap` only. Computed for display, not stored (`01-schema.md` §6). Auto-merge in [#53](https://github.com/FTC-23511/md-app/pull/53).
