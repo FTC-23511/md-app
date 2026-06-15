@@ -1,138 +1,106 @@
 import Link from 'next/link';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getCurrentMember, listMembers } from '@/lib/members';
 import { listOverdueFlags } from '@/lib/flags';
+import { loadDashboardKpis } from '@/lib/dashboard/kpis';
 import { FlagQueue } from '@/components/dashboard/flag-queue';
+import { KpiCards } from '@/components/dashboard/kpi-cards';
+import { Roster } from '@/components/dashboard/roster';
 
 export const dynamic = 'force-dynamic';
 
+const CAPTURE_LINKS: { href: string; label: string; primary?: boolean }[] = [
+  { href: '/entries/sessions/new', label: 'New Session Log', primary: true },
+  { href: '/entries/outreach/new', label: 'New Outreach Log' },
+  { href: '/entries/meetings/new', label: 'New Meeting Notes' },
+  { href: '/entries/contact/new', label: 'New Contact Log' },
+  { href: '/entries/hardware/new', label: 'New Hardware Change Log' },
+  { href: '/entries/software/new', label: 'New Software Change Log' },
+  { href: '/entries/test/new', label: 'New Test Log' },
+  { href: '/entries/decision/new', label: 'New Decision Log' },
+  { href: '/entries/recap/new', label: 'New Competition Recap' },
+  { href: '/entries/list', label: 'View recent entries' },
+];
+
+/**
+ * Combined Captain/admin dashboard (3F): roster + roles, flag queue (overdue),
+ * and KPI rollups. Captain/Deputy see the full team view; everyone else gets a
+ * reduced self-view (their own entry KPIs) — not a dead end. All reads run under
+ * the caller's session (RLS).
+ */
 export default async function DashboardPage() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const member = await getCurrentMember();
+  const isAdmin =
+    member?.role === 'documentation_captain' || member?.role === 'deputy_documentation_captain';
 
-  const { data: member } = await supabase
-    .from('members')
-    .select('email, display_name')
-    .eq('id', user!.id)
-    .maybeSingle();
-
-  const overdueFlags = await listOverdueFlags();
+  const [overdueFlags, kpis, members] = await Promise.all([
+    listOverdueFlags(),
+    loadDashboardKpis(isAdmin || !member ? undefined : { memberId: member.id }),
+    isAdmin ? listMembers() : Promise.resolve([]),
+  ]);
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
+    <main className="mx-auto max-w-4xl px-6 py-10">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
+          {member ? (
+            <p className="mt-1 text-sm text-muted-foreground">
+              {member.display_name}
+              {isAdmin ? ' · team overview' : ' · your documentation'}
+            </p>
+          ) : null}
+        </div>
+      </header>
 
-      <section className="mt-8 rounded-lg border border-border bg-card p-6">
-        {member ? (
-          <div className="space-y-2">
-            <p className="text-sm">
-              <span className="text-muted-foreground">Signed in as:</span>{' '}
-              <span className="font-medium">{member.display_name}</span>
-            </p>
-            <p className="text-sm">
-              <span className="text-muted-foreground">Email:</span>{' '}
-              <span className="font-medium">{member.email}</span>
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-sm font-medium">No member record found.</p>
-            <p className="text-sm text-muted-foreground">
-              Your auth account exists but isn&apos;t linked to a member row. Try signing out and
-              back in to trigger the auth-link backfill.
-            </p>
-          </div>
-        )}
-      </section>
-
-      <div className="mt-8">
+      <div className="mt-8 grid gap-10">
         <FlagQueue flags={overdueFlags} />
+
+        <div className="grid gap-2">
+          {!isAdmin ? <p className="text-sm text-muted-foreground">Showing your entries.</p> : null}
+          <KpiCards kpis={kpis} />
+        </div>
+
+        {isAdmin ? <Roster members={members} /> : null}
+
+        <section className="grid gap-3">
+          <h2 className="text-lg font-semibold">Capture an entry</h2>
+          <div className="flex flex-wrap gap-2 text-sm">
+            {CAPTURE_LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href as never}
+                className={
+                  l.primary
+                    ? 'inline-flex h-9 items-center rounded-md bg-primary px-3 font-medium text-primary-foreground shadow hover:bg-primary/90'
+                    : 'inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent'
+                }
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {isAdmin ? (
+          <section className="grid gap-3">
+            <h2 className="text-lg font-semibold">Admin</h2>
+            <div className="flex flex-wrap gap-2 text-sm">
+              <Link
+                href={'/admin/members' as never}
+                className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+              >
+                Members
+              </Link>
+              <Link
+                href={'/admin/manage-tags' as never}
+                className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+              >
+                Manage tags
+              </Link>
+            </div>
+          </section>
+        ) : null}
       </div>
-
-      <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-semibold">Capture an entry</h2>
-        <div className="flex flex-wrap gap-2 text-sm">
-          <Link
-            href={'/entries/sessions/new' as never}
-            className="inline-flex h-9 items-center rounded-md bg-primary px-3 font-medium text-primary-foreground shadow hover:bg-primary/90"
-          >
-            New Session Log
-          </Link>
-          <Link
-            href={'/entries/outreach/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Outreach Log
-          </Link>
-          <Link
-            href={'/entries/meetings/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Meeting Notes
-          </Link>
-          <Link
-            href={'/entries/contact/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Contact Log
-          </Link>
-          <Link
-            href={'/entries/hardware/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Hardware Change Log
-          </Link>
-          <Link
-            href={'/entries/software/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Software Change Log
-          </Link>
-          <Link
-            href={'/entries/test/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Test Log
-          </Link>
-          <Link
-            href={'/entries/decision/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Decision Log
-          </Link>
-          <Link
-            href={'/entries/recap/new' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            New Competition Recap
-          </Link>
-          <Link
-            href={'/entries/list' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            View recent entries
-          </Link>
-        </div>
-      </section>
-
-      <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-semibold">Admin</h2>
-        <div className="flex flex-wrap gap-2 text-sm">
-          <Link
-            href={'/admin/members' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            Members
-          </Link>
-          <Link
-            href={'/admin/manage-tags' as never}
-            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
-          >
-            Manage tags
-          </Link>
-        </div>
-      </section>
     </main>
   );
 }
