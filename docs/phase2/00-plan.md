@@ -88,15 +88,15 @@ Same discipline as Phase 1 (`docs/phase1/00-plan.md` §PR batching, `ROUTINE.md`
 
 ## 6. Progress tracker
 
-| Step | Status   | PR(s)   | Notes                                                                                                                                                                                                           |
-| ---- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2A   | **done** | #34     | schema on dev + prod; detail page live                                                                                                                                                                          |
-| 2B   | **done** | #35–#37 | Contact / HW / SW (baseline) all live                                                                                                                                                                           |
-| 2C   | **done** | #38–#43 | auto-compute + `test_series` rollup + fallback importer                                                                                                                                                         |
-| 2D   | **done** | #52–#53 | Comp Recap + companion trend view — Tier 1 set complete                                                                                                                                                         |
-| 2E   | **done** | #44–#51 | Decision Log + depth + `updateEntry` + outcome flow                                                                                                                                                             |
-| 2F   | paused   |         | built design ready (brief `2026-06-15-2f-media.md`); held on App Lead Google Drive setup (service-account share + Vercel secrets)                                                                               |
-| 2G   | in PR    |         | **rescoped 2026-06-15** (skill-based, not per-commit AI — see `05-scl-ai.md`): `/scl` Claude Code skill → fallback-format file → existing importer; daily Discord commit digest (GitHub Action). No app-side AI |
+| Step | Status   | PR(s)   | Notes                                                                                                                                                                                                                                                           |
+| ---- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2A   | **done** | #34     | schema on dev + prod; detail page live                                                                                                                                                                                                                          |
+| 2B   | **done** | #35–#37 | Contact / HW / SW (baseline) all live                                                                                                                                                                                                                           |
+| 2C   | **done** | #38–#43 | auto-compute + `test_series` rollup + fallback importer                                                                                                                                                                                                         |
+| 2D   | **done** | #52–#53 | Comp Recap + companion trend view — Tier 1 set complete                                                                                                                                                                                                         |
+| 2E   | **done** | #44–#51 | Decision Log + depth + `updateEntry` + outcome flow                                                                                                                                                                                                             |
+| 2F   | paused   |         | built design ready (brief `2026-06-15-2f-media.md`); held on App Lead Google Drive setup (service-account share + Vercel secrets)                                                                                                                               |
+| 2G   | **done** | #55     | **rescoped 2026-06-15** (skill-based, not per-commit AI — see `05-scl-ai.md`): `/scl` Claude Code skill → fallback-format file → existing importer; daily Discord commit digest (GitHub Action). No app-side AI. Discord integration test passed (posted live). |
 
 ---
 
