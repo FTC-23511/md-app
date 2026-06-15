@@ -46,10 +46,21 @@ export const softwareChangeLogEntry: EntryDefinition = {
     {
       type: 'text',
       name: 'commit_hash',
-      label: 'Commit hash',
-      helper: 'The commit SHA this change landed in. Auto-populated by the integration later (2G).',
+      label: 'Commit hash (range end / tip)',
+      helper:
+        'The tip commit SHA this change landed in. When a change spans several commits, this is the last one.',
       required: false,
       storage: 'column',
+      maxLength: 100,
+    },
+    {
+      type: 'text',
+      name: 'commit_range_from',
+      label: 'Commit range start',
+      helper:
+        'Optional. The FIRST commit SHA of the range, when the change spans multiple commits (AI coding often does). The entry then documents commit_range_from..commit_hash.',
+      required: false,
+      storage: 'extras',
       maxLength: 100,
     },
     {
@@ -164,6 +175,28 @@ export const softwareChangeLogEntry: EntryDefinition = {
       columns: [{ name: 'path', label: 'File path' }],
     },
   ],
+};
+
+/**
+ * Header → field-name map for the fallback importer (docs/phase1/05-fallback.md
+ * §5.3). Only body-section fields appear here; frontmatter fields (change_type,
+ * change_date, commit_hash, commit_range_from, branch, parent_decision_id) are
+ * resolved by name. Keys are matched case-insensitively / whitespace-normalised.
+ *
+ * This is what lets the `/scl` Claude Code skill's output file (and a hand-filled
+ * template) import into `sw_change_logs` through the existing importer — the 2G
+ * ingestion path with no new write code. Spec: docs/phase2/05-scl-ai.md.
+ */
+export const softwareChangeLogBodyMapping: Record<string, string> = {
+  'what changed': 'what_changed',
+  why: 'why',
+  'hardware / sensors involved': 'hardware_sensors',
+  'game challenge addressed': 'game_challenge',
+  'before behavior': 'before_behavior',
+  'after behavior': 'after_behavior',
+  'known failure modes / edge cases': 'failure_modes',
+  verification: 'verification',
+  'files changed': 'files_changed',
 };
 
 // Used by the list view to format a one-line headline per row.
