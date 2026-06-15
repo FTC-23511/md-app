@@ -1,5 +1,9 @@
 import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { listOverdueFlags } from '@/lib/flags';
+import { FlagQueue } from '@/components/dashboard/flag-queue';
+
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
@@ -12,6 +16,8 @@ export default async function DashboardPage() {
     .select('email, display_name')
     .eq('id', user!.id)
     .maybeSingle();
+
+  const overdueFlags = await listOverdueFlags();
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
@@ -39,6 +45,10 @@ export default async function DashboardPage() {
           </div>
         )}
       </section>
+
+      <div className="mt-8">
+        <FlagQueue flags={overdueFlags} />
+      </div>
 
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold">Capture an entry</h2>
@@ -109,6 +119,12 @@ export default async function DashboardPage() {
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold">Admin</h2>
         <div className="flex flex-wrap gap-2 text-sm">
+          <Link
+            href={'/admin/members' as never}
+            className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+          >
+            Members
+          </Link>
           <Link
             href={'/admin/manage-tags' as never}
             className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
