@@ -135,7 +135,7 @@ Same discipline as Phase 1/2 (`docs/ROUTINE.md`, `docs/phase1/00-plan.md` §PR b
 | 3A   | done    | #57   | merged + applied to dev & prod; App Lead = Captain              |
 | 3B   | done    | #58   | strict RLS + membership gate; dev & prod; +column-guard trigger |
 | 3C   | done    | #59   | 24h lock messaging + entry_edit_audit; dev & prod               |
-| 3D   | planned | —     | brief `2026-06-15-3d-member-admin.md`                           |
+| 3D   | done    | #60   | /admin/members invite/role/subsystem/activate; app-only         |
 | 3E   | planned | —     | brief `2026-06-15-3e-flag-alerts.md`                            |
 | 3F   | planned | —     | brief `2026-06-15-3f-captain-dashboard.md`                      |
 | 3G   | planned | —     | brief `2026-06-15-3g-discord-inbound.md` — deferrable           |
