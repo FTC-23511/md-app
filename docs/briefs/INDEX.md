@@ -41,7 +41,7 @@ Build order + specs: `docs/phase3/00-plan.md`. Security core (3A–3C) is linear
 | 3B — strict RLS + membership gate      | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                       | ✅ **done** (#58) — applied dev + prod; +members column-guard trigger |
 | 3C — 24h edit lock + audit             | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                         | ✅ **done** (#59) — applied dev + prod; entry_edit_audit + RPC        |
 | 3D — member management / onboarding UI | [2026-06-15-3d-member-admin.md](2026-06-15-3d-member-admin.md)                   | ✅ **done** (#60) — /admin/members; invite/role/subsystem/activate    |
-| 3E — flag overdue alerts               | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                     | brief written — self-contained; ship before 3F                        |
+| 3E — flag overdue alerts               | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                     | ✅ **done** (#61) — overdue helper + dashboard badge; digest deferred |
 | 3F — Captain/admin dashboard           | [2026-06-15-3f-captain-dashboard.md](2026-06-15-3f-captain-dashboard.md)         | brief written — **blocked behind 3D (roster) + 3E (flag helper)**     |
 | 3G — inbound Discord capture           | [2026-06-15-3g-discord-inbound.md](2026-06-15-3g-discord-inbound.md)             | brief written — **deferrable**; depends on 3D; gated on Discord keys  |
 
