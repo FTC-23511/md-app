@@ -333,6 +333,41 @@ export type Database = {
           },
         ];
       };
+      entry_edit_audit: {
+        Row: {
+          edit_reason: string;
+          edited_at: string;
+          editor_member_id: string;
+          entry_id: string;
+          entry_type: string;
+          id: string;
+        };
+        Insert: {
+          edit_reason: string;
+          edited_at?: string;
+          editor_member_id: string;
+          entry_id: string;
+          entry_type: string;
+          id?: string;
+        };
+        Update: {
+          edit_reason?: string;
+          edited_at?: string;
+          editor_member_id?: string;
+          entry_id?: string;
+          entry_type?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'entry_edit_audit_editor_member_id_fkey';
+            columns: ['editor_member_id'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       flags: {
         Row: {
           closed_at: string | null;
@@ -991,6 +1026,14 @@ export type Database = {
       };
       mark_overdue_flags: { Args: { p_team_id: string }; Returns: number };
       owns_row: { Args: { p_created_by: string }; Returns: boolean };
+      record_entry_edit: {
+        Args: {
+          p_edit_reason: string;
+          p_entry_id: string;
+          p_entry_type: string;
+        };
+        Returns: undefined;
+      };
       within_edit_window: { Args: { p_created_at: string }; Returns: boolean };
     };
     Enums: {

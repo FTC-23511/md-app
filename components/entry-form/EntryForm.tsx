@@ -33,6 +33,7 @@ export function EntryForm({
   defaultValues,
   submitLabel,
   successPath,
+  editReasonRequired,
 }: {
   definition: EntryDefinition;
   optionsByCategory: Partial<Record<OptionCategory, OptionListRow[]>>;
@@ -47,6 +48,12 @@ export function EntryForm({
   submitLabel?: string;
   /** Where to navigate on success. Default: '/entries/list'. */
   successPath?: string;
+  /**
+   * Phase 3 (3C): when a Captain/Deputy is editing an entry older than 24h,
+   * an edit_reason is required and recorded to the audit trail. Shows a
+   * required textarea (name="edit_reason") submitted with the form.
+   */
+  editReasonRequired?: boolean;
 }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -155,6 +162,26 @@ export function EntryForm({
           />
         );
       })}
+
+      {editReasonRequired ? (
+        <div className="grid gap-1 rounded-md border border-amber-300 bg-amber-50 px-3 py-3">
+          <label htmlFor="edit_reason" className="text-sm font-medium text-amber-900">
+            Edit reason <span className="text-amber-700">(required)</span>
+          </label>
+          <p className="text-xs text-amber-800">
+            This entry is more than 24 hours old. As Captain/Deputy you can still edit it, but the
+            reason is recorded to the audit trail to keep the record trustworthy.
+          </p>
+          <textarea
+            id="edit_reason"
+            name="edit_reason"
+            rows={2}
+            required
+            className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            placeholder="e.g. Fixing a transcription error in the original capture"
+          />
+        </div>
+      ) : null}
 
       <div className="flex items-center gap-2 pt-2">
         <button

@@ -1,9 +1,14 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { EntryForm } from '@/components/entry-form/EntryForm';
+import { EntryEditBlocked } from '@/components/entry-detail/EntryEditBlocked';
 import { decisionLogEntry } from '@/entries/decision-log';
 import { preloadOptions } from '@/lib/preload-options';
 import { loadEntryDetail, buildFormDefaults } from '@/lib/entry-detail';
 import { completeDecisionLog } from '@/lib/update-decision-log';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { resolveEditContext } from '@/lib/edit-lock-server';
+import { EDIT_MESSAGES } from '@/lib/edit-lock';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,6 +42,22 @@ export default async function CompleteDecisionLogPage({
     );
   }
 
+  // 24h edit-lock gate (3C): show a friendly message instead of the form when
+  // the lock / role denies it; show the edit_reason field on a Captain override.
+  const backHref = `/entries/decision_log/${id}`;
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect('/auth/sign-in');
+  const ctx = await resolveEditContext(supabase, decisionLogEntry.table, id, user.id);
+  if (ctx.capability.kind === 'role_denied')
+    return <EntryEditBlocked message={EDIT_MESSAGES.role_denied} backHref={backHref} />;
+  if (ctx.capability.kind === 'locked')
+    return <EntryEditBlocked message={EDIT_MESSAGES.locked} backHref={backHref} />;
+  if (ctx.capability.kind === 'denied')
+    return <EntryEditBlocked message={EDIT_MESSAGES.denied} backHref={backHref} />;
+
   const optionsByCategory = await preloadOptions(decisionLogEntry);
   const defaultValues = buildFormDefaults(decisionLogEntry, detail.row);
 
@@ -52,7 +73,8 @@ export default async function CompleteDecisionLogPage({
       action={action}
       defaultValues={defaultValues}
       submitLabel="Mark complete"
-      successPath={`/entries/decision_log/${id}`}
+      successPath={backHref}
+      editReasonRequired={ctx.capability.kind === 'reason_required'}
     />
   );
 }
