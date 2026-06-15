@@ -37,8 +37,8 @@ Build order + specs: `docs/phase3/00-plan.md`. Security core (3A–3C) is linear
 
 | Batch                                  | Brief                                                                            | Status                                                               |
 | -------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| **3A — roles + members schema + seed** | [2026-06-15-3a-roles-and-rbac-schema.md](2026-06-15-3a-roles-and-rbac-schema.md) | brief written — DB-only/additive; **unblocked** (Phase 2 closing)    |
-| 3B — strict RLS + membership gate      | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                       | brief written — **blocked behind 3A** (needs roles seeded)           |
+| **3A — roles + members schema + seed** | [2026-06-15-3a-roles-and-rbac-schema.md](2026-06-15-3a-roles-and-rbac-schema.md) | ✅ **done** (#57) — applied dev + prod; App Lead seeded as Captain    |
+| 3B — strict RLS + membership gate      | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                       | brief written — **unblocked** (3A merged); the security cutover      |
 | 3C — 24h edit lock + audit             | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                         | brief written — **blocked behind 3B**                                |
 | 3D — member management / onboarding UI | [2026-06-15-3d-member-admin.md](2026-06-15-3d-member-admin.md)                   | brief written — **blocked behind 3A+3B** (`requireCaptain`)          |
 | 3E — flag overdue alerts               | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                     | brief written — self-contained; ship before 3F                       |

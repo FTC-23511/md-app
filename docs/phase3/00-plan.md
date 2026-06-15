@@ -132,7 +132,7 @@ Same discipline as Phase 1/2 (`docs/ROUTINE.md`, `docs/phase1/00-plan.md` §PR b
 
 | Step | Status  | PR(s) | Notes                                                 |
 | ---- | ------- | ----- | ----------------------------------------------------- |
-| 3A   | planned | —     | brief `2026-06-15-3a-roles-and-rbac-schema.md`        |
+| 3A   | done    | #57   | merged + applied to dev & prod; App Lead = Captain    |
 | 3B   | planned | —     | brief `2026-06-15-3b-strict-rls.md`                   |
 | 3C   | planned | —     | brief `2026-06-15-3c-edit-lock.md`                    |
 | 3D   | planned | —     | brief `2026-06-15-3d-member-admin.md`                 |
