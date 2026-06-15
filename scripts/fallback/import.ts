@@ -21,6 +21,7 @@ import { sessionLogBodyMapping } from '../../entries/session-log';
 import { outreachLogBodyMapping } from '../../entries/outreach-log';
 import { meetingNotesBodyMapping } from '../../entries/meeting-notes';
 import { testLogBodyMapping } from '../../entries/test-log';
+import { softwareChangeLogBodyMapping } from '../../entries/software-change-log';
 import { buildZodSchemaFromDefinition, flattenZodErrors } from '../../lib/validate-entry';
 import {
   computeTestLogExtras,
@@ -36,6 +37,7 @@ import { parseSpecialtyTriggers } from './parsers/specialty-triggers';
 import { parseStories } from './parsers/stories';
 import { parseMultiSelectWithNote } from './parsers/multi-select-with-note';
 import { parseRawDataTable, parseCustomColumns, type RawDataTable } from './parsers/raw-data-table';
+import { parseRepeatingRows } from './parsers/repeating-rows';
 
 // ---------------------------------------------------------------------------
 // Body mapping registry
@@ -46,6 +48,7 @@ const BODY_MAPPINGS: Record<string, Record<string, string>> = {
   outreach_log: outreachLogBodyMapping,
   meeting_notes: meetingNotesBodyMapping,
   test_log: testLogBodyMapping,
+  sw_change_log: softwareChangeLogBodyMapping,
 };
 
 // ---------------------------------------------------------------------------
@@ -324,6 +327,9 @@ async function parseBodyValue(
 
     case 'story-block':
       return parseStories(sectionText);
+
+    case 'repeating-rows':
+      return parseRepeatingRows(sectionText, field.columns);
 
     case 'multi-select': {
       if (field.withCustomNote) {

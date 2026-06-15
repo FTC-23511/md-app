@@ -62,7 +62,7 @@ Do not read full files. Use grep + `view --view-range`. Jump to sections.
 
 Phase 2: **now active** — see `docs/phase2/00-plan.md` (Tier 2 forms, depth fields, Test Log auto-compute, media-to-Drive, detail pages, SCL AI integration).
 
-Phase 3: multi-user auth, role-based access, strict RLS policies (Phase 1 has permissive `FOR ALL TO authenticated USING (true)` — Phase 3 replaces, not adds), Discord webhooks, edit-within-24h.
+Phase 3: multi-user auth, role-based access, strict RLS policies (Phase 1 has permissive `FOR ALL TO authenticated USING (true)` — Phase 3 replaces, not adds), **inbound** Discord capture webhooks, edit-within-24h. (The **outbound** SCL commit-digest Discord webhook was pulled into Phase 2 — post-only, see `docs/phase2/05-scl-ai.md`; only inbound capture stays Phase 3.)
 
 Phase 4: classification pass UI, mobile polish, export endpoint, Subsystem Handoff workflow.
 

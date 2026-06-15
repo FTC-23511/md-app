@@ -1,0 +1,69 @@
+name: SCL commit digest
+
+# Daily nudge for Software Change Logs (Phase 2 step 2G, docs/phase2/05-scl-ai.md).
+# Posts the day's commits to a Discord channel asking "any worth a Software Change
+# Log?". A programmer then runs the /scl skill over the relevant commit range.
+#
+# This is a one-way OUTBOUND webhook (post-only). It is NOT the inbound Discord
+# capture webhook, which stays Phase 3 (see CLAUDE.md).
+#
+# Secret required (repo Settings → Secrets and variables → Actions):
+#   DISCORD_SCL_WEBHOOK_URL — a Discord channel incoming-webhook URL.
+
+on:
+  schedule:
+    # 03:00 UTC daily ≈ 7–8 PM Pacific. Adjust the cron if the team wants a
+    # different nudge time. Scheduled runs fire only from the default branch.
+    - cron: '0 3 * * *'
+  # Manual trigger — used to verify the digest before/after merge:
+  #   gh workflow run scl-digest.yml --ref <branch>
+  workflow_dispatch: {}
+
+# Don't pile up digests if a run is slow.
+concurrency:
+  group: scl-digest
+  cancel-in-progress: true
+
+jobs:
+  digest:
+    name: Post commit digest to Discord
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so the time-window git log is accurate
+
+      - name: Build and post digest
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_SCL_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DISCORD_WEBHOOK:-}" ]; then
+            echo "DISCORD_SCL_WEBHOOK_URL secret not set; skipping (nothing to post)."
+            exit 0
+          fi
+
+          SINCE="24 hours ago"
+
+          # Behaviour-changing commits in the window: drop merge commits and the
+          # routine's BACKLOG state commits (not code changes worth an SCL).
+          COMMITS="$(git log --since="$SINCE" --no-merges --pretty=format:'%h %s (%an)' \
+            | grep -vE '^[0-9a-f]+ (BACKLOG|chore|docs)' || true)"
+
+          if [ -z "$COMMITS" ]; then
+            echo "No SCL-worthy commits in the last 24h; nothing to post."
+            exit 0
+          fi
+
+          COUNT="$(printf '%s\n' "$COMMITS" | wc -l | tr -d ' ')"
+          HEADER="🛠️ **${COUNT} commit(s) in the last 24h** — any worth a Software Change Log? Open Claude Code and run \`/scl <from>..<to>\` over the relevant range to draft one."
+          BODY="$(printf '%s\n\n```\n%s\n```' "$HEADER" "$COMMITS")"
+
+          # Discord caps message content at 2000 chars; stay safely under it.
+          BODY="${BODY:0:1900}"
+
+          jq -n --arg content "$BODY" '{content: $content}' \
+            | curl -sf -X POST -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"
+
+          echo "Posted digest (${COUNT} commits)."
