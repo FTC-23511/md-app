@@ -130,15 +130,15 @@ Same discipline as Phase 1/2 (`docs/ROUTINE.md`, `docs/phase1/00-plan.md` §PR b
 
 ## 7. Progress tracker
 
-| Step | Status  | PR(s) | Notes                                                           |
-| ---- | ------- | ----- | --------------------------------------------------------------- |
-| 3A   | done    | #57   | merged + applied to dev & prod; App Lead = Captain              |
-| 3B   | done    | #58   | strict RLS + membership gate; dev & prod; +column-guard trigger |
-| 3C   | done    | #59   | 24h lock messaging + entry_edit_audit; dev & prod               |
-| 3D   | done    | #60   | /admin/members invite/role/subsystem/activate; app-only         |
-| 3E   | done    | #61   | overdue helper + dashboard badge; digest deferred (secrets+RLS) |
-| 3F   | planned | —     | brief `2026-06-15-3f-captain-dashboard.md`                      |
-| 3G   | planned | —     | brief `2026-06-15-3g-discord-inbound.md` — deferrable           |
+| Step | Status   | PR(s) | Notes                                                           |
+| ---- | -------- | ----- | --------------------------------------------------------------- |
+| 3A   | done     | #57   | merged + applied to dev & prod; App Lead = Captain              |
+| 3B   | done     | #58   | strict RLS + membership gate; dev & prod; +column-guard trigger |
+| 3C   | done     | #59   | 24h lock messaging + entry_edit_audit; dev & prod               |
+| 3D   | done     | #60   | /admin/members invite/role/subsystem/activate; app-only         |
+| 3E   | done     | #61   | overdue helper + dashboard badge; digest deferred (secrets+RLS) |
+| 3F   | done     | #62   | dashboard: roster + flag queue + KPI rollups; app-only          |
+| 3G   | deferred | —     | needs App-Lead Discord app + secrets; go/no-go pending          |
 
 ---
 
