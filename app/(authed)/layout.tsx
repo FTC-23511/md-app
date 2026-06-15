@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { canAccessApp } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 
 export default async function AuthedLayout({ children }: { children: React.ReactNode }) {
@@ -12,6 +13,13 @@ export default async function AuthedLayout({ children }: { children: React.React
   // the layout still refuses to render protected content without a session.
   if (!user) {
     redirect('/auth/sign-in');
+  }
+
+  // Same membership gate as the middleware (Phase 3): an active member (or the
+  // ALLOWED_EMAIL bootstrap account) only. A deactivated user who slips past a
+  // stale middleware check is still refused here.
+  if (!(await canAccessApp(supabase, user))) {
+    redirect('/forbidden');
   }
 
   return (

@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { env } from '@/lib/env';
+import { canAccessApp } from '@/lib/auth';
 
 // Paths reachable without an authenticated, allowlisted session. Everything
 // else is protected. The auth pages, the forbidden page, the public showcase,
@@ -21,8 +22,9 @@ function isPublicPath(pathname: string): boolean {
  *
  * Without the refresh, expired access tokens would silently fail and users
  * would get unexplained "not authorized" errors on protected routes. The
- * allowlist is defense in depth: signup is disabled in Supabase, but this
- * guarantees only ALLOWED_EMAIL reaches protected pages even if config drifts.
+ * membership gate (Phase 3) replaces the Phase 1 single-email allowlist: a
+ * signed-in user reaches protected pages only if they are an active member (or
+ * the ALLOWED_EMAIL bootstrap account). See lib/auth.ts.
  */
 export async function updateSupabaseSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -58,7 +60,9 @@ export async function updateSupabaseSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/sign-in', request.url));
   }
 
-  if (user.email !== env.ALLOWED_EMAIL) {
+  // Membership gate: an active member row must exist (or the ALLOWED_EMAIL
+  // bootstrap pass). A deactivated / unknown user is signed out and bounced.
+  if (!(await canAccessApp(supabase, user))) {
     await supabase.auth.signOut();
     return NextResponse.redirect(new URL('/forbidden', request.url));
   }
