@@ -27,6 +27,7 @@ CREATE TABLE public.discord_link_codes (
 RLS: member-own + service-role for the webhook. Codes are short-lived and single-use.
 
 **Flow:**
+
 1. Member runs `/link` in Discord → the webhook (which knows the caller's `discord_user_id` from the signed interaction) creates a code row with that id + a short expiry, replies **ephemerally** with the code.
 2. Member opens `/settings/link-discord` (authenticated), enters the code → a server action under their session finds an unconsumed/unexpired code, sets `members.discord_user_id` for the **current** member, marks the code consumed.
 
@@ -68,12 +69,12 @@ Favor flat, low-friction commands; **defer composites** (decision/test/comp_reca
 
 ## 5. Env vars (server-only lazy getters in `lib/env.ts`)
 
-| Var | Use |
-| --- | --- |
-| `DISCORD_PUBLIC_KEY` | Ed25519 verification; presence gates the whole feature |
-| `DISCORD_APPLICATION_ID` | command registration |
-| `DISCORD_BOT_TOKEN` | command registration / follow-up messages |
-| `SUPABASE_SERVICE_ROLE_KEY` | reused (webhook has no session) |
+| Var                         | Use                                                    |
+| --------------------------- | ------------------------------------------------------ |
+| `DISCORD_PUBLIC_KEY`        | Ed25519 verification; presence gates the whole feature |
+| `DISCORD_APPLICATION_ID`    | command registration                                   |
+| `DISCORD_BOT_TOKEN`         | command registration / follow-up messages              |
+| `SUPABASE_SERVICE_ROLE_KEY` | reused (webhook has no session)                        |
 
 ---
 

@@ -26,13 +26,13 @@ The first Captain (App Lead) is seeded in **3A** (`01-rbac-and-rls.md` §2). No 
 
 ## 3. UI + files
 
-| Path | Role | Notes |
-| ---- | ---- | ----- |
-| `app/(authed)/admin/members/page.tsx` | server | `requireCaptain()` guard; shadcn `Table` of members (display_name, email, role, active, subsystems) |
-| `app/(authed)/admin/members/members-table.tsx` | client | role `Select`, active toggle, "Resend invite", subsystem multi-select for leads |
-| `app/(authed)/admin/members/actions.ts` | server | `inviteMember`, `setMemberRole`, `setMemberActive`, `assignSubsystems`, `resendInvite`; each `requireCaptain()`; `revalidatePath` |
-| `lib/supabase/admin.ts` | server-only | the **only** service-role client (lazy, never imported client-side) |
-| `lib/members.ts` | shared | `listMembers()`, `getCurrentMember()`, `requireCaptain()`, the role-label constant |
+| Path                                           | Role        | Notes                                                                                                                             |
+| ---------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `app/(authed)/admin/members/page.tsx`          | server      | `requireCaptain()` guard; shadcn `Table` of members (display_name, email, role, active, subsystems)                               |
+| `app/(authed)/admin/members/members-table.tsx` | client      | role `Select`, active toggle, "Resend invite", subsystem multi-select for leads                                                   |
+| `app/(authed)/admin/members/actions.ts`        | server      | `inviteMember`, `setMemberRole`, `setMemberActive`, `assignSubsystems`, `resendInvite`; each `requireCaptain()`; `revalidatePath` |
+| `lib/supabase/admin.ts`                        | server-only | the **only** service-role client (lazy, never imported client-side)                                                               |
+| `lib/members.ts`                               | shared      | `listMembers()`, `getCurrentMember()`, `requireCaptain()`, the role-label constant                                                |
 
 `requireCaptain()` reads the current member (via the anon client / `current_role_name()`), throws/redirects if not `documentation_captain`. Existing admin sub-area precedent: `app/(authed)/admin/manage-tags/page.tsx`.
 

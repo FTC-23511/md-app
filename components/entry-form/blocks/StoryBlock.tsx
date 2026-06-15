@@ -63,7 +63,7 @@ export function StoryBlock({
     <BlockShell block={block} error={error}>
       <div className="space-y-4">
         {stories.map((s, idx) => (
-          <div key={s.id} className="bg-card rounded-md border border-input p-3 shadow-sm">
+          <div key={s.id} className="rounded-md border border-input bg-card p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Story {idx + 1}</span>
               <button

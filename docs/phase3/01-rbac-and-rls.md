@@ -8,11 +8,11 @@ Canonical spec for the role model and row-level security. Read `00-plan.md` §0 
 
 `ALTER TABLE public.members`:
 
-| Column | Type | Default | Purpose |
-| ------ | ---- | ------- | ------- |
-| `role` | `public.member_role` | `'general_member'` | base role |
-| `is_active` | `boolean NOT NULL` | `true` | deactivation without delete |
-| `is_outreach_reporter` | `boolean NOT NULL` | `false` | additive Outreach Reporter grant |
+| Column                 | Type                 | Default            | Purpose                          |
+| ---------------------- | -------------------- | ------------------ | -------------------------------- |
+| `role`                 | `public.member_role` | `'general_member'` | base role                        |
+| `is_active`            | `boolean NOT NULL`   | `true`             | deactivation without delete      |
+| `is_outreach_reporter` | `boolean NOT NULL`   | `false`            | additive Outreach Reporter grant |
 
 Re-create the enum (dropped with the legacy schema — `00-plan.md` §0):
 
@@ -69,17 +69,17 @@ Resolve `<APP_LEAD_AUTH_UID>` / `<ALLOWED_EMAIL value>` at migration-authoring t
 
 All keyed off `auth.uid()`. `SECURITY DEFINER` is mandatory: it lets a helper read `members` while bypassing `members`' own RLS, which is what prevents recursion (R2). Grant `EXECUTE` to `authenticated` (in the grants migration).
 
-| Function | Returns | Logic |
-| -------- | ------- | ----- |
-| `current_role_name()` | `text` | `members.role::text` for `auth.uid()` where `is_active AND deleted_at IS NULL`, else `NULL`. (New name — not the dead `current_member_role`.) |
-| `is_active_member()` | `boolean` | true iff `auth.uid()` maps to a member with `is_active AND deleted_at IS NULL`. The read/allowlist gate. |
-| `is_captain()` | `boolean` | `current_role_name() = 'documentation_captain'`. |
-| `is_captain_or_deputy()` | `boolean` | role ∈ {captain, deputy}. The "anytime write / 24h override" class. |
-| `can_write_entries()` | `boolean` | role ∈ {captain, deputy, subsystem_documentation_lead, general_member}. Excludes mentor. Gates INSERT. |
-| `is_outreach_reporter()` | `boolean` | `members.is_outreach_reporter` for `auth.uid()`. |
-| `leads_subsystem(p_subsystem_option_id uuid)` | `boolean` | `EXISTS(SELECT 1 FROM member_subsystems WHERE member_id = auth.uid() AND subsystem_option_id = p_subsystem_option_id)`; false on NULL input. |
-| `owns_row(p_created_by uuid)` | `boolean` | `p_created_by IS NOT NULL AND p_created_by = auth.uid()`. NULL (import rows) → false. |
-| `within_edit_window(p_created_at timestamptz)` | `boolean` | `p_created_at + INTERVAL '24 hours' > now()`. Keyed on `created_at` (not `updated_at`) so re-edits don't extend the window. |
+| Function                                       | Returns   | Logic                                                                                                                                         |
+| ---------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `current_role_name()`                          | `text`    | `members.role::text` for `auth.uid()` where `is_active AND deleted_at IS NULL`, else `NULL`. (New name — not the dead `current_member_role`.) |
+| `is_active_member()`                           | `boolean` | true iff `auth.uid()` maps to a member with `is_active AND deleted_at IS NULL`. The read/allowlist gate.                                      |
+| `is_captain()`                                 | `boolean` | `current_role_name() = 'documentation_captain'`.                                                                                              |
+| `is_captain_or_deputy()`                       | `boolean` | role ∈ {captain, deputy}. The "anytime write / 24h override" class.                                                                           |
+| `can_write_entries()`                          | `boolean` | role ∈ {captain, deputy, subsystem_documentation_lead, general_member}. Excludes mentor. Gates INSERT.                                        |
+| `is_outreach_reporter()`                       | `boolean` | `members.is_outreach_reporter` for `auth.uid()`.                                                                                              |
+| `leads_subsystem(p_subsystem_option_id uuid)`  | `boolean` | `EXISTS(SELECT 1 FROM member_subsystems WHERE member_id = auth.uid() AND subsystem_option_id = p_subsystem_option_id)`; false on NULL input.  |
+| `owns_row(p_created_by uuid)`                  | `boolean` | `p_created_by IS NOT NULL AND p_created_by = auth.uid()`. NULL (import rows) → false.                                                         |
+| `within_edit_window(p_created_at timestamptz)` | `boolean` | `p_created_at + INTERVAL '24 hours' > now()`. Keyed on `created_at` (not `updated_at`) so re-edits don't extend the window.                   |
 
 ---
 
@@ -88,16 +88,19 @@ All keyed off `auth.uid()`. `SECURITY DEFINER` is mandatory: it lets a helper re
 Use a PL/pgSQL `FOREACH` loop over the 10 table names (the idiom already in `20260521000006`): per table, `DROP POLICY <table>_all_authenticated`, then create the four policies. Two per-table substitution arrays drive the table-specific clauses.
 
 **SELECT** — every active member reads all (non-deleted):
+
 ```sql
 USING ( is_active_member() AND deleted_at IS NULL )
 ```
 
 **INSERT** — writers create as themselves; authorship unforgeable:
+
 ```sql
 WITH CHECK ( can_write_entries() AND created_by = auth.uid() AND created_via = 'app' )
 ```
 
 **UPDATE** — the composite gate (clauses OR together):
+
 ```sql
 USING (
   ( deleted_at IS NULL OR is_captain_or_deputy() )       -- captain/deputy may also restore soft-deleted
@@ -112,16 +115,17 @@ WITH CHECK ( created_by = auth.uid() OR is_captain_or_deputy() )
 ```
 
 **DELETE** — Captain-only hard delete (routine deletes are soft via UPDATE→`deleted_at`):
+
 ```sql
 USING ( is_captain() )
 ```
 
 **Per-table substitutions:**
 
-| Clause | Tables where it is the real expression | Elsewhere |
-| ------ | -------------------------------------- | --------- |
-| `<OUTREACH_CLAUSE>` | `outreach_logs` → `is_outreach_reporter() AND owns_row(created_by)` | `FALSE` |
-| `<SUBSYSTEM_CLAUSE>` | `hw_change_logs`, `decision_logs` → `leads_subsystem(subsystem_option_id)` | `FALSE` |
+| Clause               | Tables where it is the real expression                                     | Elsewhere |
+| -------------------- | -------------------------------------------------------------------------- | --------- |
+| `<OUTREACH_CLAUSE>`  | `outreach_logs` → `is_outreach_reporter() AND owns_row(created_by)`        | `FALSE`   |
+| `<SUBSYSTEM_CLAUSE>` | `hw_change_logs`, `decision_logs` → `leads_subsystem(subsystem_option_id)` | `FALSE`   |
 
 **Service-role / null-`created_by` composition (no special case):** the fallback importer uses the service-role key, which bypasses RLS entirely. Its rows are `created_by = NULL, created_via = 'import'`. Under UPDATE, `owns_row(NULL)` is false → import rows are editable only by Captain/Deputy, matching the backfill decision.
 
@@ -167,12 +171,12 @@ Current: `user.email !== env.ALLOWED_EMAIL` in `lib/supabase/middleware.ts:61` +
 
 ## 7. Migration files (timestamps `202606xx`, dev-first then prod)
 
-| Batch | File | Contents |
-| ----- | ---- | -------- |
-| 3A | `…_phase3_roles_and_members.sql` | enum + members columns + `member_subsystems` |
-| 3A | `…_phase3_seed_app_lead.sql` | backfill `created_by`; promote App Lead → Captain |
-| 3A | `…_phase3_helpers.sql` | the §3 helper functions |
-| 3A | `…_grants_for_phase3_roles.sql` | `EXECUTE` grants on helpers; table grants for `member_subsystems` |
-| 3B | `…_phase3_strict_rls_entries.sql` | the §4 loop + §5 members policies (per-table transactional swap — no deny-all gap, R9) |
+| Batch | File                              | Contents                                                                               |
+| ----- | --------------------------------- | -------------------------------------------------------------------------------------- |
+| 3A    | `…_phase3_roles_and_members.sql`  | enum + members columns + `member_subsystems`                                           |
+| 3A    | `…_phase3_seed_app_lead.sql`      | backfill `created_by`; promote App Lead → Captain                                      |
+| 3A    | `…_phase3_helpers.sql`            | the §3 helper functions                                                                |
+| 3A    | `…_grants_for_phase3_roles.sql`   | `EXECUTE` grants on helpers; table grants for `member_subsystems`                      |
+| 3B    | `…_phase3_strict_rls_entries.sql` | the §4 loop + §5 members policies (per-table transactional swap — no deny-all gap, R9) |
 
 **Cutover safety:** 3A is additive — permissive policies still hold, the app works for everyone authenticated, and the App Lead becomes Captain. Only after preview go/no-go does 3B replace policies per-table in single transactions.

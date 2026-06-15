@@ -22,7 +22,7 @@ This is the core Phase 3 security goal: strict RLS as a **replacement** for the 
 
 ## Out of scope
 
-- The friendly 24h-lock error messages + `edit_reason` capture — that's 3C (this batch's RLS *enforces* the lock; the nice errors come next).
+- The friendly 24h-lock error messages + `edit_reason` capture — that's 3C (this batch's RLS _enforces_ the lock; the nice errors come next).
 - The member admin UI (3D) — this batch ships the gate; inviting teammates comes in 3D.
 
 ## Open questions

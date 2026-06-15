@@ -17,7 +17,7 @@ export default async function DashboardPage() {
     <main className="mx-auto max-w-4xl px-6 py-12">
       <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
 
-      <section className="bg-card mt-8 rounded-lg border border-border p-6">
+      <section className="mt-8 rounded-lg border border-border bg-card p-6">
         {member ? (
           <div className="space-y-2">
             <p className="text-sm">
