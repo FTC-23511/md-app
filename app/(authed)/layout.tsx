@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { canAccessApp } from '@/lib/auth';
@@ -26,9 +27,25 @@ export default async function AuthedLayout({ children }: { children: React.React
     <div className="min-h-screen">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
-          <span className="text-sm font-semibold tracking-tight">Maximum Documentation</span>
+          <nav className="flex items-center gap-4">
+            <Link href={'/dashboard' as never} className="text-sm font-semibold tracking-tight">
+              Maximum Documentation
+            </Link>
+            <Link
+              href={'/dashboard' as never}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href={'/entries/list' as never}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Entries
+            </Link>
+          </nav>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">{user.email}</span>
+            <span className="hidden text-sm text-muted-foreground sm:inline">{user.email}</span>
             <form action="/auth/sign-out" method="post">
               <Button type="submit" variant="outline" size="sm">
                 Sign out
