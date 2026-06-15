@@ -571,6 +571,36 @@ export type Database = {
           },
         ];
       };
+      member_subsystems: {
+        Row: {
+          member_id: string;
+          subsystem_option_id: string;
+        };
+        Insert: {
+          member_id: string;
+          subsystem_option_id: string;
+        };
+        Update: {
+          member_id?: string;
+          subsystem_option_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'member_subsystems_member_id_fkey';
+            columns: ['member_id'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'member_subsystems_subsystem_option_id_fkey';
+            columns: ['subsystem_option_id'];
+            isOneToOne: false;
+            referencedRelation: 'option_lists';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       members: {
         Row: {
           created_at: string;
@@ -578,6 +608,9 @@ export type Database = {
           display_name: string;
           email: string;
           id: string;
+          is_active: boolean;
+          is_outreach_reporter: boolean;
+          role: Database['public']['Enums']['member_role'];
           updated_at: string;
         };
         Insert: {
@@ -586,6 +619,9 @@ export type Database = {
           display_name: string;
           email: string;
           id: string;
+          is_active?: boolean;
+          is_outreach_reporter?: boolean;
+          role?: Database['public']['Enums']['member_role'];
           updated_at?: string;
         };
         Update: {
@@ -594,6 +630,9 @@ export type Database = {
           display_name?: string;
           email?: string;
           id?: string;
+          is_active?: boolean;
+          is_outreach_reporter?: boolean;
+          role?: Database['public']['Enums']['member_role'];
           updated_at?: string;
         };
         Relationships: [];
@@ -889,23 +928,78 @@ export type Database = {
         };
         Relationships: [];
       };
+      test_series: {
+        Row: {
+          created_at: string;
+          headline_label: string | null;
+          headline_stat: number | null;
+          id: string;
+          test_date: string;
+          test_label: string;
+          test_log_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          headline_label?: string | null;
+          headline_stat?: number | null;
+          id?: string;
+          test_date: string;
+          test_label: string;
+          test_log_id: string;
+        };
+        Update: {
+          created_at?: string;
+          headline_label?: string | null;
+          headline_stat?: number | null;
+          id?: string;
+          test_date?: string;
+          test_label?: string;
+          test_log_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'test_series_test_log_id_fkey';
+            columns: ['test_log_id'];
+            isOneToOne: false;
+            referencedRelation: 'test_logs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
       can_read_entry: { Args: { p_entry_id: string }; Returns: boolean };
+      can_write_entries: { Args: never; Returns: boolean };
       can_write_entry: { Args: { p_entry_id: string }; Returns: boolean };
       current_can_write: { Args: never; Returns: boolean };
       current_is_captain: { Args: never; Returns: boolean };
       current_is_captain_or_deputy: { Args: never; Returns: boolean };
       current_member_id: { Args: never; Returns: string };
       current_member_role: { Args: never; Returns: string };
+      current_role_name: { Args: never; Returns: string };
       current_team_id: { Args: never; Returns: string };
+      is_active_member: { Args: never; Returns: boolean };
+      is_captain: { Args: never; Returns: boolean };
+      is_captain_or_deputy: { Args: never; Returns: boolean };
+      is_outreach_reporter: { Args: never; Returns: boolean };
+      leads_subsystem: {
+        Args: { p_subsystem_option_id: string };
+        Returns: boolean;
+      };
       mark_overdue_flags: { Args: { p_team_id: string }; Returns: number };
+      owns_row: { Args: { p_created_by: string }; Returns: boolean };
+      within_edit_window: { Args: { p_created_at: string }; Returns: boolean };
     };
     Enums: {
-      [_ in never]: never;
+      member_role:
+        | 'documentation_captain'
+        | 'deputy_documentation_captain'
+        | 'subsystem_documentation_lead'
+        | 'general_member'
+        | 'mentor';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1033,6 +1127,14 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      member_role: [
+        'documentation_captain',
+        'deputy_documentation_captain',
+        'subsystem_documentation_lead',
+        'general_member',
+        'mentor',
+      ],
+    },
   },
 } as const;
