@@ -35,15 +35,15 @@ Build order + specs: `docs/phase2/00-plan.md`. One brief per batch (2A–2G).
 
 Build order + specs: `docs/phase3/00-plan.md`. Security core (3A–3C) is linear; features (3D–3F) build on it; 3G is final + deferrable. One brief per batch.
 
-| Batch                                  | Brief                                                                            | Status                                                               |
-| -------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| **3A — roles + members schema + seed** | [2026-06-15-3a-roles-and-rbac-schema.md](2026-06-15-3a-roles-and-rbac-schema.md) | ✅ **done** (#57) — applied dev + prod; App Lead seeded as Captain   |
-| 3B — strict RLS + membership gate      | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                       | brief written — **unblocked** (3A merged); the security cutover      |
-| 3C — 24h edit lock + audit             | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                         | brief written — **blocked behind 3B**                                |
-| 3D — member management / onboarding UI | [2026-06-15-3d-member-admin.md](2026-06-15-3d-member-admin.md)                   | brief written — **blocked behind 3A+3B** (`requireCaptain`)          |
-| 3E — flag overdue alerts               | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                     | brief written — self-contained; ship before 3F                       |
-| 3F — Captain/admin dashboard           | [2026-06-15-3f-captain-dashboard.md](2026-06-15-3f-captain-dashboard.md)         | brief written — **blocked behind 3D (roster) + 3E (flag helper)**    |
-| 3G — inbound Discord capture           | [2026-06-15-3g-discord-inbound.md](2026-06-15-3g-discord-inbound.md)             | brief written — **deferrable**; depends on 3D; gated on Discord keys |
+| Batch                                  | Brief                                                                            | Status                                                                |
+| -------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **3A — roles + members schema + seed** | [2026-06-15-3a-roles-and-rbac-schema.md](2026-06-15-3a-roles-and-rbac-schema.md) | ✅ **done** (#57) — applied dev + prod; App Lead seeded as Captain    |
+| 3B — strict RLS + membership gate      | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                       | ✅ **done** (#58) — applied dev + prod; +members column-guard trigger |
+| 3C — 24h edit lock + audit             | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                         | brief written — **unblocked** (3B merged)                             |
+| 3D — member management / onboarding UI | [2026-06-15-3d-member-admin.md](2026-06-15-3d-member-admin.md)                   | brief written — **blocked behind 3A+3B** (`requireCaptain`)           |
+| 3E — flag overdue alerts               | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                     | brief written — self-contained; ship before 3F                        |
+| 3F — Captain/admin dashboard           | [2026-06-15-3f-captain-dashboard.md](2026-06-15-3f-captain-dashboard.md)         | brief written — **blocked behind 3D (roster) + 3E (flag helper)**     |
+| 3G — inbound Discord capture           | [2026-06-15-3g-discord-inbound.md](2026-06-15-3g-discord-inbound.md)             | brief written — **deferrable**; depends on 3D; gated on Discord keys  |
 
 > **Gating note:** migration batches (3A schema, 3B RLS swap, 3C audit table, 3G Discord tables) each stop for human merge approval at run time. 3B is the security cutover — verify on the dev preview before the prod push (App Lead must stay able to write; see `00-plan.md` R1). Decompose one brief per cycle, in build order.
 
