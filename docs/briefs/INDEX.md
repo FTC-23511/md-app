@@ -39,7 +39,7 @@ Build order + specs: `docs/phase3/00-plan.md`. Security core (3A–3C) is linear
 | -------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | **3A — roles + members schema + seed** | [2026-06-15-3a-roles-and-rbac-schema.md](2026-06-15-3a-roles-and-rbac-schema.md) | ✅ **done** (#57) — applied dev + prod; App Lead seeded as Captain    |
 | 3B — strict RLS + membership gate      | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                       | ✅ **done** (#58) — applied dev + prod; +members column-guard trigger |
-| 3C — 24h edit lock + audit             | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                         | brief written — **unblocked** (3B merged)                             |
+| 3C — 24h edit lock + audit             | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                         | ✅ **done** (#59) — applied dev + prod; entry_edit_audit + RPC         |
 | 3D — member management / onboarding UI | [2026-06-15-3d-member-admin.md](2026-06-15-3d-member-admin.md)                   | brief written — **blocked behind 3A+3B** (`requireCaptain`)           |
 | 3E — flag overdue alerts               | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                     | brief written — self-contained; ship before 3F                        |
 | 3F — Captain/admin dashboard           | [2026-06-15-3f-captain-dashboard.md](2026-06-15-3f-captain-dashboard.md)         | brief written — **blocked behind 3D (roster) + 3E (flag helper)**     |
