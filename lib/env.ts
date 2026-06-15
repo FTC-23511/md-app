@@ -35,9 +35,11 @@ export const env = {
   get SUPABASE_SERVICE_ROLE_KEY() {
     return required('SUPABASE_SERVICE_ROLE_KEY', process.env.SUPABASE_SERVICE_ROLE_KEY);
   },
-  // The single email allowed to access the app in Phase 1. Enforced in
-  // middleware as a belt-and-suspenders allowlist (signup is also disabled in
-  // Supabase). Phase 3 replaces this with role-based access.
+  // The App Lead's bootstrap email. Phase 3 replaced the single-email allowlist
+  // with a role-based membership gate (lib/auth.ts), but ALLOWED_EMAIL is kept
+  // as a bootstrap-only pass: a session with this email is always allowed in,
+  // so the first Documentation Captain can never be locked out even if the
+  // members roster is misconfigured (plan decision 6 / R1).
   get ALLOWED_EMAIL() {
     return required('ALLOWED_EMAIL', process.env.ALLOWED_EMAIL);
   },
