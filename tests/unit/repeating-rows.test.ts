@@ -10,9 +10,10 @@ describe('parseRepeatingRows', () => {
   ];
 
   it('parses a single-column block (e.g. Software Change Log files_changed)', () => {
-    const text = ['- lib/drive/HeadingController.java', '- test/drive/DriveControllerTest.java'].join(
-      '\n',
-    );
+    const text = [
+      '- lib/drive/HeadingController.java',
+      '- test/drive/DriveControllerTest.java',
+    ].join('\n');
     expect(parseRepeatingRows(text, single)).toEqual([
       { path: 'lib/drive/HeadingController.java' },
       { path: 'test/drive/DriveControllerTest.java' },
@@ -31,7 +32,9 @@ describe('parseRepeatingRows', () => {
   });
 
   it('ignores blank lines, the template placeholder, and non-bullet text', () => {
-    const text = ['Some intro line that is not a row.', '', '- lib/real/File.java', '   '].join('\n');
+    const text = ['Some intro line that is not a row.', '', '- lib/real/File.java', '   '].join(
+      '\n',
+    );
     expect(parseRepeatingRows(text, single)).toEqual([{ path: 'lib/real/File.java' }]);
   });
 
@@ -42,8 +45,6 @@ describe('parseRepeatingRows', () => {
 
   it('drops multi-column rows where no labelled segment matched', () => {
     const text = ['- nonsense with no labels', '- **Metric:** torque | **Now:** 2.0Nm'].join('\n');
-    expect(parseRepeatingRows(text, multi)).toEqual([
-      { metric: 'torque', was: '', now: '2.0Nm' },
-    ]);
+    expect(parseRepeatingRows(text, multi)).toEqual([{ metric: 'torque', was: '', now: '2.0Nm' }]);
   });
 });
