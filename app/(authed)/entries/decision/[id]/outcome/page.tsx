@@ -1,7 +1,12 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { EntryForm } from '@/components/entry-form/EntryForm';
+import { EntryEditBlocked } from '@/components/entry-detail/EntryEditBlocked';
 import { loadEntryDetail, buildFormDefaults } from '@/lib/entry-detail';
 import { addDecisionOutcome, decisionOutcomeDefinition } from '@/lib/update-decision-log';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { resolveEditContext } from '@/lib/edit-lock-server';
+import { EDIT_MESSAGES } from '@/lib/edit-lock';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +40,21 @@ export default async function AddDecisionOutcomePage({
     );
   }
 
+  // 24h edit-lock gate (3C) — same as the complete flow.
+  const backHref = `/entries/decision_log/${id}`;
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect('/auth/sign-in');
+  const ctx = await resolveEditContext(supabase, decisionOutcomeDefinition.table, id, user.id);
+  if (ctx.capability.kind === 'role_denied')
+    return <EntryEditBlocked message={EDIT_MESSAGES.role_denied} backHref={backHref} />;
+  if (ctx.capability.kind === 'locked')
+    return <EntryEditBlocked message={EDIT_MESSAGES.locked} backHref={backHref} />;
+  if (ctx.capability.kind === 'denied')
+    return <EntryEditBlocked message={EDIT_MESSAGES.denied} backHref={backHref} />;
+
   const defaultValues = buildFormDefaults(decisionOutcomeDefinition, detail.row);
 
   async function action(formData: FormData) {
@@ -49,7 +69,8 @@ export default async function AddDecisionOutcomePage({
       action={action}
       defaultValues={defaultValues}
       submitLabel="Save outcome"
-      successPath={`/entries/decision_log/${id}`}
+      successPath={backHref}
+      editReasonRequired={ctx.capability.kind === 'reason_required'}
     />
   );
 }

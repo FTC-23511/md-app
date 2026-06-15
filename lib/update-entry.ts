@@ -23,6 +23,8 @@ import {
   flattenZodErrors,
   parseFormDataWithDefinition,
 } from '@/lib/validate-entry';
+import { resolveEditContext } from '@/lib/edit-lock-server';
+import { EDIT_MESSAGES } from '@/lib/edit-lock';
 
 export type UpdateResult =
   | { ok: true; id: string }
@@ -85,16 +87,33 @@ export async function updateEntry(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, formError: 'Not authenticated.' };
 
-  // 5. Read-merge extras so keys outside the editable surface survive.
-  const { data: current, error: readError } = await supabase
-    .from(definition.table)
-    .select('extras')
-    .eq('id', id)
-    .single();
-  if (readError) {
-    return { ok: false, formError: readError.message };
+  // 4b. 24h edit-lock decision (mirrors the RLS UPDATE predicate so we can show
+  //     a friendly message instead of a raw 0-rows error — R3). Also returns
+  //     the row's current extras so step 5 needn't re-read. RLS stays the
+  //     authoritative backstop below.
+  const ctx = await resolveEditContext(supabase, definition.table, id, user.id);
+  if (!ctx.found) return { ok: false, formError: EDIT_MESSAGES.denied };
+
+  let editReason: string | null = null;
+  switch (ctx.capability.kind) {
+    case 'role_denied':
+      return { ok: false, formError: EDIT_MESSAGES.role_denied };
+    case 'locked':
+      return { ok: false, formError: EDIT_MESSAGES.locked };
+    case 'denied':
+      return { ok: false, formError: EDIT_MESSAGES.denied };
+    case 'reason_required': {
+      const raw = formData.get('edit_reason');
+      editReason = typeof raw === 'string' ? raw.trim() : '';
+      if (!editReason) return { ok: false, formError: EDIT_MESSAGES.reason_required };
+      break;
+    }
+    case 'allow':
+      break;
   }
-  const currentExtras = (current?.extras ?? {}) as Record<string, unknown>;
+
+  // 5. Read-merge extras so keys outside the editable surface survive.
+  const currentExtras = ctx.extras;
   const mergedExtras: Record<string, unknown> = { ...currentExtras, ...setExtras };
   for (const key of clearExtras) delete mergedExtras[key];
   if (options?.computedExtras) Object.assign(mergedExtras, options.computedExtras);
@@ -106,16 +125,41 @@ export async function updateEntry(
   };
   if (options?.entryState) row.entry_state = options.entryState;
 
-  // 6. Update.
+  // 6. Update. maybeSingle() so an RLS-denied update returns 0 rows as null
+  //    data (not a thrown PGRST116) — we map that to a generic permission
+  //    message, keeping RLS as the authoritative backstop behind the TS
+  //    pre-check above.
   const { data, error } = await supabase
     .from(definition.table)
     .update(row)
     .eq('id', id)
     .select('id')
-    .single();
+    .maybeSingle();
 
   if (error) {
     return { ok: false, formError: error.message };
   }
+  if (!data) {
+    // RLS refused the row despite the pre-check (e.g. a race or a pre-check gap).
+    return { ok: false, formError: EDIT_MESSAGES.denied };
+  }
+
+  // 7. Record the override audit row (Captain/Deputy editing a >24h entry).
+  //    Audit-only RPC (brief Q2): RLS already authorized the update; this just
+  //    writes the trail. Best-effort ordering is update-then-audit.
+  if (editReason !== null) {
+    const { error: auditError } = await supabase.rpc('record_entry_edit', {
+      p_entry_type: definition.type,
+      p_entry_id: id,
+      p_edit_reason: editReason,
+    });
+    if (auditError) {
+      return {
+        ok: false,
+        formError: 'The change was saved, but recording the edit reason failed. Tell the Captain.',
+      };
+    }
+  }
+
   return { ok: true, id: (data as { id: string }).id };
 }
