@@ -31,6 +31,22 @@ Build order + specs: `docs/phase2/00-plan.md`. One brief per batch (2A–2G).
 
 > **Gating note for the routine:** 2A is live on prod (2026-06-05), so 2B/2C/2E are **clear to decompose** into `docs/BACKLOG.md` — autonomously by the routine (ROUTINE §2 "Brief decomposition") or via `/prep-backlog`. 2D still waits on 2C (`test_series`). Decomposing only **queues** the items; any migration sub-item (e.g. 2C's `test_series`) still stops for human merge approval at run time (§3/§4). Decompose one brief per cycle, in build order; don't dump all three at once.
 
+## Phase 3 batch status
+
+Build order + specs: `docs/phase3/00-plan.md`. Security core (3A–3C) is linear; features (3D–3F) build on it; 3G is final + deferrable. One brief per batch.
+
+| Batch                                   | Brief                                                                              | Status                                                                 |
+| --------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **3A — roles + members schema + seed**  | [2026-06-15-3a-roles-and-rbac-schema.md](2026-06-15-3a-roles-and-rbac-schema.md)   | brief written — DB-only/additive; **unblocked** (Phase 2 closing)      |
+| 3B — strict RLS + membership gate       | [2026-06-15-3b-strict-rls.md](2026-06-15-3b-strict-rls.md)                         | brief written — **blocked behind 3A** (needs roles seeded)             |
+| 3C — 24h edit lock + audit              | [2026-06-15-3c-edit-lock.md](2026-06-15-3c-edit-lock.md)                           | brief written — **blocked behind 3B**                                  |
+| 3D — member management / onboarding UI  | [2026-06-15-3d-member-admin.md](2026-06-15-3d-member-admin.md)                     | brief written — **blocked behind 3A+3B** (`requireCaptain`)            |
+| 3E — flag overdue alerts                | [2026-06-15-3e-flag-alerts.md](2026-06-15-3e-flag-alerts.md)                       | brief written — self-contained; ship before 3F                         |
+| 3F — Captain/admin dashboard            | [2026-06-15-3f-captain-dashboard.md](2026-06-15-3f-captain-dashboard.md)           | brief written — **blocked behind 3D (roster) + 3E (flag helper)**      |
+| 3G — inbound Discord capture            | [2026-06-15-3g-discord-inbound.md](2026-06-15-3g-discord-inbound.md)               | brief written — **deferrable**; depends on 3D; gated on Discord keys    |
+
+> **Gating note:** migration batches (3A schema, 3B RLS swap, 3C audit table, 3G Discord tables) each stop for human merge approval at run time. 3B is the security cutover — verify on the dev preview before the prod push (App Lead must stay able to write; see `00-plan.md` R1). Decompose one brief per cycle, in build order.
+
 ## How to write a brief
 
 1. Open the [md-app Claude Project](https://claude.ai) (Opus 4.7 recommended).
@@ -52,6 +68,13 @@ That's all you do. The next routine cycle (or an on-demand `/prep-backlog`) read
 - [`2026-05-28-forms-rev2.md`](2026-05-28-forms-rev2.md) — Forms + entries batch (T13–T17), path B. Sprint C. 16 BACKLOG items, 3 approval-required (schema migrations) + 13 auto-merge. **Supersedes rev1.**
 - [`2026-05-28-forms.md`](2026-05-28-forms.md) — Forms + entries rev1. Sprint C. Superseded by rev2 after cycle 2 surfaced a schema-architecture mismatch with the auth-batch migrations.
 - [`2026-05-28-fallback.md`](2026-05-28-fallback.md) — Fallback batch (T18–T19). Sprint D. ✅ Shipped across [#31](https://github.com/FTC-23511/md-app/pull/31) (templates), [#32](https://github.com/FTC-23511/md-app/pull/32) (importer), [#33](https://github.com/FTC-23511/md-app/pull/33) (smoke test + fixes).
+- [`2026-06-15-3a-roles-and-rbac-schema.md`](2026-06-15-3a-roles-and-rbac-schema.md) — Phase 3 batch 3A: re-create the role model on the live `members` schema (enum + columns + `member_subsystems`), helper functions, seed App Lead as Captain, backfill `created_by`. DB-only, additive. Spec `docs/phase3/01-rbac-and-rls.md`.
+- [`2026-06-15-3b-strict-rls.md`](2026-06-15-3b-strict-rls.md) — Phase 3 batch 3B: replace permissive RLS with role-based policies across the 10 entry tables + `members`; swap `ALLOWED_EMAIL` for a membership gate. The security cutover. Blocked behind 3A.
+- [`2026-06-15-3c-edit-lock.md`](2026-06-15-3c-edit-lock.md) — Phase 3 batch 3C: friendly 24h-lock messaging + `edit_reason` audit at the `update-entry.ts` chokepoint. Blocked behind 3B.
+- [`2026-06-15-3d-member-admin.md`](2026-06-15-3d-member-admin.md) — Phase 3 batch 3D: Captain-only `/admin/members` — invite, role change, deactivate; reuses the auth trigger (no manual linking). Blocked behind 3A+3B.
+- [`2026-06-15-3e-flag-alerts.md`](2026-06-15-3e-flag-alerts.md) — Phase 3 batch 3E: derived flag overdue detection (`lib/flags.ts`, 72h) + dashboard pill; optional outbound Discord digest. Self-contained.
+- [`2026-06-15-3f-captain-dashboard.md`](2026-06-15-3f-captain-dashboard.md) — Phase 3 batch 3F: combined Captain/admin dashboard (roster + flag queue + KPI rollups incl. capture latency). Blocked behind 3D+3E.
+- [`2026-06-15-3g-discord-inbound.md`](2026-06-15-3g-discord-inbound.md) — Phase 3 batch 3G: inbound Discord capture via signed webhook + self-link handshake; reuses the insert pipeline. Final, deferrable. Spec `docs/phase3/05-discord-inbound.md`.
 
 <!-- When a brief lands, add a row like:
 - `2026-05-28-auth-brief.md` — Auth batch (T09–T12). Sprint B.
