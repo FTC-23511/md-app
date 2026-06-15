@@ -51,7 +51,7 @@ export function AddNewPopover({
   }
 
   return (
-    <div className="bg-card mt-2 space-y-2 rounded-md border border-input p-3 shadow-sm">
+    <div className="mt-2 space-y-2 rounded-md border border-input bg-card p-3 shadow-sm">
       <label className="block text-xs font-medium text-muted-foreground">New option label</label>
       <input
         type="text"

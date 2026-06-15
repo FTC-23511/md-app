@@ -1,6 +1,6 @@
 # Phase 3 — 24h edit lock (spec for 3C)
 
-The 24h lock freezes the contemporaneous record: a member may correct their own entry within 24h of creation, then it locks. Captain/Deputy can edit anything anytime, but an entry older than 24h requires an `edit_reason` (audit trail). Charter §6: *"allows correction-of-fact in the immediate aftermath but freezes the contemporaneous record before memory erodes the original capture."*
+The 24h lock freezes the contemporaneous record: a member may correct their own entry within 24h of creation, then it locks. Captain/Deputy can edit anything anytime, but an entry older than 24h requires an `edit_reason` (audit trail). Charter §6: _"allows correction-of-fact in the immediate aftermath but freezes the contemporaneous record before memory erodes the original capture."_
 
 **Hybrid enforcement** (`00-plan.md` decision 3): RLS is the hard gate (already designed in `01-rbac-and-rls.md` §4 UPDATE clause `(b)` + `(a)`); this batch adds the **app-layer** friendly errors and `edit_reason` capture. RLS stays the authoritative backstop — if the TS pre-check is ever wrong, the DB still refuses.
 
@@ -49,15 +49,15 @@ Today the chokepoint (`lib/update-entry.ts:1-121`) parses → validates → spli
 
 Extend the existing pre-update read (`:88`, already fetching `extras`) to also fetch `created_by` + `created_at`; fetch the caller's role via `current_role_name()`. Then compute the **same decision RLS will make** and branch:
 
-| Caller vs row | Behaviour |
-| ------------- | --------- |
-| Mentor, or inactive member | `{ ok:false, formError: 'Your role does not permit editing entries.' }` — no DB write |
-| Author, within 24h | proceed (normal update) |
-| Author, **past 24h**, not Captain/Deputy | `{ ok:false, formError: 'This entry is locked. Only the Documentation Captain or Deputy can edit it more than 24 hours after it was filed.' }` |
-| Outreach Reporter, own `outreach_log` | proceed (indefinite) |
-| Subsystem Lead, own subsystem `hw_change_log`/`decision_log` | proceed |
-| Captain/Deputy, within 24h or own row | proceed (no reason required) |
-| Captain/Deputy, **past 24h**, not author | **require `edit_reason`** in the FormData; if missing → `{ ok:false, formError: 'An edit reason is required to edit an entry more than 24 hours old.' }`; if present → proceed + call `record_entry_edit(...)` |
+| Caller vs row                                                | Behaviour                                                                                                                                                                                                      |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mentor, or inactive member                                   | `{ ok:false, formError: 'Your role does not permit editing entries.' }` — no DB write                                                                                                                          |
+| Author, within 24h                                           | proceed (normal update)                                                                                                                                                                                        |
+| Author, **past 24h**, not Captain/Deputy                     | `{ ok:false, formError: 'This entry is locked. Only the Documentation Captain or Deputy can edit it more than 24 hours after it was filed.' }`                                                                 |
+| Outreach Reporter, own `outreach_log`                        | proceed (indefinite)                                                                                                                                                                                           |
+| Subsystem Lead, own subsystem `hw_change_log`/`decision_log` | proceed                                                                                                                                                                                                        |
+| Captain/Deputy, within 24h or own row                        | proceed (no reason required)                                                                                                                                                                                   |
+| Captain/Deputy, **past 24h**, not author                     | **require `edit_reason`** in the FormData; if missing → `{ ok:false, formError: 'An edit reason is required to edit an entry more than 24 hours old.' }`; if present → proceed + call `record_entry_edit(...)` |
 
 The `edit_reason` field is added to the edit/fill UI as a conditionally-shown input (visible only when the lock applies and the caller can override). On any unexpected 0-rows result, fall back to a generic `"You don't have permission to make this change."` — RLS is the backstop.
 

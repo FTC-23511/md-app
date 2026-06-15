@@ -31,14 +31,14 @@ Compute in UTC; present "age in days". Centralizing the threshold means the badg
 
 Pure functions in `lib/dashboard/kpis.ts`; the page is a thin composition. Computable from existing columns:
 
-| KPI | Source | Notes |
-| --- | ------ | ----- |
-| Entry counts by type | per-table `count('*', { head:true })` where `deleted_at IS NULL` | no row transfer |
-| By timeframe | same + `created_at >= now()-7d/30d/season` | season from the active `seasons` row if present |
-| Draft vs complete | `entry_state` split | drafts come from decision/sw/test logs |
-| Entries per member | group `created_by` joined to `members.id` (join already correct — §0) | show **by display_name**, never null |
-| By subsystem | precise for `subsystem_option_id` (hw + decision logs); resolve `option_lists` id→label | **best-effort** for session-log `extras` multi-select — note the limitation in the UI |
-| Capture latency | `created_at::date − <event_date>` per table | the charter's core metric; surface **median days from event to filed** |
+| KPI                  | Source                                                                                  | Notes                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Entry counts by type | per-table `count('*', { head:true })` where `deleted_at IS NULL`                        | no row transfer                                                                       |
+| By timeframe         | same + `created_at >= now()-7d/30d/season`                                              | season from the active `seasons` row if present                                       |
+| Draft vs complete    | `entry_state` split                                                                     | drafts come from decision/sw/test logs                                                |
+| Entries per member   | group `created_by` joined to `members.id` (join already correct — §0)                   | show **by display_name**, never null                                                  |
+| By subsystem         | precise for `subsystem_option_id` (hw + decision logs); resolve `option_lists` id→label | **best-effort** for session-log `extras` multi-select — note the limitation in the UI |
+| Capture latency      | `created_at::date − <event_date>` per table                                             | the charter's core metric; surface **median days from event to filed**                |
 
 **Event-date columns** (9 of 10 tables have one; `contacts` is a person table, use `contact_logs.contact_date`): `session_logs.session_date`, `outreach_logs.event_date`, `meeting_notes.meeting_date`, `hw_change_logs.change_date`, `sw_change_logs.change_date`, `test_logs.test_date`, `decision_logs.decision_date`, `comp_recaps.comp_start_date`, `contact_logs.contact_date`. Exclude tables without an event date from the latency metric.
 
@@ -60,10 +60,10 @@ Rebuild `app/(authed)/dashboard/page.tsx` (currently a simpler page) into three 
 
 ## 4. Files
 
-| Batch | Create | Modify |
-| ----- | ------ | ------ |
-| 3E | `lib/flags.ts`, `components/dashboard/flag-queue.tsx`, `app/api/internal/overdue-flags/route.ts`, `.github/workflows/flag-overdue-digest.yml` | `lib/env.ts` (`CRON_SECRET`, `DISCORD_FLAG_WEBHOOK_URL`) |
-| 3F | `lib/dashboard/kpis.ts`, `components/dashboard/kpi-cards.tsx`, `components/dashboard/roster.tsx` | `app/(authed)/dashboard/page.tsx` |
+| Batch | Create                                                                                                                                        | Modify                                                   |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| 3E    | `lib/flags.ts`, `components/dashboard/flag-queue.tsx`, `app/api/internal/overdue-flags/route.ts`, `.github/workflows/flag-overdue-digest.yml` | `lib/env.ts` (`CRON_SECRET`, `DISCORD_FLAG_WEBHOOK_URL`) |
+| 3F    | `lib/dashboard/kpis.ts`, `components/dashboard/kpi-cards.tsx`, `components/dashboard/roster.tsx`                                              | `app/(authed)/dashboard/page.tsx`                        |
 
 ---
 
