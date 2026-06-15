@@ -3,6 +3,7 @@ import { loadEntryDetail } from '@/lib/entry-detail';
 import { loadCompRecapTrend, type TestTrendSeries } from '@/lib/comp-recap-companion';
 import { EntryDetailView } from '@/components/entry-detail/EntryDetailView';
 import { TestTrendView } from '@/components/entry-detail/TestTrendView';
+import { isGenericEditable } from '@/lib/editable';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,6 +68,14 @@ export default async function EntryDetailPage({
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-sm">
+          {isGenericEditable(type) ? (
+            <Link
+              href={`/entries/${type}/${id}/edit` as never}
+              className="inline-flex h-8 items-center rounded-md border border-input bg-background px-3 font-medium hover:bg-accent"
+            >
+              Edit
+            </Link>
+          ) : null}
           {isDecisionLog && isDraft ? (
             <Link
               href={`/entries/decision/${id}/complete` as never}

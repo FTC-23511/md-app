@@ -39,14 +39,17 @@ export async function getCurrentMember(): Promise<Member | null> {
 }
 
 /**
- * Guard for Captain-only pages/actions. Redirects to /forbidden if the caller
- * is not an active Documentation Captain. The ALLOWED_EMAIL bootstrap account
- * is a Captain after 3A, so it passes.
+ * Guard for Captain-only pages/actions. A signed-in member who isn't an active
+ * Captain is sent back to /dashboard (NOT /forbidden — they're a valid app user,
+ * just not an admin; /forbidden is the signed-out "not a member" dead-end). A
+ * caller with no member row at all is treated the same — the membership gate in
+ * middleware already handled the genuinely-unauthorized case. The ALLOWED_EMAIL
+ * bootstrap account is a Captain after 3A, so it passes.
  */
 export async function requireCaptain(): Promise<Member> {
   const member = await getCurrentMember();
   if (!member || !member.is_active || member.role !== 'documentation_captain') {
-    redirect('/forbidden');
+    redirect('/dashboard');
   }
   return member;
 }
