@@ -432,16 +432,23 @@ function FieldValue({
     case 'section-header':
       // Rendered as a divider heading in the map below, not as a field row.
       return null;
+
+    case 'media-links':
+      // Attached media renders in its own section (loaded separately, like
+      // flags), not as an inline field value.
+      return null;
   }
 }
 
 export function EntryDetailView({ detail }: { detail: EntryDetail }) {
-  const { definition, row, optionLabels, flags } = detail;
+  const { definition, row, optionLabels, flags, media } = detail;
   const createdAt = row.created_at ? String(row.created_at).slice(0, 10) : '';
 
   return (
     <article className="mt-6 flex flex-col gap-6">
       {definition.fields.map((block) => {
+        // Attached media renders in its own section below, not as a field row.
+        if (block.type === 'media-links') return null;
         // Section headers are dividers, not labelled value rows.
         if (block.type === 'section-header') {
           return (
@@ -484,6 +491,60 @@ export function EntryDetailView({ detail }: { detail: EntryDetail }) {
                 </span>
                 <span className="ml-2">{f.subject}</span>
                 <span className="text-muted-foreground"> ({f.status})</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {media.length > 0 ? (
+        <section className="grid gap-2 border-t border-border pt-4">
+          <h2 className="text-sm font-medium">Media</h2>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {media.map((m) => (
+              <li
+                key={m.id}
+                className="flex flex-col gap-1 rounded-md border border-border p-2 text-xs"
+              >
+                <a href={m.url} target="_blank" rel="noopener noreferrer" className="block">
+                  {m.thumbnail_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={m.thumbnail_url}
+                      alt={m.caption ?? 'Attached media'}
+                      className="h-28 w-full rounded object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-28 w-full items-center justify-center rounded bg-muted text-muted-foreground">
+                      {m.media_type === 'video' ? '▶ video' : m.provider}
+                    </div>
+                  )}
+                </a>
+                {m.caption ? <span className="line-clamp-2">{m.caption}</span> : null}
+                <div className="flex flex-wrap items-center gap-1 text-muted-foreground">
+                  <span className="rounded-full bg-muted px-1.5 py-0.5">{m.provider}</span>
+                  {m.role ? (
+                    <span className="rounded-full bg-muted px-1.5 py-0.5">{m.role}</span>
+                  ) : null}
+                  {m.permission_status !== 'pending' ? (
+                    <span className="rounded-full bg-muted px-1.5 py-0.5">
+                      perm: {m.permission_status}
+                    </span>
+                  ) : null}
+                  {m.ingest_status === 'failed' ? (
+                    <span className="rounded-full bg-destructive/10 px-1.5 py-0.5 text-destructive">
+                      ingest failed
+                    </span>
+                  ) : null}
+                </div>
+                <a
+                  href={m.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  Open ↗
+                </a>
               </li>
             ))}
           </ul>

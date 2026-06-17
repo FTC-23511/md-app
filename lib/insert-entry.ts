@@ -36,6 +36,10 @@ export async function insertEntry(
   const columnValues: Record<string, unknown> = {};
   const extrasValues: Record<string, unknown> = {};
   for (const field of definition.fields) {
+    // media-links rows are written to the side `media_links` table by a
+    // post-insert step (see lib/submit-entry-with-media.ts), never onto the
+    // entry row itself.
+    if (field.type === 'media-links') continue;
     const value = (result.data as Record<string, unknown>)[field.name];
     if (value === undefined) continue;
     if (field.storage === 'column') {

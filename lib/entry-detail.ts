@@ -25,12 +25,26 @@ export type EntryFlag = {
   owner_member_id: string | null;
 };
 
+/** One attached media item (2F). Polymorphic on the entry, like flags. */
+export type MediaLink = {
+  id: string;
+  url: string;
+  provider: string;
+  media_type: string | null;
+  caption: string | null;
+  role: string | null;
+  permission_status: string;
+  thumbnail_url: string | null;
+  ingest_status: string;
+};
+
 export type EntryDetail = {
   definition: EntryDefinition;
   row: Record<string, unknown>;
   /** option_id (uuid) → human label, for every single-/multi-select field. */
   optionLabels: Record<string, string>;
   flags: EntryFlag[];
+  media: MediaLink[];
 };
 
 /** Read a field's stored value: typed column, or a key inside `extras`. */
@@ -146,10 +160,22 @@ export async function loadEntryDetail(type: string, id: string): Promise<EntryDe
     .is('deleted_at', null)
     .order('opened_at', { ascending: false });
 
+  // Media attached to this entry (2F) — polymorphic on (entry_type, entry_id).
+  const { data: mediaRows } = await supabase
+    .from('media_links')
+    .select(
+      'id, url, provider, media_type, caption, role, permission_status, thumbnail_url, ingest_status',
+    )
+    .eq('entry_type', type)
+    .eq('entry_id', id)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: true });
+
   return {
     definition,
     row: rowRecord,
     optionLabels,
     flags: (flagRows ?? []) as EntryFlag[],
+    media: (mediaRows ?? []) as MediaLink[],
   };
 }

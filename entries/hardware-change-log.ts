@@ -110,6 +110,23 @@ export const hardwareChangeLogEntry: EntryDefinition = {
       maxLength: 2000,
       rows: 3,
     },
+    {
+      type: 'media-links',
+      name: 'photos',
+      label: 'Photos',
+      helper:
+        'Before (v(n-1)), after (v(n)), in-context, or a hero shot. Paste a link or upload a file — uploads and loose links are saved to the team Drive automatically; YouTube/Vimeo stay native.',
+      required: false,
+      storage: 'extras',
+      maxRows: 8,
+      maxUploadMb: 4,
+      roles: [
+        { value: 'prev_version', label: 'Previous version' },
+        { value: 'new_version', label: 'New version' },
+        { value: 'in_context', label: 'In context' },
+        { value: 'hero', label: 'Hero shot' },
+      ],
+    },
   ],
 };
 
