@@ -58,12 +58,22 @@ async function main(): Promise<void> {
   console.log('    thumbnail:', up.thumbnailUrl);
   console.log('    fileId:   ', up.fileId);
 
+  // Upload + sharing are the integration that matters (and all the app ever
+  // does). Cleanup is best-effort: a service account with the Content-manager
+  // role often cannot permanently delete on a Shared Drive (deletion may be
+  // restricted to Managers), which surfaces as a 404. Don't fail the smoke on
+  // it — just tell the operator to remove the one test file by hand.
   console.log('Cleaning up (deleting the test file)…');
-  await deleteDriveFile(up.fileId);
-  console.log('  ✓ deleted');
+  try {
+    await deleteDriveFile(up.fileId);
+    console.log('  ✓ deleted');
+  } catch (err) {
+    console.log(`  ⚠ could not auto-delete (${err instanceof Error ? err.message : String(err)}).`);
+    console.log('    Delete "md-app-drive-smoke-test.png" from the MD-media folder by hand.');
+  }
 
   console.log(
-    '\n✓ Drive round-trip OK — service account, Shared Drive, and link-sharing all work.',
+    '\n✓ Drive integration OK — service-account auth, Shared Drive upload, and link-sharing all work.',
   );
 }
 
