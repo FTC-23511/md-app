@@ -12,19 +12,32 @@
 import { Readable } from 'node:stream';
 import { google } from 'googleapis';
 
+const DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive'];
+
 function getDrive() {
+  // Two ways to supply the service-account key:
+  //  - GOOGLE_SERVICE_ACCOUNT_KEY      — the key JSON inline (used on Vercel).
+  //  - GOOGLE_SERVICE_ACCOUNT_KEY_FILE — a path to the key JSON on disk (handy
+  //    for local dev: no JSON to single-line into .env.local).
+  const keyFile = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE;
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
-  if (!raw) throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY is not set.');
-  let credentials: Record<string, unknown>;
-  try {
-    credentials = JSON.parse(raw) as Record<string, unknown>;
-  } catch {
-    throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY is not valid JSON.');
+
+  let auth: InstanceType<typeof google.auth.GoogleAuth>;
+  if (keyFile) {
+    auth = new google.auth.GoogleAuth({ keyFile, scopes: DRIVE_SCOPES });
+  } else if (raw) {
+    let credentials: Record<string, unknown>;
+    try {
+      credentials = JSON.parse(raw) as Record<string, unknown>;
+    } catch {
+      throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY is not valid JSON.');
+    }
+    auth = new google.auth.GoogleAuth({ credentials, scopes: DRIVE_SCOPES });
+  } else {
+    throw new Error(
+      'No Drive credentials: set GOOGLE_SERVICE_ACCOUNT_KEY (inline JSON) or GOOGLE_SERVICE_ACCOUNT_KEY_FILE (path).',
+    );
   }
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/drive'],
-  });
   return google.drive({ version: 'v3', auth });
 }
 
@@ -70,6 +83,12 @@ export async function uploadToDrive(opts: {
     webViewLink: `https://drive.google.com/file/d/${fileId}/view`,
     thumbnailUrl: `https://drive.google.com/thumbnail?id=${fileId}&sz=w640`,
   };
+}
+
+/** Delete a Drive file (used by the dev smoke test to clean up after itself). */
+export async function deleteDriveFile(fileId: string): Promise<void> {
+  const drive = getDrive();
+  await drive.files.delete({ fileId, supportsAllDrives: true });
 }
 
 /** Download a direct media URL server-side so its bytes can be re-homed in Drive. */
