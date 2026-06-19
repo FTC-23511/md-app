@@ -31,8 +31,14 @@ const PERMISSIONS: Array<{ value: string; label: string }> = [
 export function MediaLinksBlock({ block, error }: { block: MediaLinksBlockType; error?: string }) {
   const maxRows = block.maxRows ?? 10;
   const maxMb = block.maxUploadMb ?? 4;
+  const maxBytes = maxMb * 1024 * 1024;
   const roles = block.roles ?? [];
   const [rows, setRows] = useState<Row[]>(() => [newRow()]);
+  // Per-row "file too big" messages. The check runs HERE, in the browser, and
+  // clears the file input — so an oversized upload never reaches the server.
+  // Vercel rejects request bodies over ~4.5 MB with a 413 before our server-side
+  // check can run, so the only reliable place to enforce the cap is client-side.
+  const [fileErrors, setFileErrors] = useState<Record<string, string>>({});
 
   function addRow() {
     if (rows.length >= maxRows) return;
@@ -40,6 +46,31 @@ export function MediaLinksBlock({ block, error }: { block: MediaLinksBlockType; 
   }
   function removeRow(id: string) {
     setRows((prev) => (prev.length <= 1 ? prev : prev.filter((r) => r.id !== id)));
+    setFileErrors((prev) => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+
+  function onFilePick(rowId: string, input: HTMLInputElement) {
+    const file = input.files?.[0];
+    if (file && file.size > maxBytes) {
+      input.value = ''; // drop it so it isn't submitted
+      const mb = (file.size / (1024 * 1024)).toFixed(1);
+      setFileErrors((prev) => ({
+        ...prev,
+        [rowId]: `That file is ${mb} MB — over the ${maxMb} MB limit. Put large photos/videos on YouTube (or compress the image) and paste the link instead.`,
+      }));
+    } else {
+      setFileErrors((prev) => {
+        if (!(rowId in prev)) return prev;
+        const next = { ...prev };
+        delete next[rowId];
+        return next;
+      });
+    }
   }
 
   const inputClass =
@@ -62,9 +93,13 @@ export function MediaLinksBlock({ block, error }: { block: MediaLinksBlockType; 
                 type="file"
                 name={`${block.name}__file`}
                 accept="image/*,video/*"
+                onChange={(e) => onFilePick(row.id, e.currentTarget)}
                 className="mt-1 block w-full text-xs file:mr-3 file:rounded-md file:border file:border-input file:bg-background file:px-2 file:py-1 file:text-xs"
               />
             </label>
+            {fileErrors[row.id] ? (
+              <p className="text-xs text-destructive">{fileErrors[row.id]}</p>
+            ) : null}
             <input
               type="text"
               name={`${block.name}__caption`}
