@@ -263,6 +263,45 @@ export function parseFormDataWithDefinition(def: EntryDefinition, fd: FormData):
         // Presentational only — holds no value, never submitted. Leave absent.
         break;
       }
+      case 'media-links': {
+        // Build rows for validation only (the real save reads FormData directly,
+        // incl. File bytes, in lib/media/save-entry-media.ts). Parallel arrays,
+        // one row per index; empty rows (no url and no file) are dropped.
+        const urls = getAll(fd, `${field.name}__url`);
+        const captions = getAll(fd, `${field.name}__caption`);
+        const perms = getAll(fd, `${field.name}__permission_status`);
+        const roles = getAll(fd, `${field.name}__role`);
+        const fileParts = fd.getAll(`${field.name}__file`);
+        const count = Math.max(
+          urls.length,
+          captions.length,
+          perms.length,
+          roles.length,
+          fileParts.length,
+        );
+        const rows: Array<{
+          url?: string;
+          caption?: string;
+          permission_status?: string;
+          role?: string;
+          has_file: boolean;
+        }> = [];
+        for (let i = 0; i < count; i++) {
+          const url = (urls[i] ?? '').trim();
+          const part = fileParts[i];
+          const has_file = typeof part !== 'string' && part != null && (part as File).size > 0;
+          if (!url && !has_file) continue;
+          rows.push({
+            url: url || undefined,
+            caption: (captions[i] ?? '').trim() || undefined,
+            permission_status: perms[i] || undefined,
+            role: (roles[i] ?? '').trim() || undefined,
+            has_file,
+          });
+        }
+        out[field.name] = rows;
+        break;
+      }
     }
   }
 
@@ -518,6 +557,24 @@ function schemaForBlock(block: FieldBlock): ZodTypeAny {
     case 'section-header': {
       // Presentational; excluded from the submit payload. Accept absence.
       return z.unknown().optional();
+    }
+    case 'media-links': {
+      // Validated for shape only; the rows are written to the side `media_links`
+      // table by the post-insert step, not stored on the entry. Each row carries
+      // a url or an uploaded file (parse drops empty rows, guaranteeing one of
+      // the two). File bytes never reach Zod — `has_file` flags their presence.
+      const rowSchema = z.object({
+        url: z.string().min(1).optional(),
+        caption: z.string().optional(),
+        permission_status: z.enum(['yes', 'no', 'pending', 'n_a']).optional(),
+        role: z.string().optional(),
+        has_file: z.boolean().optional(),
+      });
+      let s = z
+        .array(rowSchema)
+        .max(block.maxRows ?? 10, `At most ${block.maxRows ?? 10} media items`);
+      if (block.required) s = s.min(1, 'Add at least one photo or video');
+      return s;
     }
   }
 }

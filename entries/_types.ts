@@ -347,6 +347,29 @@ export type SectionHeaderBlock = BlockBase & {
   type: 'section-header';
 };
 
+/** One role option for a {@link MediaLinksBlock} (e.g. HW photo positions). */
+export type MediaRole = { value: string; label: string };
+
+/**
+ * Media attachment block (2F, `docs/phase2/04-media.md` §7). Repeating rows of
+ * `{url_or_file, caption, permission_status, role?}`. Unlike other blocks its
+ * value is **not** stored on the entry row — `insertEntry`/`updateEntry` skip it
+ * and a post-insert step (`lib/media/save-entry-media.ts`) writes one row per
+ * item to the polymorphic `media_links` table (the entry id is needed first).
+ * On submit the server decides passthrough (YouTube/Vimeo/Drive links stay
+ * native) vs ingest (uploads + loose direct links re-home into the team Shared
+ * Drive). `storage` is required by BlockBase but unused (side table).
+ */
+export type MediaLinksBlock = BlockBase & {
+  type: 'media-links';
+  /** Max rows. Default 10. */
+  maxRows?: number;
+  /** Optional role options (e.g. HW: prev/new/in-context/hero). Omit to hide. */
+  roles?: MediaRole[];
+  /** Max upload size in MB before the item is rejected (push to YouTube). Default 4. */
+  maxUploadMb?: number;
+};
+
 // re-export so call sites can `import { ColumnKind } from '@/entries/_types'`
 export type { ColumnKind, CustomColumn };
 
@@ -371,7 +394,8 @@ export type FieldBlock =
   | ComputedReadonlyBlock
   | ChoiceBlock
   | CheckboxBlock
-  | SectionHeaderBlock;
+  | SectionHeaderBlock
+  | MediaLinksBlock;
 
 // ---- Entry definition -----------------------------------------------------
 

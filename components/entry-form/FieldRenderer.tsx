@@ -21,6 +21,7 @@ import { ComputedReadonlyBlock } from './blocks/ComputedReadonlyBlock';
 import { ChoiceBlock } from './blocks/ChoiceBlock';
 import { CheckboxBlock } from './blocks/CheckboxBlock';
 import { SectionHeaderBlock } from './blocks/SectionHeaderBlock';
+import { MediaLinksBlock } from './blocks/MediaLinksBlock';
 
 const RAW_MODES: ReadonlySet<string> = new Set(['pass_fail', 'single_measure', 'custom']);
 
@@ -117,5 +118,7 @@ export function FieldRenderer({
       );
     case 'section-header':
       return <SectionHeaderBlock block={block} />;
+    case 'media-links':
+      return <MediaLinksBlock block={block} error={error} />;
   }
 }

@@ -70,6 +70,8 @@ export async function updateEntry(
   const clearExtras: string[] = [];
   for (const field of definition.fields) {
     if (field.type === 'computed-readonly' || field.type === 'section-header') continue;
+    // media-links live in the side `media_links` table, not on the entry row.
+    if (field.type === 'media-links') continue;
     const value = (result.data as Record<string, unknown>)[field.name];
     if (field.storage === 'column') {
       columnValues[field.name] = value === undefined ? null : value;
