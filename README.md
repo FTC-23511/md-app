@@ -1,3 +1,5 @@
+> ⏸️ This project is **ON INDEFINITE HOLD** as of June 2026. See [`STATUS.md`](./STATUS.md) before doing any work. The team moved to a Linear-only documentation workflow; this app is mothballed and resumable, not deleted.
+
 # MD-App
 
 A web application implementing the data layer for **Maximum Documentation (MD)**, our FTC team's internal documentation operating system.
