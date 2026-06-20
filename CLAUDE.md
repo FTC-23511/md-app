@@ -1,3 +1,23 @@
+> # ⏸️ PROJECT ON INDEFINITE HOLD (since June 2026)
+>
+> **STOP before doing any work.** This project is paused indefinitely. The team moved to a
+> Linear-only documentation workflow; MD-App is mothballed and resumable, not deleted.
+>
+> - The prior **Phase 2 active scope** described below is **suspended**. So is Phase 3 and
+>   all later phases.
+> - **Do not** start feature work, open feature PRs, run the maintenance routine, or change
+>   application code / schema / deployment **without explicit re-authorization from the team
+>   lead.**
+> - Treat this repo as **read-reference**. Documentation-only changes (like this notice) are
+>   the exception.
+> - **Read [`STATUS.md`](./STATUS.md) first** for the full picture: why it's paused, the
+>   verified build state, how to resume, and where the live context now lives.
+>
+> _Everything below this notice is the prior operating manual, retained for whenever work
+> resumes. It is not in force while the project is on hold._
+
+---
+
 # CLAUDE.md
 
 Read every session before starting. Short by design.
